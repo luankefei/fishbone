@@ -1,6 +1,34 @@
 /* jshint asi:true */
 
 /**
+ * @name  http.js
+ * @description  数据请求模块，负责实现ajax、comet、websocket
+ * @date  2015.05.12
+ * @version  0.0.1
+ */
+
+'use strict'
+
+$.define('http', [], function() {
+
+    var http = {}
+
+    http.ajax = function() {
+
+        console.log('ajax')
+    }
+
+    return http
+})
+
+
+
+
+
+
+/* jshint asi:true */
+
+/**
  * @name  main.js
  * @description  此文件是种子模块，描述整体结构，提供extend等基础api
  * @date  2015.05.07
@@ -219,4 +247,27 @@
  * 将require函数重命名为use，原use改为require
  * 将require函数的参数1，2改为可选
  */
+
+
+/* jshint asi:true */
+
+/**
+ * @name  prototype.js
+ * @description  对象原型扩展模块，该文件为侵入式设计
+ * @date  2015.05.12
+ * @version  0.0.1
+ */
+
+'use strict'
+
+
+$.define('prototype', [], function() {
+
+
+    
+
+    return
+
+})
+
 
