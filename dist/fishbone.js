@@ -1,6 +1,138 @@
 /* jshint asi:true */
 
 /**
+ * @name  main.js
+ * @description  此文件是种子模块，描述整体结构，提供extend等基础api
+ * @date  2015.05.07
+ * @version  0.0.2
+ */
+
+'use strict'
+
+$.define('test', [], function() {})
+
+
+/* jshint asi:true */
+
+/**
+ * @name  main.js
+ * @description  此文件是种子模块，描述整体结构，提供extend等基础api
+ * @date  2015.05.07
+ * @version  0.0.2
+ */
+
+'use strict'
+
+$.define('test', [], function() {})
+
+
+/* jshint asi:true */
+
+/**
+ * @name  main.js
+ * @description  此文件是种子模块，描述整体结构，提供extend等基础api
+ * @date  2015.05.07
+ * @version  0.0.2
+ */
+
+'use strict'
+
+$.define('test', [], function() {})
+
+
+/* jshint asi:true */
+
+/**
+ * @name  main.js
+ * @description  此文件是种子模块，描述整体结构，提供extend等基础api
+ * @date  2015.05.07
+ * @version  0.0.2
+ */
+
+'use strict'
+
+$.define('test', [], function() {})
+
+
+/* jshint asi:true */
+
+/**
+ * @name  main.js
+ * @description  此文件是种子模块，描述整体结构，提供extend等基础api
+ * @date  2015.05.07
+ * @version  0.0.2
+ */
+
+'use strict'
+
+$.define('test', [], function() {})
+
+
+/* jshint asi:true */
+
+/**
+ * @name  extend.js
+ * @description  此文件用来向命名空间注册api
+ * @date  2015.05.12
+ * @version  0.0.1
+ */
+
+'use strict'
+
+!function($, fn) {
+
+    var node = $.require('node')
+    var http = $.require('http')
+
+    // Fishbone原型扩展，针对通过$函数构造的Fishbone对象
+    $.mix(fn, {
+
+        attr: node.attr
+
+    })
+
+
+
+    // Fishbone对象扩展，
+    $.mix($, {
+
+        get: http.get,
+        ajax: http.ajax,
+        jsonp: http.jsonp,
+        socket: http.socket
+
+        // get: function() {},
+
+        // eq: function() {},
+
+        // first: function() {},
+
+        // last: function() {},
+
+        // each: function() {},
+
+        // clone: function() {},
+
+        // html: function() {},
+
+        // test: function() {},
+
+        // valueOf: function() {
+
+        //     return Array.prototype.slice.call(this)
+        // },
+    })
+
+}(window.Fishbone, window.Fishbone.prototype)
+
+
+/**
+ * 2015.5.12 创建extend
+ */
+
+/* jshint asi:true */
+
+/**
  * @name  http.js
  * @description  数据请求模块，负责实现ajax、comet、websocket
  * @date  2015.05.12
@@ -13,15 +145,85 @@ $.define('http', [], function() {
 
     var http = {}
 
-    http.ajax = function() {
-
-        console.log('ajax')
+    var accepts = {
+        xml: "application/xml, text/xml",
+        html: "text/html",
+        text: "text/plain",
+        json: "application/json, text/javascript",
+        script: "text/javascript, application/javascript",
+        "*": ["*/"] + ["*"] //避免被压缩掉
+    },
+    defaults = {
+        type: "GET",
+        contentType: "application/x-www-form-urlencoded; charset=UTF-8",
+        async: true,
+        jsonp: "callback"
     }
+
+
+    // 第三个参数为自定义事件，用来支持xmlhttprequest 2.0的新增事件
+    http.ajax = function(param, callback, events) {
+
+        var url = param.url
+        var type = param.type ? param.type.toUpperCase() : defaults.type
+        var data = param.data || null
+
+        var req = new XMLHttpRequest()
+
+        req.open(type, url)
+
+        // 如果有传入loadStart和progress参数
+        if (typeof events !== 'undefined') {
+
+            for (var k in evnets) {
+
+                req.['on' + k] = events[k]
+            }
+        }
+
+        req.onreadystatechange = function() {
+
+            if (req.status === 200 && req.readyState === 4) {
+
+                var res = req.responseText
+
+                callback && callback(res)
+            }
+        }
+
+        req.setRequestHeader('Content-type', defaults.contentType)
+        req.send(data)
+    }
+
+    // 尽量使用CORS
+    http.jsonp = function(url, namespace, funcName, callback) {
+
+        var script = document.createElement('script')
+        var body = document.querySelector('body')
+
+        script.src = url + '?type=jsonp&callbackName=' + funcName
+        script.id = 'jsonp'
+        script.onload = callback
+        
+        window[funcName] = namespace.funcName
+
+        body.appendChild(script)
+    }
+
+    http.comet = function() {}
+
+    http.socket = function() {}
+
+
 
     return http
 })
 
 
+
+/**
+ * 2015.05.12 创建http模块
+ */
 
 
 
@@ -43,7 +245,7 @@ $.define('http', [], function() {
     var html = DOC.documentElement                                      //HTML元素
     var head = DOC.head || DOC.getElementsByTagName('head')
     var hasOwn = Object.prototype.hasOwnProperty
-    var fishbone = 1
+    var version = 1
 
    
     var moduleMap = []                                                  // 用于amd模块
@@ -56,22 +258,42 @@ $.define('http', [], function() {
      * @param  {String|Function} expr  CSS表达式或函数
      * @return {Mass}
      */
-    function $(expr) {
+    function $(selector) {
 
-        var arrExp = expr.split(' ')
-        var ele = null
-
-        if (arrExp.length === 1 && arrExp[0].charAt(0) === '#') {
-
-            ele = document.getElementsById(arrExp[0])
-
-        } else {
-
-            ele = document.querySelecotorAll(expr)
-        }
-
-        return ele
+        return $.fn.init(selector)
     }
+
+    $.fn = $.prototype
+
+    mix($.fn, {
+
+        nodes: [],
+        fishbone: version,
+        constructor: $,
+        length: 0,
+
+        init: function(expr) {
+
+            var arrExp = expr.split(' ')
+            var ele = null
+
+            if (arrExp.length === 1 && arrExp[0].charAt(0) === '#') {
+
+                this.nodes = document.querySelector(arrExp[0])
+
+            } else {
+
+                this.nodes = document.querySelectorAll(expr)
+            }
+
+            var obj = Object.create($.fn)
+
+            obj.nodes = this.nodes
+
+            return obj
+        }
+    })
+
 
     /**
      * 糅杂，为一个对象添加更多成员
@@ -106,6 +328,7 @@ $.define('http', [], function() {
 
     mix($, {
 
+        mix: mix,
         
         /**
          * 定义模块
@@ -135,8 +358,6 @@ $.define('http', [], function() {
                         + '.' 
                         + Math.random()
             }
-
-            console.log('define: ' + factory)
 
             if (!moduleMap[name]) {
 
@@ -232,7 +453,9 @@ $.define('http', [], function() {
         }
     })
 
-    global.$ = $
+    global.$ = global.Fishbone = $
+
+
     // global.require = $.require
     // global.define = $.define
 
@@ -246,7 +469,84 @@ $.define('http', [], function() {
  * 增加了require函数的字符串判断，允许传入字符串作为参数
  * 将require函数重命名为use，原use改为require
  * 将require函数的参数1，2改为可选
+ * 2015.5.13
+ * 重写了$函数，返回$.fn.init的结果，返回后的内容为dom对象与$.fn对象的并集
  */
+
+
+/* jshint asi:true */
+
+/**
+ * @name  main.js
+ * @description  此文件是种子模块，描述整体结构，提供extend等基础api
+ * @date  2015.05.07
+ * @version  0.0.2
+ */
+
+'use strict'
+
+$.define('test', [], function() {})
+
+
+/* jshint asi:true */
+
+/**
+ * @name  http.js
+ * @description  数据请求模块，负责实现ajax、comet、websocket
+ * @date  2015.05.12
+ * @version  0.0.1
+ */
+
+'use strict'
+
+$.define('node', [], function() {
+
+
+    var node = {}
+
+    node.attr = function(key, value) {
+
+    }
+
+    return node
+   
+})
+
+
+
+/**
+ * 2015.05.12 创建node模块
+ */
+
+
+
+
+/* jshint asi:true */
+
+/**
+ * @name  main.js
+ * @description  此文件是种子模块，描述整体结构，提供extend等基础api
+ * @date  2015.05.07
+ * @version  0.0.2
+ */
+
+'use strict'
+
+$.define('test', [], function() {})
+
+
+/* jshint asi:true */
+
+/**
+ * @name  main.js
+ * @description  此文件是种子模块，描述整体结构，提供extend等基础api
+ * @date  2015.05.07
+ * @version  0.0.2
+ */
+
+'use strict'
+
+$.define('test', [], function() {})
 
 
 /* jshint asi:true */
@@ -270,4 +570,46 @@ $.define('prototype', [], function() {
 
 })
 
+
+
+/* jshint asi:true */
+
+/**
+ * @name  main.js
+ * @description  此文件是种子模块，描述整体结构，提供extend等基础api
+ * @date  2015.05.07
+ * @version  0.0.2
+ */
+
+'use strict'
+
+$.define('test', [], function() {})
+
+
+/* jshint asi:true */
+
+/**
+ * @name  main.js
+ * @description  此文件是种子模块，描述整体结构，提供extend等基础api
+ * @date  2015.05.07
+ * @version  0.0.2
+ */
+
+'use strict'
+
+$.define('test', [], function() {})
+
+
+/* jshint asi:true */
+
+/**
+ * @name  main.js
+ * @description  此文件是种子模块，描述整体结构，提供extend等基础api
+ * @date  2015.05.07
+ * @version  0.0.2
+ */
+
+'use strict'
+
+$.define('test', [], function() {})
 

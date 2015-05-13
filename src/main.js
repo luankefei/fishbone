@@ -15,7 +15,7 @@
     var html = DOC.documentElement                                      //HTML元素
     var head = DOC.head || DOC.getElementsByTagName('head')
     var hasOwn = Object.prototype.hasOwnProperty
-    var fishbone = 1
+    var version = 1
 
    
     var moduleMap = []                                                  // 用于amd模块
@@ -28,22 +28,42 @@
      * @param  {String|Function} expr  CSS表达式或函数
      * @return {Mass}
      */
-    function $(expr) {
+    function $(selector) {
 
-        var arrExp = expr.split(' ')
-        var ele = null
-
-        if (arrExp.length === 1 && arrExp[0].charAt(0) === '#') {
-
-            ele = document.getElementsById(arrExp[0])
-
-        } else {
-
-            ele = document.querySelecotorAll(expr)
-        }
-
-        return ele
+        return $.fn.init(selector)
     }
+
+    $.fn = $.prototype
+
+    mix($.fn, {
+
+        nodes: [],
+        fishbone: version,
+        constructor: $,
+        length: 0,
+
+        init: function(expr) {
+
+            var arrExp = expr.split(' ')
+            var ele = null
+
+            if (arrExp.length === 1 && arrExp[0].charAt(0) === '#') {
+
+                this.nodes = document.querySelector(arrExp[0])
+
+            } else {
+
+                this.nodes = document.querySelectorAll(expr)
+            }
+
+            var obj = Object.create($.fn)
+
+            obj.nodes = this.nodes
+
+            return obj
+        }
+    })
+
 
     /**
      * 糅杂，为一个对象添加更多成员
@@ -78,6 +98,7 @@
 
     mix($, {
 
+        mix: mix,
         
         /**
          * 定义模块
@@ -107,8 +128,6 @@
                         + '.' 
                         + Math.random()
             }
-
-            console.log('define: ' + factory)
 
             if (!moduleMap[name]) {
 
@@ -204,7 +223,9 @@
         }
     })
 
-    global.$ = $
+    global.$ = global.Fishbone = $
+
+
     // global.require = $.require
     // global.define = $.define
 
@@ -218,5 +239,7 @@
  * 增加了require函数的字符串判断，允许传入字符串作为参数
  * 将require函数重命名为use，原use改为require
  * 将require函数的参数1，2改为可选
+ * 2015.5.13
+ * 重写了$函数，返回$.fn.init的结果，返回后的内容为dom对象与$.fn对象的并集
  */
 

@@ -80,5 +80,5 @@ gulp.task('karma', function() {
 
 // Default
 //gulp.task('default', ['lint', 'minify', 'watch', 'browser-sync'])
-gulp.task('default', ['lint', 'minify', 'watch', 'connect'])
+gulp.task('default', ['lint', 'watch', 'connect'])
 
