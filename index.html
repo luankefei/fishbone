@@ -6,26 +6,27 @@
 </head>
 <body>
     <div id="test">hello,world</div>
+
+    <div class="t">t</div>
+    <div class="t">t</div>
+    <div class="t">t</div>
+    <div class="t">t</div>
+    <div class="t">t</div>
+    <div class="t">t</div>
     
-    <script src="src/main.js"></script>
-    <script src="src/node.js"></script>
-    
-    <script src="src/http.js"></script>
-    <script src="src/prototype.js"></script>
-    <script src="src/extend.js"></script>
- 
+    <script src="dist/fishbone.js"></script>
     <script>
+    //console.log(window)
 
-    var test = $('#test')
+    var test = $('.t')
+
+    var span = document.createElement('span')
+    span.innerText = '1234'
 
 
-    //console.log(test)
+    var c = test.clone()
 
-    //console.log(test.attr('id'))
-
-    //onsole.log(test)
-    
-
+    console.log(c)
     
 
     </script>

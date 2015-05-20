@@ -1,17 +1,32 @@
-var gulp = require('gulp')
-var jshint = require('gulp-jshint')
-var concat = require('gulp-concat')
-var rename = require('gulp-rename')
-var uglify = require('gulp-uglify')
+var gulp = require('gulp'),
+    jshint = require('gulp-jshint'),
+    concat = require('gulp-concat'),
+    rename = require('gulp-rename'),
+    uglify = require('gulp-uglify')
 
 var karma = require('karma')
 //var browserSync = require('browser-sync')
 
-
 var connect = require('gulp-connect')
 var livereload = require('gulp-livereload')
 
-gulp.task('connect', function() {
+
+// 路径配置
+var paths = {
+
+    scripts: [
+            'src/dev/_intro.js',
+            'src/main.js',
+            'src/prototype.js',
+            'src/http.js',
+            'src/node.js',
+            'src/extend.js',
+            'src/dev/_outro.js'
+            ],
+    images: ''
+}
+
+gulp.task('connect', ['minify'], function() {
 
     connect.server({
         root: '',
@@ -20,7 +35,7 @@ gulp.task('connect', function() {
 })
 
 // Lint JS
-gulp.task('lint', function() {
+gulp.task('lint', ['minify'], function() {
     return gulp.src('src/*.js')
         .pipe(jshint())
         .pipe(jshint.reporter('default'))
@@ -28,7 +43,7 @@ gulp.task('lint', function() {
 
 // Concat & Minify JS
 gulp.task('minify', function() {
-    return gulp.src('src/*.js')
+    return gulp.src(paths.scripts)
         .pipe(concat('fishbone.js'))
         .pipe(gulp.dest('dist'))
         .pipe(rename('fishbone.min.js'))
@@ -54,13 +69,12 @@ gulp.task('watch', function() {
 
     livereload.listen()
 
+    // gulp.watch('*.html', ['html'], function(file) {
 
-    gulp.watch('*.html', ['html'], function(file) {
+    //     server.changed(file.path)
 
-        server.changed(file.path)
-
-        server.reload()
-    })
+    //     server.reload()
+    // })
 
     gulp.watch('src/*.js', ['lint', 'minify', 'script'], function(file) {
 
@@ -80,5 +94,6 @@ gulp.task('karma', function() {
 
 // Default
 //gulp.task('default', ['lint', 'minify', 'watch', 'browser-sync'])
-gulp.task('default', ['lint', 'watch', 'connect'])
+gulp.task('default', ['minify', 'watch', 'connect'])
+gulp.task('package', ['minify'])
 

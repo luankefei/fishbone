@@ -1,465 +1,101 @@
 /* jshint asi:true */
 
 /**
- * @name  main.js
- * @description  此文件是种子模块，描述整体结构，提供extend等基础api
- * @date  2015.05.07
- * @version  0.0.2
- */
-
-'use strict'
-
-$.define('test', [], function() {})
-
-
-/* jshint asi:true */
-
-/**
- * @name  main.js
- * @description  此文件是种子模块，描述整体结构，提供extend等基础api
- * @date  2015.05.07
- * @version  0.0.2
- */
-
-'use strict'
-
-$.define('test', [], function() {})
-
-
-/* jshint asi:true */
-
-/**
- * @name  main.js
- * @description  此文件是种子模块，描述整体结构，提供extend等基础api
- * @date  2015.05.07
- * @version  0.0.2
- */
-
-'use strict'
-
-$.define('test', [], function() {})
-
-
-/* jshint asi:true */
-
-/**
- * @name  main.js
- * @description  此文件是种子模块，描述整体结构，提供extend等基础api
- * @date  2015.05.07
- * @version  0.0.2
- */
-
-'use strict'
-
-$.define('test', [], function() {})
-
-
-/* jshint asi:true */
-
-/**
- * @name  main.js
- * @description  此文件是种子模块，描述整体结构，提供extend等基础api
- * @date  2015.05.07
- * @version  0.0.2
- */
-
-'use strict'
-
-$.define('test', [], function() {})
-
-
-/* jshint asi:true */
-
-/**
- * @name  extend.js
- * @description  此文件用来向命名空间注册api
- * @date  2015.05.12
- * @version  0.0.1
- */
-
-'use strict'
-
-!function($, fn) {
-
-    var node = $.require('node')
-    var http = $.require('http')
-
-    // Fishbone原型扩展，针对通过$函数构造的Fishbone对象
-    $.mix(fn, {
-
-        attr: node.attr
-
-    })
-
-
-
-    // Fishbone对象扩展，
-    $.mix($, {
-
-        get: http.get,
-        ajax: http.ajax,
-        jsonp: http.jsonp,
-        socket: http.socket
-
-        // get: function() {},
-
-        // eq: function() {},
-
-        // first: function() {},
-
-        // last: function() {},
-
-        // each: function() {},
-
-        // clone: function() {},
-
-        // html: function() {},
-
-        // test: function() {},
-
-        // valueOf: function() {
-
-        //     return Array.prototype.slice.call(this)
-        // },
-    })
-
-}(window.Fishbone, window.Fishbone.prototype)
-
-
-/**
- * 2015.5.12 创建extend
- */
-
-/* jshint asi:true */
-
-/**
- * @name  http.js
- * @description  数据请求模块，负责实现ajax、comet、websocket
- * @date  2015.05.12
- * @version  0.0.1
- */
-
-'use strict'
-
-$.define('http', [], function() {
-
-    var http = {}
-
-    var accepts = {
-        xml: "application/xml, text/xml",
-        html: "text/html",
-        text: "text/plain",
-        json: "application/json, text/javascript",
-        script: "text/javascript, application/javascript",
-        "*": ["*/"] + ["*"] //避免被压缩掉
-    },
-    defaults = {
-        type: "GET",
-        contentType: "application/x-www-form-urlencoded; charset=UTF-8",
-        async: true,
-        jsonp: "callback"
-    }
-
-
-    // 第三个参数为自定义事件，用来支持xmlhttprequest 2.0的新增事件
-    http.ajax = function(param, callback, events) {
-
-        var url = param.url
-        var type = param.type ? param.type.toUpperCase() : defaults.type
-        var data = param.data || null
-
-        var req = new XMLHttpRequest()
-
-        req.open(type, url)
-
-        // 如果有传入loadStart和progress参数
-        if (typeof events !== 'undefined') {
-
-            for (var k in evnets) {
-
-                req.['on' + k] = events[k]
-            }
-        }
-
-        req.onreadystatechange = function() {
-
-            if (req.status === 200 && req.readyState === 4) {
-
-                var res = req.responseText
-
-                callback && callback(res)
-            }
-        }
-
-        req.setRequestHeader('Content-type', defaults.contentType)
-        req.send(data)
-    }
-
-    // 尽量使用CORS
-    http.jsonp = function(url, namespace, funcName, callback) {
-
-        var script = document.createElement('script')
-        var body = document.querySelector('body')
-
-        script.src = url + '?type=jsonp&callbackName=' + funcName
-        script.id = 'jsonp'
-        script.onload = callback
-        
-        window[funcName] = namespace.funcName
-
-        body.appendChild(script)
-    }
-
-    http.comet = function() {}
-
-    http.socket = function() {}
-
-
-
-    return http
-})
-
-
-
-/**
- * 2015.05.12 创建http模块
- */
-
-
-
-
-/* jshint asi:true */
-
-/**
- * @name  main.js
- * @description  此文件是种子模块，描述整体结构，提供extend等基础api
- * @date  2015.05.07
- * @version  0.0.2
+ * @name _intro.js
+ * @description 整个框架的头
+ * @date 2015.5.20
  */
 
 'use strict'
 
 !function(global, DOC) {
 
-    var W3C = DOC.dispatchEvent                                         //IE9开始支持W3C的事件模型与getComputedStyle取样式值
-    var html = DOC.documentElement                                      //HTML元素
-    var head = DOC.head || DOC.getElementsByTagName('head')
-    var hasOwn = Object.prototype.hasOwnProperty
-    var version = 1
 
-   
-    var moduleMap = []                                                  // 用于amd模块
-    var fileMap = {}                                                    // 用于amd模块
 
-    var noop = function () {}                                           // 用于amd模块
+/**
+ * @name  main.js
+ * @description  此文件是种子模块，定义了大量私有变量，提供extend等基础api
+ * @date  2015.05.07
+ * @version  0.0.2
+ */
+var W3C = DOC.dispatchEvent                                         //IE9开始支持W3C的事件模型与getComputedStyle取样式值
+var html = DOC.documentElement                                      //HTML元素
+var head = DOC.head || DOC.getElementsByTagName('head')
+var version = 1
 
-    /**
-     * @description 命名空间
-     * @param  {String|Function} expr  CSS表达式或函数
-     * @return {Mass}
-     */
-    function $(selector) {
+/**
+ * @description 命名空间
+ * @param  {String|Function} expr  CSS表达式或函数
+ * @return {Mass}
+ */
+function $(selector) {
 
-        return $.fn.init(selector)
+    return $.fn.init(selector)
+}
+
+$.fn = $.prototype
+
+/**
+ * 糅杂，为一个对象添加更多成员
+ * @param {Object} receiver 接受者
+ * @param {Object} supplier 提供者
+ * @return  {Object} 目标对象
+ * @api public
+ */
+function mix(receiver, supplier) {
+
+    var args = [].slice.call(arguments),
+            i = 1,
+            key, //如果最后参数是布尔，判定是否覆写同名属性
+            ride = typeof args[args.length - 1] === 'boolean' ? args.pop() : true
+
+    if (args.length === 1) { //处理$.mix(hash)的情形
+
+        receiver = !this.window ? this : {}
+        i = 0
     }
 
-    $.fn = $.prototype
-
-    mix($.fn, {
-
-        nodes: [],
-        fishbone: version,
-        constructor: $,
-        length: 0,
-
-        init: function(expr) {
-
-            var arrExp = expr.split(' ')
-            var ele = null
-
-            if (arrExp.length === 1 && arrExp[0].charAt(0) === '#') {
-
-                this.nodes = document.querySelector(arrExp[0])
-
-            } else {
-
-                this.nodes = document.querySelectorAll(expr)
-            }
-
-            var obj = Object.create($.fn)
-
-            obj.nodes = this.nodes
-
-            return obj
-        }
-    })
-
-
-    /**
-     * 糅杂，为一个对象添加更多成员
-     * @param {Object} receiver 接受者
-     * @param {Object} supplier 提供者
-     * @return  {Object} 目标对象
-     * @api public
-     */
-    function mix(receiver, supplier) {
-
-        var args = [].slice.call(arguments),
-                i = 1,
-                key, //如果最后参数是布尔，判定是否覆写同名属性
-                ride = typeof args[args.length - 1] === 'boolean' ? args.pop() : true
-
-        if (args.length === 1) { //处理$.mix(hash)的情形
-
-            receiver = !this.window ? this : {}
-            i = 0
-        }
-
-        while ((supplier = args[i++])) {
-            for (key in supplier) { //允许对象糅杂，用户保证都是对象
-                if (hasOwn.call(supplier, key) && (ride || !(key in receiver))) {
-                    receiver[key] = supplier[key]
-                }
+    while ((supplier = args[i++])) {
+        for (key in supplier) { //允许对象糅杂，用户保证都是对象
+            if (Object.prototype.hasOwnProperty.call(supplier, key) && (ride || !(key in receiver))) {
+                receiver[key] = supplier[key]
             }
         }
-
-        return receiver
     }
 
-    mix($, {
+    return receiver
+}
 
-        mix: mix,
-        
-        /**
-         * 定义模块
-         * @param  {[string, optional]} name
-         * @param  {[array, optional]} dependencies
-         * @param  {[function]} factory
-         * @return {[object]}
-         */
-        define: function(name, dependencies, factory) {
+mix($.fn, {
 
-            var args = arguments
+    mix: mix,
+    nodes: [],
+    fishbone: version,
+    constructor: $,
+    length: 0,
 
-            if (args.length < 3) {
+    init: function(expr) {
 
-                if (args.length == 1) {
+        var arrExp = expr.split(' ')
 
-                    factory = name
+        if (arrExp.length === 1 && arrExp[0].charAt(0) === '#') {
 
-                } else {
+            this.nodes = DOC.querySelector(arrExp[0])
 
-                    factory = dependencies
-                    dependencies = name
-                }
+        } else {
 
-                // 生成名字
-                name = 'Anonymous' + moduleMap.length 
-                        + '.' 
-                        + Math.random()
-            }
-
-            if (!moduleMap[name]) {
-
-                var module = {
-                    name: name,
-                    dependencies: dependencies,
-                    factory: factory
-                };
-
-                moduleMap[name] = module
-            }
-
-            return moduleMap[name]
-        },
-
-        // TODO: require暂时只能根据name查找，不能加载匿名模块，也就是不能异步引入模块文件
-        require: function(name) {
-
-            var module = moduleMap[name]
-
-            if (!module.entity) {
-
-                var args = []
-
-                for (var i = 0; i < module.dependencies.length; i++) {
-                    
-                    if (moduleMap[module.dependencies[i]].entity) {
-
-                        args.push(moduleMap[module.dependencies[i]].entity)
-
-                    } else {
-
-                        args.push(this.use(module.dependencies[i]))
-                    }
-                }
-
-                module.entity = module.factory.apply(noop, args)
-            }
-
-            return module.entity
-        },
-
-        use: function (pathArr, callback) {
-
-            // 如果传入的是字符串，自动转为数组
-            if (typeof pathArr === 'string') {
-
-                pathArr = new Array(pathArr)
-            }
-
-            for (var i = 0; i < pathArr.length; i++) {
-
-                var path = pathArr[i]
-
-                if (!fileMap[path]) {
-
-                    var head = document.getElementsByTagName('head')[0]
-                    var node = document.createElement('script')
-
-                    node.type = 'text/javascript'
-                    node.async = 'true'
-                    node.src = path + '.js'
-
-                    node.onload = function () {
-                        fileMap[path] = true
-                        head.removeChild(node)
-                        checkAllFiles()
-                    }
-
-                    head.appendChild(node)
-                }
-            }
-
-            function checkAllFiles() {
-
-                var allLoaded = true
-
-                for (var i = 0; i < pathArr.length; i++) {
-
-                    if (!fileMap[pathArr[i]]) {
-
-                        allLoaded = false
-
-                        break
-                    }
-                }
-
-                if (allLoaded) {
-
-                    callback()
-                }
-            }
+            this.nodes = DOC.querySelectorAll(expr)
+            // 将nodeList转为数组
+            this.nodes = Array.prototype.slice.call(this.nodes)
         }
-    })
 
-    global.$ = global.Fishbone = $
+        var obj = Object.create($.fn)
 
+        obj.nodes = this.nodes
 
-    // global.require = $.require
-    // global.define = $.define
-
-} (window, window.document)
+        return obj
+    }
+})
 
 
 /**
@@ -471,24 +107,108 @@ $.define('http', [], function() {
  * 将require函数的参数1，2改为可选
  * 2015.5.13
  * 重写了$函数，返回$.fn.init的结果，返回后的内容为dom对象与$.fn对象的并集
+ * 2015.5.20
+ * 更换了打包方式，移除了amd模块
  */
 
 
-/* jshint asi:true */
 
 /**
- * @name  main.js
- * @description  此文件是种子模块，描述整体结构，提供extend等基础api
- * @date  2015.05.07
- * @version  0.0.2
+ * @name  prototype.js
+ * @description  对象原型扩展模块，该文件为侵入式设计
+ * @date  2015.05.12
  */
+String.prototype.byteLen = function(target, fix) {
 
-'use strict'
+    /**取得一个字符串所有字节的长度。这是一个后端过来的方法，如果将一个英文字符插
+     *入数据库 char、varchar、text 类型的字段时占用一个字节，而一个中文字符插入
+     *时占用两个字节，为了避免插入溢出，就需要事先判断字符串的字节长度。在前端，
+     *如果我们要用户填空的文本，需要字节上的长短限制，比如发短信，也要用到此方法。
+     *随着浏览器普及对二进制的操作，这方法也越来越常用。
+     */
+    fix = fix ? fix: 2
+    var str = new Array(fix + 1).join('-')
+    return target.replace(/[^\x00-\xff]/g, str).length
+}
 
-$.define('test', [], function() {})
+// 从数据中随机抽出一个元素
+Array.prototype.random = function(target) {
+
+    return target[Math.floor(Math.random() * target.length)]
+
+}
+
+// 对数据进行平坦化处理，多维数组合并为一维数组
+Array.prototype.flatten = function(target) {
+
+    var result = []
+
+    target.forEach(function(item) {
+
+        if (Array.isArray[item]) {
+
+            result  = result.concat(Array.prototype.flatten(item))
+
+        } else {
+
+            result.push(item)
+        }
+
+        return result
+    })
+}
+
+Array.prototype.min = function(target) {
+
+    return Math.min.apply(0, target)
+}
+
+Array.prototype.max = function(target) {
+
+    return Math.max.apply(0, target)
+}
+
+// 数组去重
+Array.prototype.unique = function() {
+
+    this.sort()
+    
+    var arr = ['1']
+
+    for (var i = 1; i < this.length; i++) {
+        
+        if (this[i] !== arr[arr.length - 1]) {
+   
+            arr.push(this[i])
+        }
+    }
+
+    arr.shift()
+
+    return arr
+}
+
+// 对两个数组取并集
+Array.prototype.union = function(target, array) {
+
+    return (target.concat(array)).unique()
+}
+
+// 取数组中的第一个元素
+Array.prototype.first = function() {
+    return this[0]
+}
+
+// 取数组的最后一个元素
+Array.prototype.last = function() {
+    return this[this.length - 1]
+}
+
+// 过滤数组中的undefined、null和' '
 
 
-/* jshint asi:true */
+
+
 
 /**
  * @name  http.js
@@ -496,23 +216,202 @@ $.define('test', [], function() {})
  * @date  2015.05.12
  * @version  0.0.1
  */
+var Http = {}
 
-'use strict'
+var accepts = {
+    xml: 'application/xml, text/xml',
+    html: 'text/html',
+    text: 'text/plain',
+    json: 'application/json, text/javascript',
+    script: 'text/javascript, application/javascript',
+    '*': ['*/'] + ['*'] //避免被压缩掉
+},
+defaults = {
+    type: 'GET',
+    contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+    async: true
+    //jsonp: 'callback'
+}
 
-$.define('node', [], function() {
+// ajax函数的简化版，提供更简单易用的api
+Http.get = function(url, callback) {
 
+    var param = defaults
 
-    var node = {}
+    param.url = url
 
-    node.attr = function(key, value) {
+    Http.ajax(param, callback)
+}
 
+// 第三个参数为自定义事件，用来支持xmlhttprequest 2.0的新增事件
+Http.ajax = function(param, callback, events) {
+
+    var url = param.url
+    var type = param.type ? param.type.toUpperCase() : defaults.type
+    var data = param.data || null
+
+    var req = new XMLHttpRequest()
+
+    req.open(type, url)
+
+    // 如果有传入loadStart和progress参数
+    if (typeof events !== 'undefined') {
+
+        for (var k in events) {
+
+            req['on' + k] = events[k]
+        }
     }
 
-    return node
+    req.onreadystatechange = function() {
+
+        if (req.status === 200 && req.readyState === 4) {
+
+            var res = req.responseText
+
+            callback && callback(res)
+        }
+    }
+
+    req.setRequestHeader('Content-type', defaults.contentType)
+    req.send(data)
+}
+
+// 尽量使用CORS
+Http.jsonp = function(url, namespace, funcName, callback) {
+
+    var script = document.createElement('script')
+    var body = document.querySelector('body')
+
+    script.src = url + '?type=jsonp&callbackName=' + funcName
+    script.id = 'jsonp'
+    script.onload = callback
+    
+    window[funcName] = namespace.funcName
+
+    body.appendChild(script)
+}
+
+Http.comet = function() {}
+
+Http.socket = function() {}
+
+/**
+ * 2015.05.12 
+ * 创建http模块
+ * 添加ajax、jsonp两个顶级接口。ajax支持httprequest 2.0
+ */
+
+
+
+
+
+
+/**
+ * @name  node.js
+ * @description  dom、node模块，提供dom对象的CRUD
+ * @date  2015.05.12
+ */
+var Node = {}
+
+
+// 将node以某元素子元素的形式插入到该元素内容的最后面
+Node.append = function(node) {
+
+    if (this.nodes.length == 1) {
+
+        this.nodes.appendChild(node)
+
+    } else {
+
+        // 循环复制插入节点
+        this.nodes.forEach(function(value) {
+
+            var n = node.cloneNode(true)
+
+            value.appendChild(n)
+        })            
+    }
+
+    return this
+}
+
+// 将node以某元素子元素的形式插入到该元素内容的最前面
+Node.prepend = function(node) {
+
+    if (this.nodes.nodeName) {
+
+        this.nodes.insertBefore(node, this.nodes.childNodes[0])
+
+    } else {
+
+        // 循环复制插入节点
+        this.nodes.forEach(function(v) {
+
+            var n = node.cloneNode(true)
+
+            v.insertBefore(n, v.childNodes[0])
+        })            
+    }
+
+    return this
+}
+
+// 克隆节点，如果include_all为true，会克隆该元素所包含的所有子节点
+Node.clone = function(include_all) {
+
+    if (this.nodes.nodeName) {
+
+        return this.nodes.cloneNode(include_all)
+
+    } else {
+
+        var arr = []
+
+        this.nodes.forEach(function(v) {
+
+            arr.push(v.cloneNode(include_all))    
+        })
+
+        return arr
+    }
+}
+
+// 修改元素的innerHTML
+Node.html = function() {}
+
+// 移除元素
+Node.remove = function() {}
+
+Node.empty = function() {}
+
+Node.after = function() {}
+
+Node.before = function() {}
+
+Node.css = function() {}
+
+Node.width = function() {}
+
+Node.attr = function(key, value) {}
+
+
+
+
+// get: function() {},
+
+// eq: function() {},
+
+// first: function() {},
+
+// last: function() {},
+
+// each: function() {},
+
+
+
+// html: function() {},
    
-})
-
-
 
 /**
  * 2015.05.12 创建node模块
@@ -521,95 +420,60 @@ $.define('node', [], function() {
 
 
 
-/* jshint asi:true */
+
 
 /**
- * @name  main.js
- * @description  此文件是种子模块，描述整体结构，提供extend等基础api
- * @date  2015.05.07
- * @version  0.0.2
- */
-
-'use strict'
-
-$.define('test', [], function() {})
-
-
-/* jshint asi:true */
-
-/**
- * @name  main.js
- * @description  此文件是种子模块，描述整体结构，提供extend等基础api
- * @date  2015.05.07
- * @version  0.0.2
- */
-
-'use strict'
-
-$.define('test', [], function() {})
-
-
-/* jshint asi:true */
-
-/**
- * @name  prototype.js
- * @description  对象原型扩展模块，该文件为侵入式设计
+ * @name  extend.js
+ * @description  此文件用来向命名空间注册api
  * @date  2015.05.12
- * @version  0.0.1
  */
 
-'use strict'
 
+// Fishbone对象扩展，
+mix($, {
 
-$.define('prototype', [], function() {
+    mix: mix,
+    get: Http.get,
+    ajax: Http.ajax,
+    jsonp: Http.jsonp
 
+    // get: function() {},
 
-    
+    // eq: function() {},
 
-    return
+    // first: function() {},
 
+    // last: function() {},
+
+    // each: function() {},
+
+    // clone: function() {},
+
+    // html: function() {},
+
+    // test: function() {},
+
+    // valueOf: function() {
+
+    //     return Array.prototype.slice.call(this)
+    // },
 })
 
+mix($.fn, Node)
 
-
-/* jshint asi:true */
 
 /**
- * @name  main.js
- * @description  此文件是种子模块，描述整体结构，提供extend等基础api
- * @date  2015.05.07
- * @version  0.0.2
+ * 2015.5.12 创建extend
  */
 
-'use strict'
-
-$.define('test', [], function() {})
-
-
-/* jshint asi:true */
-
+    
 /**
- * @name  main.js
- * @description  此文件是种子模块，描述整体结构，提供extend等基础api
- * @date  2015.05.07
- * @version  0.0.2
+ * @name  _outro.js
+ * @description 框架的结尾
+ * @date 2015.5.20
  */
 
-'use strict'
 
-$.define('test', [], function() {})
+    global.$ = global.Fishbone = $
 
-
-/* jshint asi:true */
-
-/**
- * @name  main.js
- * @description  此文件是种子模块，描述整体结构，提供extend等基础api
- * @date  2015.05.07
- * @version  0.0.2
- */
-
-'use strict'
-
-$.define('test', [], function() {})
-
+} (window, window.document)
