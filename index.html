@@ -16,18 +16,58 @@
     
     <script src="dist/fishbone.js"></script>
     <script>
-    //console.log(window)
 
-    var test = $('.t')
+    //var n = $('#test').remove()
 
-    var span = document.createElement('span')
-    span.innerText = '1234'
+    $.route
+        .provider()
+        .when('/index', {
 
+            template: '1'
+        })
+        .otherwise('/')
 
-    var c = test.clone()
+    // var c = /[^/]*$/.test('#1231231232')
 
-    console.log(c)
-    
+    // console.log('zhengze: ' + c)
+
+    //window.location.href = '/'
+    //window.location.href = '/#!123232323232/'
+
+    //history.replaceState('1234', '/1', '1')
+
+    //console.log()
+
+    // api
+    // $.route(config)
+
+    // $.route({
+
+    //     // html后缀可以省略？省略后似乎不清晰，像url而不是文件路径
+    //     '/': 'views/index.html',
+    //     '/index': 'views/index.html',
+    //     // 以前只支持了?形式，比如/index?id=1
+    //     '/login/:id': 'views/login.html',
+    //     // 其他页面直接跳转回根目录
+    //     'others': '/'
+    // })
+
+    // $.route()
+    //     <div className="config"></div>
+    //     .when('/', {
+    //         template: 'views/index.html'
+    //     })
+    //     .when('/main', {
+    //         template: 'views/main.html'
+    //     })
+    //     .when('/day/:id', {
+    //         template: 'views/day.html'
+    //     })
+    //     .others({
+    //         redirect: '/'
+    //     })
+    // css、js、file、title、controller、keywords、description
+    // resetCSS、resetJS时可以检查一下css和js列表，如果有一致的可以不删除
 
     </script>
 

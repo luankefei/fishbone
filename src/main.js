@@ -58,23 +58,33 @@ mix($.fn, {
 
     mix: mix,
     nodes: [],
+    // bonelot
     fishbone: version,
     constructor: $,
     length: 0,
 
+    // 传入的expr可能是dom对象
     init: function(expr) {
 
-        var arrExp = expr.split(' ')
+        // 如果传入的是dom节点
+        if (expr.nodeName) {
 
-        if (arrExp.length === 1 && arrExp[0].charAt(0) === '#') {
-
-            this.nodes = DOC.querySelector(arrExp[0])
+            this.nodes = expr
 
         } else {
 
-            this.nodes = DOC.querySelectorAll(expr)
-            // 将nodeList转为数组
-            this.nodes = Array.prototype.slice.call(this.nodes)
+            var arrExp = expr.split(' ')
+
+            if (arrExp.length === 1 && arrExp[0].charAt(0) === '#') {
+
+                this.nodes = DOC.querySelector(arrExp[0])
+
+            } else {
+
+                this.nodes = DOC.querySelectorAll(expr)
+                // 将nodeList转为数组
+                this.nodes = Array.prototype.slice.call(this.nodes)
+            }
         }
 
         var obj = Object.create($.fn)

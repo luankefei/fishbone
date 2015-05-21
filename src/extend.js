@@ -13,8 +13,10 @@ mix($, {
     mix: mix,
     get: Http.get,
     ajax: Http.ajax,
-    jsonp: Http.jsonp
+    jsonp: Http.jsonp,
+    route: Route
 
+    
     // get: function() {},
 
     // eq: function() {},

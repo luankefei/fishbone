@@ -20,6 +20,7 @@ var paths = {
             'src/prototype.js',
             'src/http.js',
             'src/node.js',
+            'src/route.js',
             'src/extend.js',
             'src/dev/_outro.js'
             ],
@@ -36,7 +37,7 @@ gulp.task('connect', ['minify'], function() {
 
 // Lint JS
 gulp.task('lint', ['minify'], function() {
-    return gulp.src('src/*.js')
+    return gulp.src('dist/fishbone.js')
         .pipe(jshint())
         .pipe(jshint.reporter('default'))
 })
@@ -69,12 +70,12 @@ gulp.task('watch', function() {
 
     livereload.listen()
 
-    // gulp.watch('*.html', ['html'], function(file) {
+    gulp.watch('*.html', ['html'], function(file) {
 
-    //     server.changed(file.path)
+        server.changed(file.path)
 
-    //     server.reload()
-    // })
+        server.reload()
+    })
 
     gulp.watch('src/*.js', ['lint', 'minify', 'script'], function(file) {
 
@@ -96,4 +97,5 @@ gulp.task('karma', function() {
 //gulp.task('default', ['lint', 'minify', 'watch', 'browser-sync'])
 gulp.task('default', ['minify', 'watch', 'connect'])
 gulp.task('package', ['minify'])
+gulp.task('test', ['lint'])
 
