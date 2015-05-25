@@ -607,6 +607,66 @@ mix($.fn, Node)
  * 2015.5.12 创建extend
  */
 
+/**
+ * @name event.js
+ * @description 事件模块
+ * @date 2015.5.25
+ */
+
+var Event = {}
+
+Event.addEvent = function(target, type, handler) {
+
+	if (target.addEventListener) {
+		target.addEventListener(type, handler, false)
+	
+	} else {
+
+		target.attachEvent('on' + type, function(event) {
+			// 把处理和程序作为时间目标的方法调用
+			// 传递事件对象
+			return handler.call(target, event)
+		})
+	}
+}
+
+Event.removeEvent = function(target, type, handler) {
+	
+	if (target.removeEventListener) {
+		target.removeEventListener(type, handler, false)
+
+	} else {
+
+		target.detechEvent('on' + type, handler)
+}
+
+Event.on = function() {}
+Event.unbind = function() {}
+
+
+// Event.removeEvent = function(event) {
+	
+	// var event = event || window.event
+	
+	// if (event.preventDefault) {
+		// event.preventDefault()
+	// }
+
+	// if (event.returnValue) {
+		// event.returnValue = false	// IE
+	// }
+
+	// return false
+// }
+
+
+
+
+/**
+ * 2015.5.25
+ * 创建模块
+ */
+
     
 /**
  * @name  _outro.js

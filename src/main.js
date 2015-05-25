@@ -70,8 +70,12 @@ mix($.fn, {
         if (expr.nodeName) {
 
             this.nodes = expr
+			this.selector = null
 
         } else {
+	
+			// 记录选择器，方便后面使用	
+			this.selector = expr
 
             var arrExp = expr.split(' ')
 
@@ -90,8 +94,9 @@ mix($.fn, {
         var obj = Object.create($.fn)
 
         obj.nodes = this.nodes
-
-        return obj
+		obj.selector = this.selector
+        
+		return obj
     }
 })
 
