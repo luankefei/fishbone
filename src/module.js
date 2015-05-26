@@ -17,17 +17,17 @@
 // var dropdown = $.Module()
 
 // dropdown.view = '<div class="dropdown"><ul>fs-replace</ul></div>'
-			
+
 // dropdown.model = ['男', '女']
 
 // dropdown.controller(function(data) {
 
 // 	var init = function(data) {
-		
+
 // 		var html = ''
 
 // 		for (var i = 0, length = data.length; i < length; i++) {
-			
+
 // 			html += '<li>' + data[i] + '</li>'
 // 		}
 
@@ -44,11 +44,11 @@
 // dropdown.controller(function(data) {
 
 // 	var init = function(data) {
-		
+
 // 		var html = ''
 
 // 		for (var i = 0, length = data.length; i < length; i++) {
-			
+
 // 			html += '<li>' + data[i] + '</li>'
 // 		}
 
@@ -57,7 +57,7 @@
 // })
 
 // dropdown.model(function() {
-	
+
 // 	var data  = $.get(url)
 // 	return data
 // })
@@ -65,7 +65,6 @@
 // <dropdown id="dropdown-gender" />
 
 // $('#dropdown-gender').init()
-
 
 
 
@@ -80,16 +79,16 @@ var dropdown = (function() {
 		init: function(node) {
 
 			module.node = node
-			// 初始化模块	
+				// 初始化模块	
 			$.promise(module.data.init)
 				.then(module.view.init(node))
-				.then(module.controller.init)	
+				.then(module.controller.init)
 		}
 	}
-	
+
 	// view负责初始化页面模板
 	module.view = {
-		
+
 		html: '<div><ul></ul></div>',
 		init: function(node) {
 
@@ -97,34 +96,34 @@ var dropdown = (function() {
 			var data = module.dataset
 
 			for (var i = 0, length = data.length; i < length; i++) {
-				
+
 				html += '<li>' + data[i] + '</li>'
 			}
 
-			dropdown.view.replace('fs-replace', html)	
+			dropdown.view.replace('fs-replace', html)
 			node.innerHTML = module.view.html
 		}
 	}
 
 	// controller 负责注册事件和其他逻辑代码
 	module.controller = {
-		
-		init: function() {	  
+
+		init: function() {
 			// 绑定事件
-			module.controller.registerEvent(module.node)		
+			module.controller.registerEvent(module.node)
 		},
 
 		registerEvent: function(node) {
-		
+
 			// 点击时切换下拉列表的隐藏、显示 	   
 			node.addEventListener('click', function() {
-				
+
 				var list = this.getElementsByClassName('.dropdown-list')[0]
 
 				list.style.display = 'block'
 
 			}, false)
-					   
+
 		}
 	}
 
@@ -132,13 +131,13 @@ var dropdown = (function() {
 	module.data = {
 
 		init: function(callback) {
-			
-			var url = '/people'	
-			
+
+			var url = '/people'
+
 			$.get(url, function(d) {
-			
+
 				module.dataset = d
-				
+
 				callback && callback()
 			})
 		}
