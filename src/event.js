@@ -40,8 +40,28 @@ Event.removeEvent = function(target, type, handler) {
 	}
 }
 
+Event.live = function(type, handler) {
+	
+	var selector = this.selector
+	
+	// live的实现，模仿jquery。但内部调用queryselector来匹配对象
+	document.addEventListener(type, function(e) {
+	
+		var nodes = document.querySelectorAll(selector)
+
+		for (var i = 0; i < nodes.length; i++) {
+			
+			if (nodes[i] === e.target) {
+
+				return handler.call(e.target, e)
+			}
+		}
+	})
+}
+
 // 将事件绑定在document上，然后根据selector来判断是否执行
 // TODO: 缺少ie9以下的处理，事件委托的选择器不完善
+/*
 Event.live = function(target, type, handler) {
 	// TODO: 这里应该是传入选择器的selector
 	var selector = target.getAttribute('id')
@@ -54,14 +74,15 @@ Event.live = function(target, type, handler) {
 		}
 	})
 }
+*/
 
 // 对外暴露的事件绑定api
 Event.on = function(type, handler) {
 
 	var target = this.nodes
-	
-	// 根据length判断单个绑定或循环绑定
-	if (target.length === 1) {
+
+	// 根据nodeName判断单个绑定或循环绑定
+	if (target.nodeName) {
 		
 		Event.addEvent(target, type, handler)
 
@@ -116,5 +137,7 @@ Event.unbind = function() {}
  * 创建模块
  * 添加了addEvent和removeEvent函数
  * TODO: 添加了live函数，但不完善
- * 添加了on函数，此函数将对外暴露
+ * 添加了on函数，此函数将对外暴
+ * 2015.5.26
+ * 重写了live函数，初步测试可用，但事件通过document绑定，还有优化空间
  */

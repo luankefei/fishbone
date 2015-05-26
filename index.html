@@ -16,17 +16,38 @@
     
     <script src="dist/fishbone.js"></script>
     <script>
+	
+	$('.t').on('click', function(e) {
+	
+		console.log('clicked')
+	})
+
+	$('#d').live('click', function(e) {
+		console.log('live clicked')	
+	})
+
+	setTimeout(function() {
+		
+		var body = document.getElementsByTagName('body')[0]
+		var node = document.createElement('div')
+
+		node.id = 'd'
+		node.innerHTML = 'hahahahahhahahahahahahahahahhaa'
+
+		body.appendChild(node)
+	
+	}, 1000)
 
     //var n = $('#test').remove()
 
-    $.route
+    /*$.route
         .provider()
         .when('/index', {
 
             template: '1'
         })
         .otherwise('/')
-
+	*/
     // var c = /[^/]*$/.test('#1231231232')
 
     // console.log('zhengze: ' + c)

@@ -14,8 +14,9 @@ mix($, {
     get: Http.get,
     ajax: Http.ajax,
     jsonp: Http.jsonp,
-    route: Route
-
+    route: Route,
+	on: Event.on,
+	live: Event.live
     
     // get: function() {},
 
@@ -40,7 +41,10 @@ mix($, {
 })
 
 mix($.fn, Node)
-
+mix($.fn, {
+	on: Event.on,
+	live: Event.live
+})
 
 /**
  * 2015.5.12 创建extend

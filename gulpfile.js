@@ -21,8 +21,8 @@ var paths = {
             'src/http.js',
             'src/node.js',
             'src/route.js',
-            'src/extend.js',
 			'src/event.js',
+            'src/extend.js',
             'src/dev/_outro.js'
             ],
     images: ''
