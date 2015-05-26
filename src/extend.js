@@ -17,7 +17,6 @@ mix($, {
     route: Route,
 	on: Event.on,
 	live: Event.live
-    
     // get: function() {},
 
     // eq: function() {},
@@ -43,7 +42,8 @@ mix($, {
 mix($.fn, Node)
 mix($.fn, {
 	on: Event.on,
-	live: Event.live
+	live: Event.live,
+	ready: Event.ready    
 })
 
 /**

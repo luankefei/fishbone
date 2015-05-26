@@ -59,6 +59,7 @@ Event.live = function(type, handler) {
 	})
 }
 
+
 // 将事件绑定在document上，然后根据selector来判断是否执行
 // TODO: 缺少ie9以下的处理，事件委托的选择器不完善
 /*
@@ -95,6 +96,28 @@ Event.on = function(type, handler) {
 	}
 }
 
+// domReady
+Event.ready = function(handler) {
+
+	var eventFn = W3C ? 'DOMContentLoaded' : 'readystatechange'
+	var handle = null
+
+	if (this.nodes !== document) { return }
+	
+	if (eventFn === 'readystatechange') {
+	
+		handle = function() {
+			
+			if (DOC.readyState === 'complite') { 
+				
+				Function.call(handler)	
+			}	
+		}
+	} else {
+	
+		Event.addEvent(this.nodes, eventFn, handle, false)
+	}
+}
 
 /* Event.on = function(type, handler) { */
 
@@ -140,4 +163,5 @@ Event.unbind = function() {}
  * 添加了on函数，此函数将对外暴
  * 2015.5.26
  * 重写了live函数，初步测试可用，但事件通过document绑定，还有优化空间
+ * 添加了ready函数
  */
