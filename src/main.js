@@ -1,13 +1,11 @@
-
-
 /**
  * @name  main.js
  * @description  此文件是种子模块，定义了大量私有变量，提供extend等基础api
  * @date  2015.05.07
  * @version  0.0.2
  */
-var W3C = DOC.dispatchEvent                                         //IE9开始支持W3C的事件模型与getComputedStyle取样式值
-var html = DOC.documentElement                                      //HTML元素
+var W3C = DOC.dispatchEvent //IE9开始支持W3C的事件模型与getComputedStyle取样式值
+var html = DOC.documentElement //HTML元素
 var head = DOC.head || DOC.getElementsByTagName('head')
 var version = 1
 
@@ -33,9 +31,9 @@ $.fn = $.prototype
 function mix(receiver, supplier) {
 
     var args = [].slice.call(arguments),
-            i = 1,
-            key, //如果最后参数是布尔，判定是否覆写同名属性
-            ride = typeof args[args.length - 1] === 'boolean' ? args.pop() : true
+        i = 1,
+        key, //如果最后参数是布尔，判定是否覆写同名属性
+        ride = typeof args[args.length - 1] === 'boolean' ? args.pop() : true
 
     if (args.length === 1) { //处理$.mix(hash)的情形
 
@@ -70,12 +68,12 @@ mix($.fn, {
         if (expr.nodeName) {
 
             this.nodes = expr
-			this.selector = null
+            this.selector = null
 
         } else {
-	
-			// 记录选择器，方便后面使用	
-			this.selector = expr
+
+            // 记录选择器，方便后面使用	
+            this.selector = expr
 
             var arrExp = expr.split(' ')
 
@@ -86,7 +84,7 @@ mix($.fn, {
             } else {
 
                 this.nodes = DOC.querySelectorAll(expr)
-                // 将nodeList转为数组
+                    // 将nodeList转为数组
                 this.nodes = Array.prototype.slice.call(this.nodes)
             }
         }
@@ -94,16 +92,16 @@ mix($.fn, {
         var obj = Object.create($.fn)
 
         obj.nodes = this.nodes
-		obj.selector = this.selector
-        
-		return obj
+        obj.selector = this.selector
+
+        return obj
     }
 })
 
 
 /**
  * 2015.5.11 整合了原有的module.js模块，使框架结构更清晰
- * 2015.5.12 
+ * 2015.5.12
  * 将amd模块与图表组件库统一，让出全局的define和require
  * 增加了require函数的字符串判断，允许传入字符串作为参数
  * 将require函数重命名为use，原use改为require
@@ -113,4 +111,3 @@ mix($.fn, {
  * 2015.5.20
  * 更换了打包方式，移除了amd模块
  */
-

@@ -8,55 +8,55 @@ var Event = {}
 
 // 添加事件
 Event.addEvent = function(target, type, handler) {
-	if (target.addEventListener) {
-		target.addEventListener(type, handler, false)
-	
-	} else {
+    if (target.addEventListener) {
+        target.addEventListener(type, handler, false)
 
-		target.attachEvent('on' + type, function(event) {
-			// 把处理和程序作为时间目标的方法调用
-			// 传递事件对象
-			return handler.call(target, event)
-		})
-	}
+    } else {
+
+        target.attachEvent('on' + type, function(event) {
+            // 把处理和程序作为时间目标的方法调用
+            // 传递事件对象
+            return handler.call(target, event)
+        })
+    }
 }
 
 // 移除事件
 // TODO: handler应该是可选项，如果没有传入，清除所有事件函数
 Event.removeEvent = function(target, type, handler) {
 
-	// 对handler进行判断，如果不存在，按照type使用dom 0方式清除事件
-	if (handler === undefined) {
-		
-		target['on' + type] = null
-	}
+    // 对handler进行判断，如果不存在，按照type使用dom 0方式清除事件
+    if (handler === undefined) {
 
-	if (target.removeEventListener) {
-		target.removeEventListener(type, handler, false)
+        target['on' + type] = null
+    }
 
-	} else {
+    if (target.removeEventListener) {
+        target.removeEventListener(type, handler, false)
 
-		target.detechEvent('on' + type, handler)
-	}
+    } else {
+
+        target.detechEvent('on' + type, handler)
+    }
 }
 
 Event.live = function(type, handler) {
-	
-	var selector = this.selector
-	
-	// live的实现，模仿jquery。但内部调用queryselector来匹配对象
-	document.addEventListener(type, function(e) {
-	
-		var nodes = document.querySelectorAll(selector)
 
-		for (var i = 0; i < nodes.length; i++) {
-			
-			if (nodes[i] === e.target) {
+    var selector = this.selector
 
-				return handler.call(e.target, e)
-			}
-		}
-	})
+    // live的实现，模仿jquery。但内部调用queryselector来匹配对象
+    document.addEventListener(type, function(e) {
+
+        var nodes = document.querySelectorAll(selector)
+
+        for (var i = 0; i < nodes.length; i++) {
+
+            if (nodes[i] === e.target) {
+
+                return handler.call(e.target, e)
+            }
+        }
+    })
 }
 
 
@@ -64,94 +64,95 @@ Event.live = function(type, handler) {
 // TODO: 缺少ie9以下的处理，事件委托的选择器不完善
 /*
 Event.live = function(target, type, handler) {
-	// TODO: 这里应该是传入选择器的selector
-	var selector = target.getAttribute('id')
+    // TODO: 这里应该是传入选择器的selector
+    var selector = target.getAttribute('id')
 
-	document.addEventListener(type, function(e) {
-	
-		if (e.target.id = selector) {
-		
-			e.target.call(e.target, handler)
-		}
-	})
+    document.addEventListener(type, function(e) {
+    
+        if (e.target.id = selector) {
+        
+            e.target.call(e.target, handler)
+        }
+    })
 }
 */
 
 // 对外暴露的事件绑定api
 Event.on = function(type, handler) {
 
-	var target = this.nodes
+    var target = this.nodes
 
-	// 根据nodeName判断单个绑定或循环绑定
-	if (target.nodeName) {
-		
-		Event.addEvent(target, type, handler)
+    // 根据nodeName判断单个绑定或循环绑定
+    if (target.nodeName) {
 
-	} else {
+        Event.addEvent(target, type, handler)
 
-		target.forEach(function(v, i, a) {
-		
-			Event.addEvent(v, type, handler)
-		})
-	}
+    } else {
+
+        target.forEach(function(v, i, a) {
+
+            Event.addEvent(v, type, handler)
+        })
+    }
 }
 
 // domReady
 Event.ready = function(handler) {
 
-	var eventFn = W3C ? 'DOMContentLoaded' : 'readystatechange'
-	var handle = null
+    var eventFn = W3C ? 'DOMContentLoaded' : 'readystatechange'
+    var handle = null
 
-	if (this.nodes !== document) { return }
-	
-	if (eventFn === 'readystatechange') {
-	
-		handle = function() {
-			
-			if (DOC.readyState === 'complite') { 
-				
-				Function.call(handler)	
-			}	
-		}
-	} else {
-	
-		Event.addEvent(this.nodes, eventFn, handle, false)
-	}
+    if (this.nodes !== document) {
+        return
+    }
+
+    if (eventFn === 'readystatechange') {
+
+        handle = function() {
+
+            if (DOC.readyState === 'complite') {
+
+                Function.call(handler)
+            }
+        }
+    } else {
+
+        Event.addEvent(this.nodes, eventFn, handle, false)
+    }
 }
 
 /* Event.on = function(type, handler) { */
 
-	// var selector = this.selector
-	
-	// // 如果选择器不存在，获取选择器链
-	// if (selector === null) {
-	
-		// var str = ''
-		
-		// // 判断this.nodes是否是复数
-		// if (this.nodes.length == 1) {
-		// }	
-	// }
+// var selector = this.selector
+
+// // 如果选择器不存在，获取选择器链
+// if (selector === null) {
+
+// var str = ''
+
+// // 判断this.nodes是否是复数
+// if (this.nodes.length == 1) {
+// }    
+// }
 /* } */
 
 Event.unbind = function() {}
 
 
 // Event.removeEvent = function(event) {
-	
-	// var event = event || window.event
-	
-	// if (event.preventDefault) {
-		// event.preventDefault()
-	// }
 
-	// if (event.returnValue) {
-		// event.returnValue = false	// IE
-	// }
+// var event = event || window.event
 
-	// return false
+// if (event.preventDefault) {
+// event.preventDefault()
 // }
 
+// if (event.returnValue) {
+// event.returnValue = false    // IE
+// }
+
+// return false
+// }
 
 
 

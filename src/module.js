@@ -8,9 +8,9 @@
 // var moduleMap = {}
 // var Module = function() {
 
-// 	this.view = null
-// 	this.controller = null
-// 	this.model = null
+//  this.view = null
+//  this.controller = null
+//  this.model = null
 // }
 
 
@@ -22,17 +22,17 @@
 
 // dropdown.controller(function(data) {
 
-// 	var init = function(data) {
+//  var init = function(data) {
 
-// 		var html = ''
+//      var html = ''
 
-// 		for (var i = 0, length = data.length; i < length; i++) {
+//      for (var i = 0, length = data.length; i < length; i++) {
 
-// 			html += '<li>' + data[i] + '</li>'
-// 		}
+//          html += '<li>' + data[i] + '</li>'
+//      }
 
-// 		dropdown.view.replace('fs-replace', html)	
-// 	}
+//      dropdown.view.replace('fs-replace', html)   
+//  }
 // })
 
 
@@ -43,23 +43,23 @@
 
 // dropdown.controller(function(data) {
 
-// 	var init = function(data) {
+//  var init = function(data) {
 
-// 		var html = ''
+//      var html = ''
 
-// 		for (var i = 0, length = data.length; i < length; i++) {
+//      for (var i = 0, length = data.length; i < length; i++) {
 
-// 			html += '<li>' + data[i] + '</li>'
-// 		}
+//          html += '<li>' + data[i] + '</li>'
+//      }
 
-// 		dropdown.view.replace('fs-replace', html)	
-// 	}
+//      dropdown.view.replace('fs-replace', html)   
+//  }
 // })
 
 // dropdown.model(function() {
 
-// 	var data  = $.get(url)
-// 	return data
+//  var data  = $.get(url)
+//  return data
 // })
 
 // <dropdown id="dropdown-gender" />
@@ -73,75 +73,75 @@
  */
 var dropdown = (function() {
 
-	var module = {
-		node: null,
-		dataset: null,
-		init: function(node) {
+    var module = {
+        node: null,
+        dataset: null,
+        init: function(node) {
 
-			module.node = node
-				// 初始化模块	
-			$.promise(module.data.init)
-				.then(module.view.init(node))
-				.then(module.controller.init)
-		}
-	}
+            module.node = node
+                // 初始化模块    
+            $.promise(module.data.init)
+                .then(module.view.init(node))
+                .then(module.controller.init)
+        }
+    }
 
-	// view负责初始化页面模板
-	module.view = {
+    // view负责初始化页面模板
+    module.view = {
 
-		html: '<div><ul></ul></div>',
-		init: function(node) {
+        html: '<div><ul></ul></div>',
+        init: function(node) {
 
-			var html = ''
-			var data = module.dataset
+            var html = ''
+            var data = module.dataset
 
-			for (var i = 0, length = data.length; i < length; i++) {
+            for (var i = 0, length = data.length; i < length; i++) {
 
-				html += '<li>' + data[i] + '</li>'
-			}
+                html += '<li>' + data[i] + '</li>'
+            }
 
-			dropdown.view.replace('fs-replace', html)
-			node.innerHTML = module.view.html
-		}
-	}
+            dropdown.view.replace('fs-replace', html)
+            node.innerHTML = module.view.html
+        }
+    }
 
-	// controller 负责注册事件和其他逻辑代码
-	module.controller = {
+    // controller 负责注册事件和其他逻辑代码
+    module.controller = {
 
-		init: function() {
-			// 绑定事件
-			module.controller.registerEvent(module.node)
-		},
+        init: function() {
+            // 绑定事件
+            module.controller.registerEvent(module.node)
+        },
 
-		registerEvent: function(node) {
+        registerEvent: function(node) {
 
-			// 点击时切换下拉列表的隐藏、显示 	   
-			node.addEventListener('click', function() {
+            // 点击时切换下拉列表的隐藏、显示     
+            node.addEventListener('click', function() {
 
-				var list = this.getElementsByClassName('.dropdown-list')[0]
+                var list = this.getElementsByClassName('.dropdown-list')[0]
 
-				list.style.display = 'block'
+                list.style.display = 'block'
 
-			}, false)
+            }, false)
 
-		}
-	}
+        }
+    }
 
-	// data负责数据请求
-	module.data = {
+    // data负责数据请求
+    module.data = {
 
-		init: function(callback) {
+        init: function(callback) {
 
-			var url = '/people'
+            var url = '/people'
 
-			$.get(url, function(d) {
+            $.get(url, function(d) {
 
-				module.dataset = d
+                module.dataset = d
 
-				callback && callback()
-			})
-		}
-	}
+                callback && callback()
+            })
+        }
+    }
 
-	return module
+    return module
 })
