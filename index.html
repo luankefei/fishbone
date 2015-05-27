@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Document</title>
+    <title>框架测试</title>
 </head>
 <body>
     <div id="test">hello,world</div>
@@ -16,96 +16,77 @@
     
     <script src="dist/fishbone.js"></script>
     <script>
-	
-	$('.t').on('click', function(e) {
-	
-		console.log('clicked')
-	})
 
-	$('#d').live('click', function(e) {
-		console.log('live clicked')	
-	})
+    // 创建一个模块
+    // 对这个模块传入dom节点并初始化
+    // 改变模块的数据，dom节点随之改变
+    var dropdownModule = $.module(function() {
 
-	$(document).ready(function(){
-		
-		console.log('dom loaded')	
-	})
-	
-	/*
-	setTimeout(function() {
-		
-		var body = document.getElementsByTagName('body')[0]
-		var node = document.createElement('div')
+        var module = {
+            
+        }
+        
+        // 定义模板，初始化模板
+        module.view = {
 
-		node.id = 'd'
-		node.innerHTML = 'hahahahahhahahahahahahahahahhaa'
+            html: '<div><ul>fs-replace</ul></div>',
+            init: function(node) {
+        
+                // TODO: 增加格式校验
+                var html = ''
+                var data = module.dataset
 
-		body.appendChild(node)
-	
-	}, 1000)
-	*/	
+                for (var i = 0, length = data.length; i < length; i++) {
 
-	/*	
-	window.addEventListener('DOMContentLoaded', function() {
+                    html += '<li>' + data[i] + '</li>'
+                }
 
-		console.log('loaded')	
-	
-	}, false)
+                module.view.html = module.view.html.replace('fs-replace', html)
 
-	$(document).ready()
+                node.innerHTML = module.view.html
+            }
+        }
 
-	$(function(){})()
-    //var n = $('#test').remove()
+        // 事件，数据逻辑
+        module.controller = {
 
-    /*$.route
-        .provider()
-        .when('/index', {
+            init: function() {
+                // 初始化view层 
+                module.view.init(module.dataset)
+                // 绑定事件
+                module.controller.registerEvent(module.node)
+            },
 
-            template: '1'
-        })
-        .otherwise('/')
-	*/
-    // var c = /[^/]*$/.test('#1231231232')
+            registerEvent: function(node) {
 
-    // console.log('zhengze: ' + c)
+                // 点击时切换下拉列表的隐藏、显示     
+                node.addEventListener('click', function() {
 
-    //window.location.href = '/'
-    //window.location.href = '/#!123232323232/'
+                    alert(node.getAttribute('id') + '  clicked')
 
-    //history.replaceState('1234', '/1', '1')
+                },
+                false)
 
-    //console.log()
+            }
+        }
+        
+        // 数据读取、存储
+        module.model = {
 
-    // api
-    // $.route(config)
+            init: function(callback) {
 
-    // $.route({
+                var url = '/people'
+                var d = ['男', '女']
 
-    //     // html后缀可以省略？省略后似乎不清晰，像url而不是文件路径
-    //     '/': 'views/index.html',
-    //     '/index': 'views/index.html',
-    //     // 以前只支持了?形式，比如/index?id=1
-    //     '/login/:id': 'views/login.html',
-    //     // 其他页面直接跳转回根目录
-    //     'others': '/'
-    // })
+                module.dataset = d
+                callback && callback()
+            }
+        }
 
-    // $.route()
-    //     <div className="config"></div>
-    //     .when('/', {
-    //         template: 'views/index.html'
-    //     })
-    //     .when('/main', {
-    //         template: 'views/main.html'
-    //     })
-    //     .when('/day/:id', {
-    //         template: 'views/day.html'
-    //     })
-    //     .others({
-    //         redirect: '/'
-    //     })
-    // css、js、file、title、controller、keywords、description
-    // resetCSS、resetJS时可以检查一下css和js列表，如果有一致的可以不删除
+        return module
+    })
+
+    console.log(dropdownModule)
 
     </script>
 

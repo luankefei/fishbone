@@ -16,7 +16,9 @@ mix($, {
     jsonp: Http.jsonp,
     route: Route,
 	on: Event.on,
-	live: Event.live
+	live: Event.live,
+    
+    module: Module.init,
     // get: function() {},
 
     // eq: function() {},
