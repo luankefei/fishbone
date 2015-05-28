@@ -18,19 +18,18 @@
     // 创建一个模块
     // 对这个模块传入dom节点并初始化
     // 改变模块的数据，dom节点随之改变
-    var dropdownModule = $.module(function() {
+    var dropdownModule = $.module(function(module) {
 
         // module、view、controller应该为私有 
-        var module = {}
-        
         // 定义模板，初始化模板
         module.view = {
 
             html: '<div class="dropdown"><ul>fs-replace</ul></div>',
             init: function(node) {
-                
+
                 // TODO: 增加格式校验
                 var html = ''
+
                 var data = module.data
 
                 for (var i = 0, length = data.length; i < length; i++) {
@@ -69,10 +68,12 @@
 
             init: function(callback) {
 
-                var url = '/people'
-                var d = ['男', '女']
-
-                module.data = d
+                console.log(callback)
+                /*
+                var url = '/user'
+                $.get(url, callback)
+                */
+                module.data = ['男', '女']
                 callback && callback()
             }
         }
@@ -81,17 +82,16 @@
     })
 
     var node = document.getElementsByTagName('dropdown')
-
-
-    console.log(dropdownModule)
-
     var component = dropdownModule.init(node[0])
+    /*
+    setTimeout(function() {
+    
+        component.data = ['王二', '赵五', '四四']
+    
+    }, 2000)
 
-    console.log(component)
-    //dropdownModule.data = ['王二', '赵五', '四四']
-
+    */
 
     </script>
-
 </body>
 </html>

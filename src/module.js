@@ -11,28 +11,34 @@ Module.Component = function(model, view, controller) {
    
     var model = model,
         view = view,
-        controller = controller,
-        that = this
-
+        controller = controller
     // 添加模块的基础属性
     this.node = null
     this.init =  function(node) {
-    
+
         this.node = node
 
+        console.log('----')
+        console.log(this)
         // 初始化用户定义的模块
-        model.init(function() {
-
+        model.init.call(this, function() {
+        
             view.init(node)
             controller.init(node)
-
-            return that
         })
+        
+        return this 
+    }
+    
+    // 数据变更后的刷新操作
+    this.refresh = function(node) {
+        
+        view.init.call(this, node)
+        controller.init(node)
     }
 
     return this
 }
-
 
 Module.init = function(handler) {
 
@@ -47,12 +53,11 @@ Module.init = function(handler) {
             configurable: true,
             
             get: function() { return this.value },
-            set: function(newValue) { 
-                this.value = newValue 
+            set: function(newValue) {
 
-                console.log('问题就在这')
+                this.value = newValue 
                 // 数据变更时，调用view层的初始化
-                module.init(module.node)
+                module.refresh(module.node)
             }
         }
     })
@@ -63,4 +68,6 @@ Module.init = function(handler) {
 /**
  * 2015.5.26
  * 使用defineProperties创建模块对象
+ * 2015.5.28
+ * 
  */
