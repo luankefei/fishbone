@@ -737,24 +737,38 @@ Event.unbind = function() {}
 
 var Module = {}
 
-Module.init = function(handler) {
-    
-    var module = handler()
-    
+// 组件模块类, 参数mvc
+Module.Component = function(model, view, controller) {
+   
+    var model = model,
+        view = view,
+        controller = controller,
+        that = this
+
     // 添加模块的基础属性
-    mix(module, {
-        node: null,
-        init: function(node) {
+    this.node = null
+    this.init =  function(node) {
+    
+        this.node = node
 
-            module.node = node
+        // 初始化用户定义的模块
+        model.init(function() {
 
-            module.model.init(function() {
+            view.init(node)
+            controller.init(node)
 
-                module.view.init(node)
-                module.controller.init()
-            })
-        }
-    })
+            return that
+        })
+    }
+
+    return this
+}
+
+
+Module.init = function(handler) {
+
+    var obj = handler()
+    var module = new Module.Component(obj.model, obj.view, obj.controller)
 
     // 添加data属性
     module = Object.defineProperties(module, {
@@ -767,8 +781,9 @@ Module.init = function(handler) {
             set: function(newValue) { 
                 this.value = newValue 
 
+                console.log('问题就在这')
                 // 数据变更时，调用view层的初始化
-                module.view.init(module.node)
+                module.init(module.node)
             }
         }
     })
