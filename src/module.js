@@ -50,6 +50,7 @@ Module.component.init = function(name, handler) {
           
             get: function() { return this.value },
             set: function(value) { 
+
                 this.value = value 
             
                 // 数据变更时，调用view层的初始化

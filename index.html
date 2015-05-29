@@ -31,9 +31,10 @@
                     html += '<li>' + data[i] + '</li>'
                 }
 
-                cop.view.html = cop.view.html.replace('fs-replace', html)
-
-                node.innerHTML = cop.view.html
+                html = cop.view.html.replace('fs-replace', html)
+                // cop.view.html = cop.view.html.replace('fs-replace', html)
+                // node.innerHTML = cop.view.html
+                node.innerHTML = html
             }
         }
 
@@ -57,7 +58,7 @@
             },
             // 数据变更后的刷新操作
             refresh: function(node) {
-                
+
                 cop.view.init.call(this, node)
                 cop.controller.init(node)
             }
@@ -82,6 +83,18 @@
 
     var node = document.getElementById('test')
     var d = dropdown.init(node)
+
+    setTimeout(function() {
+    
+        d.data = ['张三', '李四', '王二']
+
+    }, 1000)
+
+    setTimeout(function() {
+
+        d.data = ['111', '222', '333', '444']
+        
+    }, 5000)
 
     //$.components['dropdown'].init(node)
 
