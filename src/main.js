@@ -9,11 +9,7 @@ var html = DOC.documentElement //HTML元素
 var head = DOC.head || DOC.getElementsByTagName('head')
 var version = 1
 
-/**
- * @description 命名空间
- * @param  {String|Function} expr  CSS表达式或函数
- * @return {Mass}
- */
+// 命名空间，传入css表达式或dom对象，返回一个fishbone对象
 function $(selector) {
 
     return $.fn.init(selector)
@@ -21,13 +17,7 @@ function $(selector) {
 
 $.fn = $.prototype
 
-/**
- * 糅杂，为一个对象添加更多成员
- * @param {Object} receiver 接受者
- * @param {Object} supplier 提供者
- * @return  {Object} 目标对象
- * @api public
- */
+// 糅杂，为一个对象添加更多成员
 function mix(receiver, supplier) {
 
     var args = [].slice.call(arguments),

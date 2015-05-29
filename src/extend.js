@@ -19,6 +19,7 @@ mix($, {
 	live: Event.live,
     
     module: Module.init,
+    component: Module.component.init
     // get: function() {},
 
     // eq: function() {},

@@ -14,36 +14,42 @@
 
     <script src="dist/fishbone.js"></script>
     <script>
-    
-    var dropdown = $.component('dropdown', function(cop) {
-        
-        cop.view = {
+
+    // 创建一个模块
+    // 对这个模块传入dom节点并初始化
+    // 改变模块的数据，dom节点随之改变
+    var dropdownModule = $.module(function(module) {
+
+        // module、view、controller应该为私有 
+        // 定义模板，初始化模板
+        module.view = {
 
             html: '<div class="dropdown"><ul>fs-replace</ul></div>',
             init: function(node) {
 
                 // TODO: 增加格式校验
                 var html = ''
-                var data = cop.data
+
+                var data = module.data
 
                 for (var i = 0, length = data.length; i < length; i++) {
 
                     html += '<li>' + data[i] + '</li>'
                 }
 
-                cop.view.html = cop.view.html.replace('fs-replace', html)
+                module.view.html = module.view.html.replace('fs-replace', html)
 
-                node.innerHTML = cop.view.html
+                node.innerHTML = module.view.html
             }
         }
 
         // 事件，数据逻辑
-        cop.controller = {
+        module.controller = {
 
             init: function(node) {
 
                 // 绑定事件
-                cop.controller.registerEvent(node)
+                module.controller.registerEvent(node)
             },
 
             registerEvent: function(node) {
@@ -54,36 +60,37 @@
                     alert(node.getAttribute('id') + '  clicked')
                 },
                 false)
-            },
-            // 数据变更后的刷新操作
-            refresh: function(node) {
-                
-                cop.view.init.call(this, node)
-                cop.controller.init(node)
             }
         }
         
         // 数据读取、存储
-        cop.model = {
-            // TODO: callback没有执行
+        module.model = {
+
             init: function(callback) {
 
+                console.log(callback)
                 /*
                 var url = '/user'
                 $.get(url, callback)
                 */
-                cop.data = ['男', '女']
-                // callback && callback()
+                module.data = ['男', '女']
+                callback && callback()
             }
         }
 
-        return cop
+        return module
     })
 
-    var node = document.getElementById('test')
-    var d = dropdown.init(node)
+    var node = document.getElementsByTagName('dropdown')
+    var component = dropdownModule.init(node[0])
+    /*
+    setTimeout(function() {
+    
+        component.data = ['王二', '赵五', '四四']
+    
+    }, 2000)
 
-    //$.components['dropdown'].init(node)
+    */
 
     </script>
 </body>

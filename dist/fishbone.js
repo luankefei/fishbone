@@ -21,11 +21,7 @@ var html = DOC.documentElement //HTML元素
 var head = DOC.head || DOC.getElementsByTagName('head')
 var version = 1
 
-/**
- * @description 命名空间
- * @param  {String|Function} expr  CSS表达式或函数
- * @return {Mass}
- */
+// 命名空间，传入css表达式或dom对象，返回一个fishbone对象
 function $(selector) {
 
     return $.fn.init(selector)
@@ -33,13 +29,7 @@ function $(selector) {
 
 $.fn = $.prototype
 
-/**
- * 糅杂，为一个对象添加更多成员
- * @param {Object} receiver 接受者
- * @param {Object} supplier 提供者
- * @return  {Object} 目标对象
- * @api public
- */
+// 糅杂，为一个对象添加更多成员
 function mix(receiver, supplier) {
 
     var args = [].slice.call(arguments),
@@ -123,6 +113,7 @@ mix($.fn, {
  * 2015.5.20
  * 更换了打包方式，移除了amd模块
  */
+
 
 /**
  * @name  prototype.js
@@ -737,70 +728,68 @@ Event.unbind = function() {}
 
 var Module = {}
 
-// 组件模块类, 参数mvc
-Module.Component = function(model, view, controller) {
+// 组件类，生成基本结构
+Module.Component = function() {
+    
+    // privite variable
+    var that = this
    
-    var model = model,
-        view = view,
-        controller = controller
-    // 添加模块的基础属性
+    // basic properties
     this.node = null
-    this.init =  function(node) {
+    this.view = null
 
+    this.controller = null
+    this.model = null
+
+    // basic mothod 
+    this.init =  function(node) {
+     
         this.node = node
 
-        console.log('----')
-        console.log(this)
-        // 初始化用户定义的模块
-        model.init.call(this, function() {
-        
-            view.init(node)
-            controller.init(node)
-        })
-        
+        // 调用数据的初始化，之后会进入data的set，执行controller.refresh
+        // TODO: callback 似乎是没用的
+        this.model.init.call(this, function() {})
+
         return this 
-    }
-    
-    // 数据变更后的刷新操作
-    this.refresh = function(node) {
-        
-        view.init.call(this, node)
-        controller.init(node)
     }
 
     return this
 }
 
-Module.init = function(handler) {
+Module.component = {}
 
-    var obj = handler()
-    var module = new Module.Component(obj.model, obj.view, obj.controller)
+// 初始化组件
+Module.component.init = function(name, handler) {
+    
+    var cop = new Module.Component()
 
     // 添加data属性
-    module = Object.defineProperties(module, {
+    cop = Object.defineProperties(cop, {
         
         data: {
             enumerable: true,
             configurable: true,
-            
+          
             get: function() { return this.value },
-            set: function(newValue) {
-
-                this.value = newValue 
+            set: function(value) { 
+                this.value = value 
+            
                 // 数据变更时，调用view层的初始化
-                module.refresh(module.node)
+                this.controller.refresh(this.node)
             }
         }
     })
-
-    return module
+    
+    return handler.call(this, cop)
 }
 
 /**
  * 2015.5.26
  * 使用defineProperties创建模块对象
  * 2015.5.28
- * 
+ * 重写了模块
+ * 2015.5.29
+ * 重写了模块
  */
 
 
@@ -824,6 +813,7 @@ mix($, {
 	live: Event.live,
     
     module: Module.init,
+    component: Module.component.init
     // get: function() {},
 
     // eq: function() {},
