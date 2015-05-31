@@ -15,10 +15,12 @@
     "gulp-mocha": "*",
     "gulp-rename": "*",
     "gulp-uglify": "*",
+    "jasmine-core": "^2.3.4",
     "karma": "*",
     "karma-browserify": "*",
     "karma-chrome-launcher": "*",
     "karma-coffee-preprocessor": "*",
+    "karma-jasmine": "^0.3.5",
     "karma-mocha": "*",
     "karma-nyan-reporter": "*",
     "karma-sinon-chai": "*"

@@ -23,6 +23,7 @@ var paths = {
             'src/route.js',
 			'src/event.js',
             'src/module.js',
+            'src/css.js',
             'src/extend.js',
             'src/dev/_outro.js'
             ],
