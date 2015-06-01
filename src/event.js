@@ -108,7 +108,7 @@ Event.ready = function(handler) {
 	
 		handle = function() {
 			
-			if (DOC.readyState === 'complite') { 
+			if (DOC.readyState === 'complete') { 
 				
 				Function.call(handler)	
 			}	
