@@ -827,10 +827,9 @@ Css.calculateChange = function(key, value) {
         
     // 这里调用的是Css.getCss
     // TODO: 如果是width，返回值会带px，返回类型需要验证 
-    // TODO: 代码杂乱，需要抽象
     var oldValue = Css.getCss.call(this, key)
 
-    // 取掉px后取整
+    // 去掉px后取整
     oldValue = Number.parseInt(oldValue.substring(0, oldValue.length - 2))
     // 去掉px后取整
     value = Number.parseInt(value.substring(0, value.length - 2))
@@ -841,8 +840,7 @@ Css.calculateChange = function(key, value) {
 }
 
 // 基础的设置css方法
-// TODO: 没有考虑如-40等变化量和有无px等情况
-// TODO: 因为没有px后缀，对height的测试没有通过
+// TODO: 没有考虑有无px等情况
 Css.setCss = function(key, value) {
 
     // 处理变化量的情况，需要先获取，再计算
@@ -868,10 +866,13 @@ Css.setCss = function(key, value) {
             this.nodes[i].style[key] = value
         }
     }
+
+    return this
 }
 
 // 基础的getCss方法
-// TODO: 没有考虑驼峰、连缀写法，浏览器私有前缀和css优先级问题
+// TODO: 没有考虑驼峰、浏览器私有前缀和css优先级问题
+// TODO: 仅支持连缀写法
 Css.getCss = function(key) {
 
     var value = null
@@ -890,17 +891,19 @@ Css.getCss = function(key) {
 // 对外暴露的接口，$.fn.css
 Css.init = function(key, value) {
 
+    var returnValue = null
+
     if (value === undefined) {
    
         // 这里要将this向下传递
-        Css.getCss.call(this, key)
+        returnValue = Css.getCss.call(this, key)
     
     } else {
     
-        Css.setCss.call(this, key, value)
+        returnValue = Css.setCss.call(this, key, value)
     }
 
-    return this
+    return returnValue
 }
 /**
  * 2015.5.30
@@ -913,6 +916,7 @@ Css.init = function(key, value) {
  * 添加了validateChange函数，用来判断传入的value是否是变化量
  * 修改了setCss，增加了变化量判断流程
  * 修改了setCss，修改了变化量的处理，暂时跑通，但缺乏对百分比的支持
+ * 修改了init的返回值，get应该返回value，set则返回this
  */
 
 
