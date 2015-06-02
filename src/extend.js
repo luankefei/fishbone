@@ -48,9 +48,9 @@ mix($.fn, {
 	on: Event.on,
 	live: Event.live,
 	ready: Event.ready,
-    css: Css.init
+    css: Css.init,
+    attr: Attr.init
 })
-
 /**
  * 2015.5.12 创建extend
  */
