@@ -12,17 +12,11 @@ Css.validateChange = function(value) {
     return value[0] === '+' || value[0] === '-'
 }
 
-// 基础的设置css方法
-// TODO: 没有考虑如-40等变化量和有无px等情况
-// TODO: 因为没有px后缀，对height的测试没有通过
-Css.setCss = function(key, value) {
-
-    // 处理变化量的情况，需要先获取，再计算
-    var change = Css.validateChange(value)
+// 处理连缀写法，将css写法转为驼峰式
+Css.handleSeperator = function(key) {
     // 对key处理，与value无关
     var sepIndex = key.indexOf('-')
 
-    // 处理连缀写法
     if (sepIndex !== -1) {
     
         key = key.replace('-', '')
@@ -30,22 +24,52 @@ Css.setCss = function(key, value) {
         key = key.substring(0, sepIndex) + key[sepIndex].toUpperCase() + key.substring(sepIndex + 1)
     }
 
-    if (this.nodes.nodeName !== undefined) {
- 
-        if (change) {
+    return key
+}
+
+// 处理变化量
+Css.calculateChange = function(key, value) {
+        
+    // 这里调用的是Css.getCss
+    // TODO: 如果是width，返回值会带px，返回类型需要验证 
+    // TODO: 代码杂乱，需要抽象
+    var oldValue = Css.getCss.call(this, key)
+
+    // 取掉px后取整
+    oldValue = Number.parseInt(oldValue.substring(0, oldValue.length - 2))
+    // 去掉px后取整
+    value = Number.parseInt(value.substring(0, value.length - 2))
     
-            // 这里调用的是Css.getCss
-            // TODO: 如果是width，返回值会带px，返回类型需要验证 
-            // TODO: 代码杂乱，需要抽象
-            value = this.css(key) + value 
-        } 
-     
+    value = oldValue + value + 'px'
+
+    return value
+}
+
+// 基础的设置css方法
+// TODO: 没有考虑如-40等变化量和有无px等情况
+// TODO: 因为没有px后缀，对height的测试没有通过
+Css.setCss = function(key, value) {
+
+    // 处理变化量的情况，需要先获取，再计算
+    var change = Css.validateChange(value)
+   
+    if (change) {
+
+        value = Css.calculateChange.apply(this, [key, value])    
+    }
+
+    // 处理连缀写法
+    key = Css.handleSeperator(key)
+
+    if (this.nodes.nodeName !== undefined) {
+        
+        // 可能所有变化量都是带px的 
         this.nodes.style[key] = value
     
     } else {
 
         for (var i = 0, length = this.nodes.length; i < length; i++) {
-        
+       
             this.nodes[i].style[key] = value
         }
     }
@@ -64,7 +88,7 @@ Css.getCss = function(key) {
     }
 
     value = global.getComputedStyle(nodes, null).getPropertyValue(key)
-    
+
     return value
 }
 
@@ -93,4 +117,5 @@ Css.init = function(key, value) {
  * 修改了getCss，将dom.style替换成global.getComputedStyle
  * 添加了validateChange函数，用来判断传入的value是否是变化量
  * 修改了setCss，增加了变化量判断流程
+ * 修改了setCss，修改了变化量的处理，暂时跑通，但缺乏对百分比的支持
  */
