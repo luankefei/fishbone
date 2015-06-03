@@ -15,7 +15,7 @@ var livereload = require('gulp-livereload')
 var paths = {
 
     scripts: [
-            'src/dev/_intro.js',
+            'src/_intro.js',
             'src/main.js',
             'src/prototype.js',
             'src/http.js',
@@ -26,7 +26,7 @@ var paths = {
             'src/css.js',
             'src/attr.js',
             'src/extend.js',
-            'src/dev/_outro.js'
+            'src/_outro.js'
             ],
     images: ''
 }

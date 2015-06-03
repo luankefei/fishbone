@@ -1,0 +1,41 @@
+
+header {
+    background: rgb(84, 86, 81);
+    height: 30px;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+header nav {
+    padding-left: 100px;
+}
+
+header nav ul li {
+    color: #fff;
+    float: left;
+    font-size: 1.07692rem;
+    height: 22px;
+    line-height: 22px;
+    margin-right: 20px;
+    margin-top: 4px;
+    text-align: center;
+    width: 40px;
+}
+
+header nav ul li.selected {
+    background: none repeat scroll 0 0 rgb(237, 68, 65);
+}
+
+header nav a {
+    color: #fff;
+}
+
+#logo {
+    float: left;
+    width: 200px;
+    font-size: 16px;
+    line-height: 30px;
+    color: #e0e0e0;
+    padding-left: 30px;
+}
+

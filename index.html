@@ -2,35 +2,77 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>框架测试</title>
+    <meta id="viewport" name='viewport' content='initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no'>
+    <title>首页 - sunken.me</title>
+    <link data-type='common' rel="stylesheet" href="/css/common.css" />
+    <link data-type='common' rel="stylesheet" href="/css/media.css" />
+    <link data-type='common' rel="stylesheet" href="/css/layout.css" />
+    <link data-type='common' rel="stylesheet" href="/css/ui.css" />
+    
 </head>
 <body>
-    <div id="test">hello,world</div>
+    <div class="wrapper">
+        <div id="nav">
+            <nav>
+                <div class="container">
+                    <ul>
+                        <li class="selected">
+                            <a href="/">首页</a>
+                        </li>
+                        <li>
+                            <a href="">留言</a>
+                        </li>
+                        <li>
+                            <a href="/#/about">关于</a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+            <div id="load-bar"></div>
+        </div>
 
-    <div class="t">t</div>
-    <div class="t">t</div>
-    
-    <dropdown></dropdown>
+        <header>
+            <div class="container">
+                <img src="/images/logo.png" alt="www.sunken.me" id="logo" />
+                <div class="slogan">想法、层次、评论、戏剧性、流言</div>
+            </div>
+            
+        </header>
+
+        <div id="fs-view" class="container clearfix" data-view=""></div>
+
+        <footer>
+            <span>design by sunken, all rights reserved</span>
+            <a href="/#/about">关于我</a>
+            <a href="#">作品展示</a>
+        </footer>
+    </div>
 
     <script src="dist/fishbone.js"></script>
+
     <script>
 
-        var obj = $('#test')
+    var route = $.route
+        .provider()
+        .when(['', '/', '/index'], {
 
-        // 对css模块的测试
-        obj.css('background-color', 'red')
-            .css('height', '+40px')
-            .css('width', '-200px')
-            .css('position', 'absolute')
-            .css('left', '0px')
-            .css('top', '0px')
-            .css('left', '+20px')
-            .css('top', '+100px')
+            css: ['/css/index.css'],
+            js: ['/js/index.js'],
+            template: '/views/index.html',
+            title: 'fishbone'
+        })
+        .when('/list', {
 
-        var id = obj.attr('id')
-        
-        obj.attr('data-id', 'test22')
+            css: '/css/list.css',
+            js: '/js/list.js',
+            template: '/views/list.html',
+            title: 'list'
+        })
+        .otherwise('/')
+
 
     </script>
+    
 </body>
 </html>
+

@@ -1,0 +1,156 @@
+
+#you_cant_see_me {
+    display: none;
+    height: 0;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 100%;
+    z-index: 100;
+    padding-right: 20px;
+}
+
+#you_cant_see_me_div {
+    background: #000;
+    height: 100%;
+    left: 0;
+    opacity: 0.85;
+    position: absolute;
+    top: 0;
+    width: 100%;
+}
+
+.is_overflow_box {
+    height: 100%;
+    margin-left: -8px;
+    overflow: hidden;
+    position: absolute;
+    width: 100%;
+}
+
+.select {
+    background: #fff;
+    float: left;
+    height: 28px;
+    line-height: 22px;
+    width: 153px;
+    border: 1px solid #c9c9c6;
+}
+.select:hover {
+    cursor: pointer;
+}
+.select .select-value {
+    float: left;
+    line-height: 28px;
+    padding-left: 5px;
+}
+.select i {
+    float: right;
+    background: url(../images/select.png) no-repeat;
+    background-position: 0px 11px;
+    height: 28px;
+    width: 15px;
+    margin-left: 4px;
+}
+.select-wrapper {
+    left: -1px;
+    position: relative;
+    float: left;
+    width: 100%;
+}
+.select-list {
+    width: 100%;
+    /*width: 630px;*/
+    position: absolute;
+    top: 0;
+    left: 0;
+    /*background: #f6f5ef;*/
+    background: #fff;
+    display: none;
+    padding: 10px 0;
+    border: 1px solid #bfbfbf;
+    z-index: 3;
+    max-height: 300px;
+    overflow-y: scroll;
+}
+.select-list ul li {
+    height: 30px;
+    line-height: 30px;
+    padding-left: 5px;
+    /*padding: 2px 4px;*/
+    /*margin-right: 2px;*/
+    /*white-space: nowrap;*/
+}
+.select-list ul li:hover {
+    background: rgb(237, 68, 65);
+    color: #fff;
+}
+.select-list-value {
+    background: #f5f5f5;
+}
+.checkbox {
+    width: 16px;
+    height: 16px;
+    background: #fff;
+    border: 2px solid #fff;
+    outline: 1px solid #c9c9c6;
+}
+
+.checkbox:hover {
+    background: #c9c9c6;
+}
+
+.checkbox[data-value="checked"] {
+    background: #319b8d;
+}
+
+.button {
+    width: 140px;
+    height: 30px;
+    background: rgb(237, 68, 65);
+    /*background: #319b8d;*/
+    /*background: #33beac;*/
+    line-height: 30px;
+    color: #fff;
+    text-align: center;
+}
+.button[data-style="gray"] {
+    background: #c2c2c2;
+}
+
+/*button[data-style="gray"] {
+    height: 28px;
+    border: 1px solid #329b8d;
+    background: #fff;
+    color: rgb(83, 88, 95);
+}*/
+
+
+
+
+.textbox {
+    width: 150px;
+    height: 28px;
+    line-height: 28px;
+    border: 1px solid #c9c9c6;
+    padding-left: 4px;
+}
+
+.input {
+    display:block;
+    width:198px;
+    height:23px;
+    border:1px solid #b5b5b5;
+
+    color:#aeaeae;
+    text-indent: 8px;
+}
+
+.clearfix:after {
+    visibility: hidden;
+    display: block;
+    font-size: 0;
+    content: " ";
+    clear: both;
+    height: 0;
+}

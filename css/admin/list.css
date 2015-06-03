@@ -1,0 +1,17 @@
+
+.wrapper {
+    width: 1440px;
+    margin: 0 auto;
+    padding-top: 100px;
+}
+
+.wrapper > table {
+    width: 100%;
+}
+
+.wrapper > table td, .wrapper > table th {
+    border: 1px solid #c9c9c6;
+    text-align: center;
+    height: 30px;
+}
+
