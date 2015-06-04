@@ -118,18 +118,11 @@ Node.remove = function() {
     return null
 }
 
-// 清空元素的内容
-Node.empty = function() {}
-
 Node.after = function() {}
 
 Node.before = function() {}
 
-Node.css = function() {}
-
 Node.width = function() {}
-
-Node.attr = function(key, value) {}
 
 // TODO: 如果this.nodes不是数组，这里会报错
 Node.eq = function(index) {
@@ -139,7 +132,6 @@ Node.eq = function(index) {
     try {
 
         n = this.nodes[index]
-
         n = $.fn.init(n)
 
     } catch(e) {

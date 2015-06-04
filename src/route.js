@@ -24,13 +24,6 @@ Route.getHash = function() {
     // 将去掉#!后的url显示在地址栏中
     history.replaceState(null, null, hash)
 
-    console.log('hash')
-    console.log(hash)
-    console.log(hash.length)
-    console.log(encodeURI(hash))
-    console.log(hash == '' || hash == '/' || hash == 'index' || hash == ' ')
-
-
     return hash
 }
 
@@ -155,8 +148,6 @@ Route.provider = function(paths) {
 
     var hashChange = function() {
 
-        console.log('hashChange 的加载')
-
         var hash = Route.getHash()
 
         // 在这里分析routes，然后分别调用加载
@@ -202,21 +193,10 @@ Route.provider = function(paths) {
         // TODO: 这里的代码和hashChange中的重复
         ! function() {
 
-            console.log('! function 的加载')
-
             var hash = Route.getHash()
-
-
-            console.log('! function 的 hash')
-            console.log(hash)
-
-            console.log(Route.routes)
 
             // 在这里分析routes，然后分别调用加载
             var routes = Route.routes[hash]
-
-            console.log('! function 的 routes')
-            console.log(routes)
 
             Route.load(routes)
 
@@ -235,4 +215,3 @@ Route.provider = function(paths) {
  * 2015.6.3
  * 增加了resetResource函数
  */
- 

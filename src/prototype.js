@@ -21,7 +21,6 @@ String.prototype.byteLen = function(target, fix) {
 Array.prototype.random = function(target) {
 
     return target[Math.floor(Math.random() * target.length)]
-
 }
 
 // 对数据进行平坦化处理，多维数组合并为一维数组
