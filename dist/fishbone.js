@@ -850,6 +850,7 @@ Event.on = function(type, handler) {
 // domReady
 Event.ready = function(handler) {
 
+
     var eventFn = W3C ? 'DOMContentLoaded' : 'readystatechange'
     var handle = null
 

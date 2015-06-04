@@ -29,6 +29,8 @@ Event.removeEvent = function(target, type, handler) {
     if (handler === undefined) {
 
         target['on' + type] = null
+
+        return 
     }
 
     if (target.removeEventListener) {
@@ -36,7 +38,7 @@ Event.removeEvent = function(target, type, handler) {
 
     } else {
 
-        target.detechEvent('on' + type, handler)
+        target.detachEvent('on' + type, handler)
     }
 }
 
