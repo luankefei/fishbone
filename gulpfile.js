@@ -26,7 +26,8 @@ var paths = {
             'src/css.js',
             'src/attr.js',
             'src/extend.js',
-            'src/_outro.js'
+            'src/_outro.js',
+            'src/seajs-debug.js'
             ],
     images: ''
 }

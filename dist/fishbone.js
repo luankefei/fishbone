@@ -238,16 +238,19 @@ defaults = {
 }
 
 // ajax获取js文件
+// TODO: 这里暂时修改使用seajs的api
 Http.getScript = function(url, callback) {
 
-    var script = document.createElement('script')
-    var body = document.querySelector('body')
+    seajs.use(url, callback)
 
-    script.src = url
-    script.type = 'text/javascript'
-    script.onload = callback.call(this)
+    // var script = document.createElement('script')
+    // var body = document.querySelector('body')
+
+    // script.src = url
+    // script.type = 'text/javascript'
+    // script.onload = callback.call(this)
    
-    body.appendChild(script)
+    // body.appendChild(script)
 }
 
 // ajax获取css文件
@@ -328,9 +331,11 @@ Http.comet = function() {}
 Http.socket = function() {}
 
 /**
- * 2015.05.12 
+ * 2015.5.12 
  * 创建http模块
  * 添加ajax、jsonp两个顶级接口。ajax支持httprequest 2.0
+ * 2015.6.4
+ * 修改了getScript函数，依赖了seajs
  */
 
 /**
