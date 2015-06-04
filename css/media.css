@@ -1,0 +1,76 @@
+@media screen and (min-width: 960px) {
+
+    
+
+    .wrapper {
+        width: 960px;
+    }
+
+    .container {
+        width: 880px;
+    }
+
+    html {
+        font-size: 13px;
+    }
+
+    /*.wrapper > .container > .main {
+        width: 634px;
+    }*/
+}
+
+
+@media screen and (max-width: 768px) {
+    body {
+        min-width: 320px;
+    }
+
+ /*   html {
+        font-size: 13px;
+    }*/
+
+    .wrapper > #view.container > .main {
+        width: 100%;
+    }
+
+    .main > .content > .top {
+        height: 42px;
+    }
+
+    .slogan {
+        display: none;
+    }
+
+    header {
+        height: 120px;
+        margin-bottom: 20px;
+    }
+
+    .wrapper > .container > aside {
+        display: none;
+    }
+
+    #pager {
+        display: none;
+    }
+
+    footer {
+        display: none;
+    }
+}
+
+@media screen and (max-width: 480px) {
+
+  /*  html {
+        font-size: 12px;
+    }*/
+
+    header {
+        height: 140px;
+        margin-bottom: 42px;
+    }
+
+    #logo {
+        width: 110px;
+    }
+}

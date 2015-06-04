@@ -8,6 +8,7 @@
 var Http = {}
 
 var accepts = {
+
     xml: 'application/xml, text/xml',
     html: 'text/html',
     text: 'text/plain',
@@ -16,10 +17,38 @@ var accepts = {
     '*': ['*/'] + ['*'] //避免被压缩掉
 },
 defaults = {
+
     type: 'GET',
     contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
     async: true
     //jsonp: 'callback'
+}
+
+// ajax获取js文件
+Http.getScript = function(url, callback) {
+
+    var script = document.createElement('script')
+    var body = document.querySelector('body')
+
+    script.src = url
+    script.type = 'text/javascript'
+    script.onload = callback.call(this)
+   
+    body.appendChild(script)
+}
+
+// ajax获取css文件
+// TODO: 和getScript可以合并
+Http.getCss = function(url, callback) {
+
+    var link = document.createElement('link')
+    var head = document.getElementsByTagName('head')[0]
+
+    link.href = url
+    link.rel = 'stylesheet'
+    link.onload = callback.call(this)
+
+    head.appendChild(link)
 }
 
 // ajax函数的简化版，提供更简单易用的api
@@ -90,6 +119,3 @@ Http.socket = function() {}
  * 创建http模块
  * 添加ajax、jsonp两个顶级接口。ajax支持httprequest 2.0
  */
-
-
-

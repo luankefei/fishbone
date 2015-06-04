@@ -4,6 +4,7 @@
  * @name  extend.js
  * @description  此文件用来向命名空间注册api
  * @date  2015.05.12
+ * @author: sunken
  */
 
 
@@ -16,7 +17,10 @@ mix($, {
     jsonp: Http.jsonp,
     route: Route,
 	on: Event.on,
-	live: Event.live
+	live: Event.live,
+    
+    module: Module.init,
+    component: Module.component.init
     // get: function() {},
 
     // eq: function() {},
@@ -43,9 +47,10 @@ mix($.fn, Node)
 mix($.fn, {
 	on: Event.on,
 	live: Event.live,
-	ready: Event.ready    
+	ready: Event.ready,
+    css: Css.init,
+    attr: Attr.init
 })
-
 /**
  * 2015.5.12 创建extend
  */

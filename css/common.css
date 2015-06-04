@@ -1,0 +1,141 @@
+@charset "utf-8";
+/* CSS Document */
+
+html, input, textarea { color:rgb(83,88,95); }
+body { background:#fff;overflow-y:scroll; }
+body, td, th { font-size:13px;font-family: Myriad Set Pro, Arial; /*font-family:Arial, microsoft yahei, \5b8b\4f53, sans-serif;*/ }
+/*body,a,strong,input,select,button,h1,h2,h3,h4,h5,h6,h7 { font:12px "Tahoma","宋体","Arial",sans-serif; }*/
+/*html,body { height:100%;} 设置浏览器高度为100%*/
+body, div, dl, dt, dd, ul, li, h1, h2, h3, h4, h5, h6, pre, code, form, fieldset, legend, input, button, textarea, blockquote, table,iframe ,p,img{ padding:0;margin:0; } /*设置内外补丁为0*/
+article,section,hgroup,header,footer,nav{display:block;}
+div,p { display:block; } /*所有div,p为块元素*/
+img{
+    border:none;
+}
+ul,ol,dl { list-style:none; } /*所有项目符号显示无*/
+fieldset, img { border:0; } /*所有图片边框无*/
+button { cursor:pointer;} /*所有按钮鼠标放上时为手型标志*/
+textarea { resize: none; } /*禁用跨行文本输入框的拖拽*/
+table { border-collapse: collapse;border-spacing: 0; }
+address, caption, cite, code, dfn, em, th, var, optgroup { font-style: normal;font-weight: normal; }
+input, button, textarea, select, optgroup, option { font-family: inherit;font-size: inherit;font-style: inherit;font-weight: inherit; }
+a { color:rgb(237, 68, 65);text-decoration:none; } /*所有链接无修饰[上,下划线,虚线...]*/
+a:link { text-decoration:none; }
+a:visited {}
+a:hover { cursor:pointer; }
+a:active {}
+a:focus { outline:0; }
+input, button ,textarea{ border:none; outline:none;}
+input[type="text"]:focus, input[type="password"]:focus, textarea:focus {
+    outline: 0 none;
+}
+
+input::-ms-clear { display:none; } /* 禁用ie10的X */
+input::-ms-reveal { display:none; }
+/* ================== 索引 ====================
+
+1.头部样式header.css
+2.布局样式layout.css
+3.页尾样式footer.css
+4.字体样式font.css
+5.适配样式hack.css
+6.分页样式page.css
+7.表单样式form.css
+
+============================================== */
+  
+  
+/* 布局 
+#centent { width:800px; margin:0 auto; text-align:left; border-width:0 1px; }
+#nav,
+#lm,
+#sn,
+#links,
+#copy_right { clear:both; }
+*/
+
+/*===================字体适配===================*/
+.os_win7 {
+	/*
+	font-family:Arial, \5b8b\4f53, sans-serif;
+	*/
+}
+	
+.os_mac {
+	font-family:"ff-tisa-web-pro-1","ff-tisa-web-pro-2","Lucida Grande","Hiragino Sans GB","Hiragino Sans GB W3";
+}
+	
+.os_winxp {
+	/*font-family:Arial,sans-serif;*/
+}
+	
+/*===================自定义常用样式===================*/
+
+/* 按钮悬浮透明度 */
+/*.opa7:hover {
+	filter:alpha(opacity=70);
+	-moz-opacity:0.7;
+	-khtml-opacity:0.7;
+	opacity: 0.7;
+	cursor:pointer;
+}*/
+
+/* 清除浮动 */	
+.clearfix:after {
+    clear: both;
+    content: "";
+    display: block;
+    height: 0;
+    visibility: hidden;
+}
+
+.clearfix {
+    display: inline-block;
+}
+
+* + html .clearfix {
+    height: 1%;
+}
+
+.clearfix {
+    display: block;
+}
+
+.clearfloat {
+    display: inline-block;
+}
+
+/* 悬浮类 */
+/*.f_left { float:left !important; }
+.f_right { float:right !important; }
+
+.fill-width {
+	float:left;
+	width:100%;
+}		
+	
+.hidden { display:none !important;}*/
+/*.redlink { color:#ea4b17; }*/
+
+h2, h3, h4, h5 { 
+	font-weight: normal;
+}	
+
+h1 { font-size:20px; }	
+h2 { font-size:16px; }	
+h3 { font-size:16px; }
+h4 { font-size:14px; }
+h5 { font-size:13px; }
+	
+/*.border-none { border:none !important;}*/
+
+/* 选中的颜色 */
+*::selection {
+	background:#6ad0c3;
+	color:#fff;
+}
+
+*::-moz-selection {
+    background: none repeat scroll 0 0 #eda7bb;
+    color: #fff;
+}

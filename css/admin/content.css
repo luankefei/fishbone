@@ -1,0 +1,51 @@
+
+.wrapper {
+    width: 1200px;
+    margin: 0 auto;
+    padding-top: 100px;
+}
+
+#editor {
+    float: left;
+    width: 640px;
+    height: 500px;
+}
+
+#form {
+    float: right;
+    width: 500px;
+    height: 500px;
+}
+
+#form > dl {
+    margin-bottom: 30px;
+}
+
+#form > dl > dt {
+    float: left;
+    width: 80px;
+    line-height: 30px;
+}
+
+#form > dl > dd {
+    float: right;
+    width: 420px;
+}
+
+.timer {
+    display: inline-block;
+    width: 80px;
+    margin-left: 25px;
+}
+
+#tweet-content {
+    border: 1px solid #c9c9c6;
+    width: 410px;
+    height: 120px;
+    padding: 4px;
+    display: block;
+}
+
+#content-title {
+    width: 414px;
+}

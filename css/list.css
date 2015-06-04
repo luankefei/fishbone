@@ -1,0 +1,245 @@
+
+
+/****************** 首页部分代码 ******************/
+
+.container {
+    margin: 0 auto;
+}
+
+#logo {
+    padding-top: 72px;
+}
+
+.slogan {
+    padding-top: 7px;
+    font-size: 1.076923077rem; /* 14 / 13 */
+}
+
+header .welcome {
+    float: right;
+    margin-top: 83px;
+}
+
+.wrapper > .container > .main {
+    float: left;
+    width: 72.0454545%; /* 634 / 880 */
+}
+
+.wrapper > .container > .main > h3 {
+    margin-bottom: 1.538461538rem; /* 20 / 13 */
+    color: rgb(237, 68, 65);
+}
+
+/*.wrapper > .container > .main > section {
+    padding-bottom: 20px;
+}
+*/
+.wrapper > .main > .content > h3 {
+    margin-bottom: 10px;
+}
+
+.wrapper > .container > .main {
+    padding-bottom: 40px;
+}
+
+.wrapper > .container > aside {
+    float: right;
+    /* 190 / 880 */
+    width: 21.5909091%;
+}
+
+.wrapper > .container > aside > h3 {
+    margin-bottom: 20px;
+    color: rgb(237, 68, 65);
+}
+
+.search {
+    /*width: 100%;
+    max-width: 188px;*/
+    /*min-width: 90px;*/
+    height: 28px;
+    border: 1px solid rgb(221, 222, 224);
+    margin-bottom: 65px;
+    /*display: table;*/
+}
+
+.search input {
+    float: left;
+    height: 100%;
+    line-height: 28px;
+    width: 75.1578947%; /* magic number */
+    /*width: 100%;*/
+    /*max-width: 158px;*/
+    /*min-width: 74.84210523px;*/
+    text-indent: 4px;
+    color: #777;
+    /*display: table-cell;*/
+    /*display: table-cell;*/
+}
+
+.search a {
+    float: right;
+    width: 28px;
+    min-width: 28px;
+    height: 100%;
+    line-height: 28px;
+    text-align: center;
+    background-image: url(/resource/images/search_button.png);
+    background-repeat: no-repeat;
+    background-position: center;
+    /*display: table-cell;*/
+    /*display: table-cell;*/
+    /*background: #329c8e;*/
+    /*color: #fff;*/
+}
+
+.comment {
+    margin-bottom: 65px;
+}
+
+.comment > ul > li {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    border-bottom: 1px dotted rgb(221, 222, 224);
+}
+
+.comment > ul > li:last-child {
+    border-bottom: none;
+}
+
+.tags {
+    margin-bottom: 65px;
+}
+
+.tags a {
+    padding-left: 8px;
+    padding-right: 8px;
+    padding-top: 3px;
+    padding-bottom: 3px;
+    display: inline-block;
+    background: #e8e8e8;
+    color: #777;
+    margin-bottom: 10px;
+    margin-right: 5px;
+}
+
+.main > h4 {
+    padding-bottom: 20px;
+}
+
+.main .content {
+    margin-bottom: 30px;
+}
+
+.main .content > .top {
+    width: 632px;
+    height: 45px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    
+    border: 1px solid rgb(221, 222, 224);
+    /*background: #e8e8e8;*/
+    /*border-top: 1px solid #e3e3e3;
+    box-shadow: 1px 2px 2px #ababab;*/
+
+    /*margin-bottom: 25px;*/
+}
+
+.main .content > .top > h3 {
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+.main .content > .top > h3:hover {
+    color: rgb(237, 68, 65);
+    cursor: pointer;
+}
+
+.main .content > .top > .author {
+    padding-right: 10px;
+}
+
+.content > .top > .head {
+    float: left;
+    height: 100%;
+    max-height: 45px;
+    margin-right: 20px;
+    margin-left: 10px;
+    border-radius: 25px;
+}
+
+/*
+.content > .top > .head {
+    
+    
+}
+*/
+/*
+.content > .top > .title {
+    color: #777;
+    padding-top: 2px;
+    padding-bottom: 10px;
+}
+
+.content > .top > span {
+    padding-right: 10px;
+}*/
+
+.content > article {
+    text-align: justify;
+    font-size: 1.076923077rem; /* 14 / 13 */
+    line-height: 1.8;
+}
+
+.content > article .content-image {
+    width: 100%;
+    height: auto;
+    margin-bottom: 20px;
+}
+
+.content > article > p > img {
+    width: 100%;
+}
+
+.content > article p {
+    margin-bottom: 20px;
+    text-align: justify;
+}
+
+.content .read-more {
+    float: right;
+}
+
+
+/*************************/
+
+.content dl {
+    height: 160px;
+}
+
+.content dl > dt {
+    float: left;
+    width: 250px;
+    height: 100%;
+    padding-right: 14px;
+}
+
+
+.content dl > dt > img {
+    max-width: 100%;
+}
+
+.content dl > dd {
+    float: left;
+    width: 370px;
+    height: 100%;
+}
+
+.content dl > dd > p {
+    font-size: 14px;
+    line-height: 1.6;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+
