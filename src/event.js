@@ -99,26 +99,7 @@ Event.on = function(type, handler) {
 // domReady
 Event.ready = function(handler) {
 
-<<<<<<< HEAD
-	var eventFn = W3C ? 'DOMContentLoaded' : 'readystatechange'
-	var handle = null
 
-	if (this.nodes !== document) { return }
-	
-	if (eventFn === 'readystatechange') {
-	
-		handle = function() {
-			
-			if (DOC.readyState === 'complete') { 
-				
-				Function.call(handler)	
-			}	
-		}
-	} else {
-	
-		Event.addEvent(this.nodes, eventFn, handle, false)
-	}
-=======
     var eventFn = W3C ? 'DOMContentLoaded' : 'readystatechange'
     var handle = null
 
@@ -139,7 +120,6 @@ Event.ready = function(handler) {
 
         Event.addEvent(this.nodes, eventFn, handle, false)
     }
->>>>>>> fish1/master
 }
 
 /* Event.on = function(type, handler) { */
