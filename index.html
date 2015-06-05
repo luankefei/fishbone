@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta id="viewport" name='viewport' content='initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no'>
@@ -8,8 +9,8 @@
     <link data-type='common' rel="stylesheet" href="/css/media.css" />
     <link data-type='common' rel="stylesheet" href="/css/layout.css" />
     <link data-type='common' rel="stylesheet" href="/css/ui.css" />
-    
 </head>
+
 <body>
     <div class="wrapper">
         <div id="nav">
@@ -30,50 +31,43 @@
             </nav>
             <div id="load-bar"></div>
         </div>
-
         <header>
             <div class="container">
                 <img src="/images/logo.png" alt="www.sunken.me" id="logo" />
                 <div class="slogan">想法、层次、评论、戏剧性、流言</div>
             </div>
-            
         </header>
-
         <div id="fs-view" class="container clearfix" data-view=""></div>
-
         <footer>
             <span>design by sunken, all rights reserved</span>
             <a href="/#/about">关于我</a>
             <a href="#">作品展示</a>
         </footer>
     </div>
-
     <script src="dist/fishbone.js"></script>
     <script>
+    $('.t').on('click', function(e) {
 
-	
-	$('.t').on('click', function(e) {
-	
-		console.log('clicked')
-	})
+        console.log('clicked')
+    })
 
-	$('#d').live('click', function(e) {
-		console.log('live clicked')	
-	})
+    $('#d').live('click', function(e) {
+        console.log('live clicked')
+    })
 
-	$(document).ready(function(){
-		
-		console.log('dom loaded')	
-	})
-	
-	/*
-	setTimeout(function() {
-		
-		var body = document.getElementsByTagName('body')[0]
-		var node = document.createElement('div')
+    $(document).ready(function() {
 
-		node.id = 'd'
-		node.innerHTML = 'hahahahahhahahahahahahahahahhaa'
+        console.log('dom loaded')
+    })
+
+    /*
+    setTimeout(function() {
+        
+        var body = document.getElementsByTagName('body')[0]
+        var node = document.createElement('div')
+
+        node.id = 'd'
+        node.innerHTML = 'hahahahahhahahahahahahahahahhaa'
 =======
 >>>>>>> fish1/master
 
@@ -98,8 +92,8 @@
         .otherwise('/')
 
 
+    */
     </script>
-    
 </body>
-</html>
 
+</html>
