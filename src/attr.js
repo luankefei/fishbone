@@ -1,11 +1,9 @@
 
-
 /**
  * @name attr.js
  * @description 属性操作模块
  * @date 2015.6.2
  */
-
 var Attr = {}
 
 // 获取属性
@@ -19,7 +17,7 @@ Attr.setAttr = function(key, value) {
     
     if (this.nodes.nodeName) {
 
-        this.nodes.setAttribute(key, value)    
+        this.nodes.setAttribute(key, value)
 
     } else {
    
@@ -47,7 +45,6 @@ Attr.init = function(key, value) {
 
     return returnValue
 }
-
 
 /**
  * 2015.6.2

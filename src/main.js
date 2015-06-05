@@ -74,7 +74,6 @@ function makeArray(arrayLike) {
     return arr
 }
 
-
 mix($.fn, {
 
     mix: mix,
@@ -135,5 +134,6 @@ mix($.fn, {
  * 更换了打包方式，移除了amd模块
  * 2015.6.5
  * 增加了makeArray函数
+ * 修改了init函数，为兼容IE 8 将Object.create更换为new Object
  */
  

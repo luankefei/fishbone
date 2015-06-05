@@ -38,7 +38,6 @@ Css.calculateChange = function(key, value) {
     oldValue = Number.parseInt(oldValue.substring(0, oldValue.length - 2))
     // 去掉px后取整
     value = Number.parseInt(value.substring(0, value.length - 2))
-    
     value = oldValue + value + 'px'
 
     return value

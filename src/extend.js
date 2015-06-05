@@ -22,7 +22,6 @@ mix($, {
     component: Module.component.init
 })
 
-
 mix($.fn, Node)
 mix($.fn, {
 	on: Event.on,

@@ -3,7 +3,6 @@
  * @description 定义模块
  * @date 2015.5.26
  */
-
 var Module = {}
 
 // 组件类，生成基本结构

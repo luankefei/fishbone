@@ -5,11 +5,7 @@
  */
 var Route = {}
 
-// if (W3C) {
 
-//     Route.cssReady
-
-// }
 Route.cssReady = false
 Route.jsReady = false
 Route.hash = null
@@ -97,6 +93,7 @@ if (W3C) {
 // } else {
 
 //     // IE 8 兼容
+//     // propertychange也只能对dom对象使用
 //     Event.addEvent(Route, 'propertychange', function(e) {
         
 //         if (Route['cssReady'] === true) {

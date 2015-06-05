@@ -101,13 +101,15 @@ Event.ready = function(handler) {
                 Function.call(handler)
             }
         }
+        
     } else {
 
         Event.addEvent(this.nodes, eventFn, handle, false)
     }
 }
 
-Event.unbind = function() {}
+// TODO: 还没做
+Event.off = function() {}
 
 
 /**
@@ -119,4 +121,6 @@ Event.unbind = function() {}
  * 2015.5.26
  * 重写了live函数，初步测试可用，但事件通过document绑定，还有优化空间
  * 添加了ready函数
+ * 2015.6.5
+ * 将unbind更名为off
  */
