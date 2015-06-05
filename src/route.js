@@ -183,11 +183,10 @@ Route.provider = function(paths) {
         Route.routes = routes
 
         // 激活hashChange事件
-        window.addEventListener('hashchange', hashChange)
+        $('window').on('hashchange', hashChange)
 
         // 重置模块加载状态
         Route.resetStatus()
-
 
         // 处理url直接访问的加载情况
         // TODO: 这里的代码和hashChange中的重复

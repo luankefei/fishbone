@@ -29,6 +29,8 @@ Event.removeEvent = function(target, type, handler) {
     if (handler === undefined) {
 
         target['on' + type] = null
+
+        return
     }
 
     if (target.removeEventListener) {
@@ -40,6 +42,8 @@ Event.removeEvent = function(target, type, handler) {
     }
 }
 
+// 将事件绑定在document上，然后根据selector来判断是否执行
+// TODO: 缺少ie9以下的处理，事件委托的选择器不完善
 Event.live = function(type, handler) {
 
     var selector = this.selector
@@ -58,24 +62,6 @@ Event.live = function(type, handler) {
         }
     })
 }
-
-
-// 将事件绑定在document上，然后根据selector来判断是否执行
-// TODO: 缺少ie9以下的处理，事件委托的选择器不完善
-/*
-Event.live = function(target, type, handler) {
-    // TODO: 这里应该是传入选择器的selector
-    var selector = target.getAttribute('id')
-
-    document.addEventListener(type, function(e) {
-    
-        if (e.target.id = selector) {
-        
-            e.target.call(e.target, handler)
-        }
-    })
-}
-*/
 
 // 对外暴露的事件绑定api
 Event.on = function(type, handler) {
@@ -121,39 +107,7 @@ Event.ready = function(handler) {
     }
 }
 
-/* Event.on = function(type, handler) { */
-
-// var selector = this.selector
-
-// // 如果选择器不存在，获取选择器链
-// if (selector === null) {
-
-// var str = ''
-
-// // 判断this.nodes是否是复数
-// if (this.nodes.length == 1) {
-// }    
-// }
-/* } */
-
 Event.unbind = function() {}
-
-
-// Event.removeEvent = function(event) {
-
-// var event = event || window.event
-
-// if (event.preventDefault) {
-// event.preventDefault()
-// }
-
-// if (event.returnValue) {
-// event.returnValue = false    // IE
-// }
-
-// return false
-// }
-
 
 
 /**

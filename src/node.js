@@ -152,9 +152,10 @@ Node.last = function() {
     return Node.eq.call(this, this.nodes.length - 1)   
 }
 
+// 遍历所有对象
+// Node.each = function() {
 
-
-// each: function() {},
+// },
 
 /**
  * 2015.5.12 创建node模块
@@ -163,6 +164,3 @@ Node.last = function() {
  * 在eq中添加了try-catch处理，目前的写法并不完美，但足够使用
  * 增加了first、last和remove方法
  */
-
-
-

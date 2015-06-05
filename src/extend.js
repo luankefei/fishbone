@@ -21,27 +21,8 @@ mix($, {
     
     module: Module.init,
     component: Module.component.init
-    // get: function() {},
-
-    // eq: function() {},
-
-    // first: function() {},
-
-    // last: function() {},
-
-    // each: function() {},
-
-    // clone: function() {},
-
-    // html: function() {},
-
-    // test: function() {},
-
-    // valueOf: function() {
-
-    //     return Array.prototype.slice.call(this)
-    // },
 })
+
 
 mix($.fn, Node)
 mix($.fn, {
@@ -49,7 +30,15 @@ mix($.fn, {
 	live: Event.live,
 	ready: Event.ready,
     css: Css.init,
-    attr: Attr.init
+    attr: Attr.init,
+    first: Node.first,
+    last: Node.last,
+    eq: Node.eq,
+    remove: Node.remove,
+    html: Node.html,
+    clone: Node.clone,
+    append: Node.append,
+    prepend: Node.prepend
 })
 /**
  * 2015.5.12 创建extend

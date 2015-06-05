@@ -42,7 +42,7 @@ Module.component.init = function(name, handler) {
     var cop = new Module.Component()
 
     // 添加data属性
-    cop = Object.defineProperties(cop, {
+    Object.defineProperties(cop, {
         
         data: {
             enumerable: true,

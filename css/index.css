@@ -78,7 +78,7 @@ header .welcome {
     height: 100%;
     line-height: 28px;
     text-align: center;
-    background-image: url(/resource/images/search_button.png);
+    background-image: url(../view/res/images/search_button.png);
     background-color: transparent;
     background-repeat: no-repeat;
     background-position: center;
