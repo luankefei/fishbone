@@ -27,6 +27,7 @@ var paths = {
             'src/css.js',
             'src/attr.js',
             'src/route.js',
+            'src/animate.js',
             'src/extend.js',
             'src/_outro.js'
             ],

@@ -37,7 +37,8 @@ mix($.fn, {
     html: Node.html,
     clone: Node.clone,
     append: Node.append,
-    prepend: Node.prepend
+    prepend: Node.prepend,
+    animate: Animate.init
 })
 /**
  * 2015.5.12 创建extend
