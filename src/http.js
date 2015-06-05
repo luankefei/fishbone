@@ -95,18 +95,25 @@ Http.ajax = function(param, events) {
 
     req.onreadystatechange = function() {
 
-        if (req.status === 200 && req.readyState === 4) {
+        if (req.readyState === 4 && req.status === 200) {
 
             // 应该判断是否是json
             var res = req.responseText
 
             try {
 
-                res = JSON.parse(res)
+                if (W3C) {
+
+                    res = JSON.parse(res)
+
+                } else {
+
+                    res = eval('[' + res + ']')
+                }
             
             } catch(e) {
 
-                throw new Error()
+                throw 'json parse error'
             }
 
             param.success && param.success(res)

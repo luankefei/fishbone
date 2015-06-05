@@ -112,15 +112,15 @@ mix($.fn, {
             }
         }
 
-        var obj = Object.create($.fn)
-
+        //var obj = Object.create($.fn)
+        var obj = new Object($.fn)
+        
         obj.nodes = this.nodes
         obj.selector = this.selector
 
         return obj
     }
 })
-
 
 /**
  * 2015.5.11 整合了原有的module.js模块，使框架结构更清晰

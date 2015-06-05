@@ -42,6 +42,7 @@ Module.component.init = function(name, handler) {
     var cop = new Module.Component()
 
     // 添加data属性
+    // IE 8 兼容
     Object.defineProperties(cop, {
         
         data: {

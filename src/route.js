@@ -5,6 +5,11 @@
  */
 var Route = {}
 
+// if (W3C) {
+
+//     Route.cssReady
+
+// }
 Route.cssReady = false
 Route.jsReady = false
 Route.hash = null
@@ -62,26 +67,46 @@ Route.resetStatus = function() {
 }
 
 // 添加data属性
-Object.defineProperties(Route, {
+// IE8 Dom only
+// if (W3C) {
+
+if (W3C) {
+
+    Object.defineProperties(Route, {
         
-    cssReady: {
-        enumerable: true,
-        configurable: true,
-      
-        get: function() { return this.value },
-        set: function(value) { 
+        cssReady: {
+            enumerable: true,
+            configurable: true,
+          
+            get: function() { return this.value },
+            set: function(value) { 
 
-            this.value = value
+                this.value = value
 
-            if (value === true) {
+                if (value === true) {
 
-                // 加载js和file
-                Route.loadJs(Route.routes[Route.hash]['js'])
-                Route.loadTempalte(Route.routes[Route.hash]['template'])
-            }            
+                    // 加载js和file
+                    Route.loadJs(Route.routes[Route.hash]['js'])
+                    Route.loadTempalte(Route.routes[Route.hash]['template'])
+                }
+            }
         }
-    }
-})
+    })
+}
+
+// } else {
+
+//     // IE 8 兼容
+//     Event.addEvent(Route, 'propertychange', function(e) {
+        
+//         if (Route['cssReady'] === true) {
+
+//             // 加载js和file
+//             Route.loadJs(Route.routes[Route.hash]['js'])
+//             Route.loadTempalte(Route.routes[Route.hash]['template'])
+//         }
+//     })
+// }
 
 // 加载页面模板代码
 Route.loadTempalte = function(url) {
@@ -125,9 +150,16 @@ Route.loadCss = function(arr) {
 
         if (cssReady === arr.length) {
 
-            // TODO: 在route模块中需要一些全局属性来标记完成
-            // TODO: 加载依然是观察者
-            Route.cssReady = true
+
+            if (W3C) {
+
+                Route.cssReady = true
+
+            } else {
+
+                Route.loadJs(Route.routes[Route.hash]['js'])
+                Route.loadTempalte(Route.routes[Route.hash]['template'])
+            }
         }
     }
 
@@ -198,7 +230,6 @@ Route.provider = function(paths) {
             var routes = Route.routes[hash]
 
             Route.load(routes)
-
         }()
     }
 

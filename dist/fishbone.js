@@ -1256,15 +1256,15 @@ mix($.fn, {
             }
         }
 
-        var obj = Object.create($.fn)
-
+        //var obj = Object.create($.fn)
+        var obj = new Object($.fn)
+        
         obj.nodes = this.nodes
         obj.selector = this.selector
 
         return obj
     }
 })
-
 
 /**
  * 2015.5.11 整合了原有的module.js模块，使框架结构更清晰
@@ -1286,272 +1286,6 @@ mix($.fn, {
  * @name _fix.js
  * @deprecated  2015.6.4
  */
-
-/*
-//===================修复浏览器对Object.defineProperties的支持=================
-var expose = new Date() - 0
-//切割字符串为一个个小块，以空格或豆号分开它们，结合replace实现字符串的forEach
-var rword = /[^, ]+/g 
-//一些不需要被监听的属性
-var $$skipArray = String("$id,$watch,$unwatch,$fire,$events,$model,$skipArray").match(rword)
-
-if ("__defineGetter__" in $) {
-    
-    defineProperty = function (obj, prop, desc) {
-        if ('value' in desc) {
-            obj[prop] = desc.value
-        }
-        if ("get" in desc) {
-            obj.__defineGetter__(prop, desc.get)
-        }
-        if ('set' in desc) {
-            obj.__defineSetter__(prop, desc.set)
-        }
-        return obj
-    }
-    defineProperties = function (obj, descs) {
-        for (var prop in descs) {
-            if (descs.hasOwnProperty(prop)) {
-                defineProperty(obj, prop, descs[prop])
-            }
-        }
-        return obj
-    }
-}
-
-function IE() {
-    if (window.VBArray) {
-        var mode = document.documentMode
-        return mode ? mode : window.XMLHttpRequest ? 7 : 6
-    } else {
-        return 0
-    }
-}
-var IEVersion = IE()
-
-if (IEVersion) {
-    window.execScript([ // jshint ignore:line
-        "Function parseVB(code)",
-        "\tExecuteGlobal(code)",
-        "End Function",
-        "Dim VBClassBodies",
-        "Set VBClassBodies=CreateObject(\"Scripting.Dictionary\")",
-        "Function findOrDefineVBClass(name,body)",
-        "\tDim found",
-        "\tfound=\"\"",
-        "\tFor Each key in VBClassBodies",
-        "\t\tIf body=VBClassBodies.Item(key) Then",
-        "\t\t\tfound=key",
-        "\t\t\tExit For",
-        "\t\tEnd If",
-        "\tnext",
-        "\tIf found=\"\" Then",
-        "\t\tparseVB(\"Class \" + name + body)",
-        "\t\tVBClassBodies.Add name, body",
-        "\t\tfound=name",
-        "\tEnd If",
-        "\tfindOrDefineVBClass=found",
-        "End Function"
-    ].join("\n"), "VBScript")
-    function VBMediator(instance, accessors, name, value) {// jshint ignore:line
-        var accessor = accessors[name]
-        if (arguments.length === 4) {
-            accessor.call(instance, value)
-        } else {
-            return accessor.call(instance)
-        }
-    }
-    defineProperties = function (name, accessors, properties) {
-        var className = "VBClass" + setTimeout("1"),// jshint ignore:line
-                buffer = []
-        buffer.push(
-                "\r\n\tPrivate [__data__], [__proxy__]",
-                "\tPublic Default Function [__const__](d, p)",
-                "\t\tSet [__data__] = d: set [__proxy__] = p",
-                "\t\tSet [__const__] = Me", //链式调用
-                "\tEnd Function")
-        //添加普通属性,因为VBScript对象不能像JS那样随意增删属性，必须在这里预先定义好
-        for (name in properties) {
-            if (!accessors.hasOwnProperty(name)) {
-                buffer.push("\tPublic [" + name + "]")
-            }
-        }
-        $$skipArray.forEach(function (name) {
-            if (!accessors.hasOwnProperty(name)) {
-                buffer.push("\tPublic [" + name + "]")
-            }
-        })
-        buffer.push("\tPublic [" + 'hasOwnProperty' + "]")
-        //添加访问器属性 
-        for (name in accessors) {
-            buffer.push(
-                    //由于不知对方会传入什么,因此set, let都用上
-                    "\tPublic Property Let [" + name + "](val" + expose + ")", //setter
-                    "\t\tCall [__proxy__](Me,[__data__], \"" + name + "\", val" + expose + ")",
-                    "\tEnd Property",
-                    "\tPublic Property Set [" + name + "](val" + expose + ")", //setter
-                    "\t\tCall [__proxy__](Me,[__data__], \"" + name + "\", val" + expose + ")",
-                    "\tEnd Property",
-                    "\tPublic Property Get [" + name + "]", //getter
-                    "\tOn Error Resume Next", //必须优先使用set语句,否则它会误将数组当字符串返回
-                    "\t\tSet[" + name + "] = [__proxy__](Me,[__data__],\"" + name + "\")",
-                    "\tIf Err.Number <> 0 Then",
-                    "\t\t[" + name + "] = [__proxy__](Me,[__data__],\"" + name + "\")",
-                    "\tEnd If",
-                    "\tOn Error Goto 0",
-                    "\tEnd Property")
-
-        }
-
-        buffer.push("End Class")
-        var code = buffer.join("\r\n"),
-                realClassName = window['findOrDefineVBClass'](className, code) //如果该VB类已定义，返回类名。否则用className创建一个新类。
-        if (realClassName === className) {
-            window.parseVB([
-                "Function " + className + "Factory(a, b)", //创建实例并传入两个关键的参数
-                "\tDim o",
-                "\tSet o = (New " + className + ")(a, b)",
-                "\tSet " + className + "Factory = o",
-                "End Function"
-            ].join("\r\n"))
-        }
-        var ret = window[realClassName + "Factory"](accessors, VBMediator) //得到其产品
-        return ret //得到其产品
-    }
-}
-*/
-
-var defineProperty = Object.defineProperty
-try {
-
-    defineProperty({}, '_', {
-        value: 'x'
-    })
-
-    var defineProperties = Object.defineProperties
-
-} catch(e) {
-
-    if ("__defineGetter__" in $) {
-    
-        defineProperty = function (obj, prop, desc) {
-            if ('value' in desc) {
-                obj[prop] = desc.value
-            }
-            if ("get" in desc) {
-                obj.__defineGetter__(prop, desc.get)
-            }
-            if ('set' in desc) {
-                obj.__defineSetter__(prop, desc.set)
-            }
-            return obj
-        }
-        defineProperties = function (obj, descs) {
-            for (var prop in descs) {
-                if (descs.hasOwnProperty(prop)) {
-                    defineProperty(obj, prop, descs[prop])
-                }
-            }
-            return obj
-        }
-    }
-}
-
-if (!defineProperties && window.VBArray) {
-
-    window.execScript([ // jshint ignore:line
-        "Function parseVB(code)",
-        "\tExecuteGlobal(code)",
-        "End Function",
-        "Dim VBClassBodies",
-        "Set VBClassBodies=CreateObject(\"Scripting.Dictionary\")",
-        "Function findOrDefineVBClass(name,body)",
-        "\tDim found",
-        "\tfound=\"\"",
-        "\tFor Each key in VBClassBodies",
-        "\t\tIf body=VBClassBodies.Item(key) Then",
-        "\t\t\tfound=key",
-        "\t\t\tExit For",
-        "\t\tEnd If",
-        "\tnext",
-        "\tIf found=\"\" Then",
-        "\t\tparseVB(\"Class \" + name + body)",
-        "\t\tVBClassBodies.Add name, body",
-        "\t\tfound=name",
-        "\tEnd If",
-        "\tfindOrDefineVBClass=found",
-        "End Function"
-    ].join("\n"), "VBScript")
-    function VBMediator(instance, accessors, name, value) {// jshint ignore:line
-        var accessor = accessors[name]
-        if (arguments.length === 4) {
-            accessor.call(instance, value)
-        } else {
-            return accessor.call(instance)
-        }
-    }
-    defineProperties = function (name, accessors, properties) {
-        var className = "VBClass" + setTimeout("1"),// jshint ignore:line
-                buffer = []
-        buffer.push(
-                "\r\n\tPrivate [__data__], [__proxy__]",
-                "\tPublic Default Function [__const__](d, p)",
-                "\t\tSet [__data__] = d: set [__proxy__] = p",
-                "\t\tSet [__const__] = Me", //链式调用
-                "\tEnd Function")
-        //添加普通属性,因为VBScript对象不能像JS那样随意增删属性，必须在这里预先定义好
-        for (name in properties) {
-            if (!accessors.hasOwnProperty(name)) {
-                buffer.push("\tPublic [" + name + "]")
-            }
-        }
-        $$skipArray.forEach(function (name) {
-            if (!accessors.hasOwnProperty(name)) {
-                buffer.push("\tPublic [" + name + "]")
-            }
-        })
-        buffer.push("\tPublic [" + 'hasOwnProperty' + "]")
-        //添加访问器属性 
-        for (name in accessors) {
-            buffer.push(
-                    //由于不知对方会传入什么,因此set, let都用上
-                    "\tPublic Property Let [" + name + "](val" + expose + ")", //setter
-                    "\t\tCall [__proxy__](Me,[__data__], \"" + name + "\", val" + expose + ")",
-                    "\tEnd Property",
-                    "\tPublic Property Set [" + name + "](val" + expose + ")", //setter
-                    "\t\tCall [__proxy__](Me,[__data__], \"" + name + "\", val" + expose + ")",
-                    "\tEnd Property",
-                    "\tPublic Property Get [" + name + "]", //getter
-                    "\tOn Error Resume Next", //必须优先使用set语句,否则它会误将数组当字符串返回
-                    "\t\tSet[" + name + "] = [__proxy__](Me,[__data__],\"" + name + "\")",
-                    "\tIf Err.Number <> 0 Then",
-                    "\t\t[" + name + "] = [__proxy__](Me,[__data__],\"" + name + "\")",
-                    "\tEnd If",
-                    "\tOn Error Goto 0",
-                    "\tEnd Property")
-
-        }
-
-        buffer.push("End Class")
-        var code = buffer.join("\r\n"),
-                realClassName = window['findOrDefineVBClass'](className, code) //如果该VB类已定义，返回类名。否则用className创建一个新类。
-        if (realClassName === className) {
-            window.parseVB([
-                "Function " + className + "Factory(a, b)", //创建实例并传入两个关键的参数
-                "\tDim o",
-                "\tSet o = (New " + className + ")(a, b)",
-                "\tSet " + className + "Factory = o",
-                "End Function"
-            ].join("\r\n"))
-        }
-        var ret = window[realClassName + "Factory"](accessors, VBMediator) //得到其产品
-        return ret //得到其产品
-    }
-}
-
-
-
-
 
 
 
@@ -1700,6 +1434,8 @@ Http.getCss = function(url, callback) {
 
     link.href = url
     link.rel = 'stylesheet'
+
+    // IE 8兼容
     //link.onload = callback.call(this)
     link.onload = function() {
 
@@ -1745,18 +1481,25 @@ Http.ajax = function(param, events) {
 
     req.onreadystatechange = function() {
 
-        if (req.status === 200 && req.readyState === 4) {
+        if (req.readyState === 4 && req.status === 200) {
 
             // 应该判断是否是json
             var res = req.responseText
 
             try {
 
-                res = JSON.parse(res)
+                if (W3C) {
+
+                    res = JSON.parse(res)
+
+                } else {
+
+                    res = eval('[' + res + ']')
+                }
             
             } catch(e) {
 
-                throw new Error()
+                throw 'json parse error'
             }
 
             param.success && param.success(res)
@@ -1960,224 +1703,6 @@ Node.last = function() {
  * 在eq中添加了try-catch处理，目前的写法并不完美，但足够使用
  * 增加了first、last和remove方法
  */
-/*
- * @name  route.js
- * @description  路由模块
- * @date  2015.5.21
- */
-var Route = {}
-
-Route.cssReady = false
-Route.jsReady = false
-Route.hash = null
-
-// 根据当前url返回hash，并处理history
-Route.getHash = function() {
-
-    var hash = window.location.hash
-    var history = window.history
-
-    // 去掉url前面的#!
-    hash = hash.replace('#!', '')
-
-    // 记录hash，以便后面的set方法中调用
-    Route.hash = hash
-
-    // 将去掉#!后的url显示在地址栏中
-    history.replaceState(null, null, hash)
-
-    return hash
-}
-
-// 模块加载的入口
-Route.load = function(routes) {
-
-    // 先充值页面不需要的css和js
-    Route.resetResource()
-
-    // 这里要保证前面的加载完成，尤其是css完成才能加载file，类似于promise
-    Route.loadCss(routes.css)
-}
-
-// 清除当前页面不需要的css、js
-Route.resetResource = function() {
-
-    var doms = $('link, script')
-
-    for (var i = 0; i < doms.nodes.length; i++) {
-
-        var type = doms.eq(i).attr('data-type')
-
-        if (type !== 'common') {
-
-            doms.eq(i).remove()
-        }
-    }
-}
-
-// 重置模块加载状态
-Route.resetStatus = function() {
-
-    Route.cssReady = false
-    Route.jsReady = false
-    Route.hash = null
-}
-
-// 添加data属性
-//Object.defineProperties(Route, {
-defineProperties(Route, {
-        
-    cssReady: {
-        enumerable: true,
-        configurable: true,
-      
-        get: function() { return this.value },
-        set: function(value) { 
-
-            this.value = value
-
-            if (value === true) {
-
-                // 加载js和file
-                Route.loadJs(Route.routes[Route.hash]['js'])
-                Route.loadTempalte(Route.routes[Route.hash]['template'])
-            }            
-        }
-    }
-})
-
-// 加载页面模板代码
-Route.loadTempalte = function(url) {
-
-    Http.get(url, function(data) {
-
-        // 加载成功之后，将data复制到view中
-        $('#fs-view').html(data)
-    })
-}
-
-// 加载js文件
-Route.loadJs = function(arr) {
-
-    var jsReady = 0
-
-    var callback = function() {
-
-        jsReady += 1
-
-        if (jsReady === arr.length) {
-
-            Route.jsReady = true
-        }
-    }
-
-    for (var i = 0; i < arr.length; i++) {
-
-        Http.getScript(arr[i], callback)
-    }
-}
-
-// 根据Route.routes加载css
-Route.loadCss = function(arr) {
-
-    var cssReady = 0
-
-    var callback = function() {
-
-        cssReady += 1
-
-        if (cssReady === arr.length) {
-
-            // TODO: 在route模块中需要一些全局属性来标记完成
-            // TODO: 加载依然是观察者
-            Route.cssReady = true
-        }
-    }
-
-    for (var i = 0; i < arr.length; i++) {
-
-        Http.getCss(arr[i], callback)
-    }
-}
-
-// Route.resetCss = function() {}
-// Route.resetJs = function() {}
-
-// TODO: provider可以考虑改成类
-Route.provider = function(paths) {
-
-    var provider = this,
-        routes = {}
-
-    var hashChange = function() {
-
-        var hash = Route.getHash()
-
-        // 在这里分析routes，然后分别调用加载
-        var routes = Route.routes[hash]
-
-        Route.load(routes)
-    }
-
-    this.when = function(path, route) {
-
-        // TODO: path需要支持数组形式
-        if (path instanceof Array) {
-
-            path.forEach(function(v, i, a) {
-
-                routes[v] = route
-            })
-        
-        } else {
-
-            routes[path] = route    
-        }
-
-        return provider
-    }
-
-    // 路由的配置必须由otherwise结尾，该方法负责注册路由规则和激活hashchange事件
-    this.otherwise = function(path) {
-
-        // 这里使用的routes是provider的私有变量
-        routes.otherwise = path
-
-        Route.routes = routes
-
-        // 激活hashChange事件
-        $('window').on('hashchange', hashChange)
-
-        // 重置模块加载状态
-        Route.resetStatus()
-
-        // 处理url直接访问的加载情况
-        // TODO: 这里的代码和hashChange中的重复
-        ! function() {
-
-            var hash = Route.getHash()
-
-            // 在这里分析routes，然后分别调用加载
-            var routes = Route.routes[hash]
-
-            Route.load(routes)
-
-        }()
-    }
-
-    return this
-}
-
-/**
- * 2015.5.21
- * 增加了Route模块
- * 增加了hashChange事件，when和otherwise方法
- * 2015.6.2
- * 修改了hashchange
- * 2015.6.3
- * 增加了resetResource函数
- */
-
 /**
  * @name event.js
  * @description 事件模块
@@ -2345,8 +1870,8 @@ Module.component.init = function(name, handler) {
     var cop = new Module.Component()
 
     // 添加data属性
-    //Object.defineProperties(cop, {
-    defineProperties(cop, {
+    // IE 8 兼容
+    Object.defineProperties(cop, {
         
         data: {
             enumerable: true,
@@ -2557,6 +2082,253 @@ Attr.init = function(key, value) {
  * 创建模块
  * 增加了getAttr、setAttr和init
  * 测试通过
+ */
+/*
+ * @name  route.js
+ * @description  路由模块
+ * @date  2015.5.21
+ */
+var Route = {}
+
+// if (W3C) {
+
+//     Route.cssReady
+
+// }
+Route.cssReady = false
+Route.jsReady = false
+Route.hash = null
+
+// 根据当前url返回hash，并处理history
+Route.getHash = function() {
+
+    var hash = window.location.hash
+    var history = window.history
+
+    // 去掉url前面的#!
+    hash = hash.replace('#!', '')
+
+    // 记录hash，以便后面的set方法中调用
+    Route.hash = hash
+
+    // 将去掉#!后的url显示在地址栏中
+    history.replaceState(null, null, hash)
+
+    return hash
+}
+
+// 模块加载的入口
+Route.load = function(routes) {
+
+    // 先充值页面不需要的css和js
+    Route.resetResource()
+
+    // 这里要保证前面的加载完成，尤其是css完成才能加载file，类似于promise
+    Route.loadCss(routes.css)
+}
+
+// 清除当前页面不需要的css、js
+Route.resetResource = function() {
+
+    var doms = $('link, script')
+
+    for (var i = 0; i < doms.nodes.length; i++) {
+
+        var type = doms.eq(i).attr('data-type')
+
+        if (type !== 'common') {
+
+            doms.eq(i).remove()
+        }
+    }
+}
+
+// 重置模块加载状态
+Route.resetStatus = function() {
+
+    Route.cssReady = false
+    Route.jsReady = false
+    Route.hash = null
+}
+
+// 添加data属性
+// IE8 Dom only
+// if (W3C) {
+
+if (W3C) {
+
+    Object.defineProperties(Route, {
+        
+        cssReady: {
+            enumerable: true,
+            configurable: true,
+          
+            get: function() { return this.value },
+            set: function(value) { 
+
+                this.value = value
+
+                if (value === true) {
+
+                    // 加载js和file
+                    Route.loadJs(Route.routes[Route.hash]['js'])
+                    Route.loadTempalte(Route.routes[Route.hash]['template'])
+                }
+            }
+        }
+    })
+}
+
+// } else {
+
+//     // IE 8 兼容
+//     Event.addEvent(Route, 'propertychange', function(e) {
+        
+//         if (Route['cssReady'] === true) {
+
+//             // 加载js和file
+//             Route.loadJs(Route.routes[Route.hash]['js'])
+//             Route.loadTempalte(Route.routes[Route.hash]['template'])
+//         }
+//     })
+// }
+
+// 加载页面模板代码
+Route.loadTempalte = function(url) {
+
+    Http.get(url, function(data) {
+
+        // 加载成功之后，将data复制到view中
+        $('#fs-view').html(data)
+    })
+}
+
+// 加载js文件
+Route.loadJs = function(arr) {
+
+    var jsReady = 0
+
+    var callback = function() {
+
+        jsReady += 1
+
+        if (jsReady === arr.length) {
+
+            Route.jsReady = true
+        }
+    }
+
+    for (var i = 0; i < arr.length; i++) {
+
+        Http.getScript(arr[i], callback)
+    }
+}
+
+// 根据Route.routes加载css
+Route.loadCss = function(arr) {
+
+    var cssReady = 0
+
+    var callback = function() {
+
+        cssReady += 1
+
+        if (cssReady === arr.length) {
+
+
+            if (W3C) {
+
+                Route.cssReady = true
+
+            } else {
+
+                Route.loadJs(Route.routes[Route.hash]['js'])
+                Route.loadTempalte(Route.routes[Route.hash]['template'])
+            }
+        }
+    }
+
+    for (var i = 0; i < arr.length; i++) {
+
+        Http.getCss(arr[i], callback)
+    }
+}
+
+// Route.resetCss = function() {}
+// Route.resetJs = function() {}
+
+// TODO: provider可以考虑改成类
+Route.provider = function(paths) {
+
+    var provider = this,
+        routes = {}
+
+    var hashChange = function() {
+
+        var hash = Route.getHash()
+
+        // 在这里分析routes，然后分别调用加载
+        var routes = Route.routes[hash]
+
+        Route.load(routes)
+    }
+
+    this.when = function(path, route) {
+
+        // TODO: path需要支持数组形式
+        if (path instanceof Array) {
+
+            path.forEach(function(v, i, a) {
+
+                routes[v] = route
+            })
+        
+        } else {
+
+            routes[path] = route    
+        }
+
+        return provider
+    }
+
+    // 路由的配置必须由otherwise结尾，该方法负责注册路由规则和激活hashchange事件
+    this.otherwise = function(path) {
+
+        // 这里使用的routes是provider的私有变量
+        routes.otherwise = path
+
+        Route.routes = routes
+
+        // 激活hashChange事件
+        $('window').on('hashchange', hashChange)
+
+        // 重置模块加载状态
+        Route.resetStatus()
+
+        // 处理url直接访问的加载情况
+        // TODO: 这里的代码和hashChange中的重复
+        ! function() {
+
+            var hash = Route.getHash()
+
+            // 在这里分析routes，然后分别调用加载
+            var routes = Route.routes[hash]
+
+            Route.load(routes)
+        }()
+    }
+
+    return this
+}
+
+/**
+ * 2015.5.21
+ * 增加了Route模块
+ * 增加了hashChange事件，when和otherwise方法
+ * 2015.6.2
+ * 修改了hashchange
+ * 2015.6.3
+ * 增加了resetResource函数
  */
 
 

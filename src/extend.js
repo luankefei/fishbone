@@ -1,5 +1,4 @@
 
-
 /**
  * @name  extend.js
  * @description  此文件用来向命名空间注册api
