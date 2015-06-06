@@ -1218,7 +1218,6 @@ function makeArray(arrayLike) {
     return arr
 }
 
-
 mix($.fn, {
 
     mix: mix,
@@ -1279,6 +1278,7 @@ mix($.fn, {
  * 更换了打包方式，移除了amd模块
  * 2015.6.5
  * 增加了makeArray函数
+ * 修改了init函数，为兼容IE 8 将Object.create更换为new Object
  */
  
 /**
@@ -1806,13 +1806,15 @@ Event.ready = function(handler) {
                 Function.call(handler)
             }
         }
+        
     } else {
 
         Event.addEvent(this.nodes, eventFn, handle, false)
     }
 }
 
-Event.unbind = function() {}
+// TODO: 还没做
+Event.off = function() {}
 
 
 /**
@@ -1824,6 +1826,8 @@ Event.unbind = function() {}
  * 2015.5.26
  * 重写了live函数，初步测试可用，但事件通过document绑定，还有优化空间
  * 添加了ready函数
+ * 2015.6.5
+ * 将unbind更名为off
  */
 
 /**
@@ -1831,7 +1835,6 @@ Event.unbind = function() {}
  * @description 定义模块
  * @date 2015.5.26
  */
-
 var Module = {}
 
 // 组件类，生成基本结构
@@ -1940,7 +1943,6 @@ Css.calculateChange = function(key, value) {
     oldValue = Number.parseInt(oldValue.substring(0, oldValue.length - 2))
     // 去掉px后取整
     value = Number.parseInt(value.substring(0, value.length - 2))
-    
     value = oldValue + value + 'px'
 
     return value
@@ -2027,13 +2029,11 @@ Css.init = function(key, value) {
  */
 
 
-
 /**
  * @name attr.js
  * @description 属性操作模块
  * @date 2015.6.2
  */
-
 var Attr = {}
 
 // 获取属性
@@ -2076,13 +2076,13 @@ Attr.init = function(key, value) {
     return returnValue
 }
 
-
 /**
  * 2015.6.2
  * 创建模块
  * 增加了getAttr、setAttr和init
  * 测试通过
  */
+ 
 /*
  * @name  route.js
  * @description  路由模块
@@ -2090,11 +2090,7 @@ Attr.init = function(key, value) {
  */
 var Route = {}
 
-// if (W3C) {
 
-//     Route.cssReady
-
-// }
 Route.cssReady = false
 Route.jsReady = false
 Route.hash = null
@@ -2182,6 +2178,7 @@ if (W3C) {
 // } else {
 
 //     // IE 8 兼容
+//     // propertychange也只能对dom对象使用
 //     Event.addEvent(Route, 'propertychange', function(e) {
         
 //         if (Route['cssReady'] === true) {
@@ -2331,6 +2328,40 @@ Route.provider = function(paths) {
  * 增加了resetResource函数
  */
 
+/**
+ * @name animate.js
+ * @description 动画模块
+ * @date 2015.6.5
+ */
+
+
+var Animate = {}
+
+
+Animate.init = function(params, duration, easing, callback) {
+
+    // 这是fishbone对象
+    this
+    // 这是fishbone对象里面的dom数组
+    this.nodes
+
+
+
+
+
+    callback.call(this)
+}
+
+
+
+
+
+
+
+/**
+ * 2015.6.5
+ * 创建模块
+ */
 
 /**
  * @name  extend.js
@@ -2355,7 +2386,6 @@ mix($, {
     component: Module.component.init
 })
 
-
 mix($.fn, Node)
 mix($.fn, {
 	on: Event.on,
@@ -2370,7 +2400,8 @@ mix($.fn, {
     html: Node.html,
     clone: Node.clone,
     append: Node.append,
-    prepend: Node.prepend
+    prepend: Node.prepend,
+    animate: Animate.init
 })
 /**
  * 2015.5.12 创建extend
