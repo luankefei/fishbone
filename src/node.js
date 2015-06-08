@@ -1,4 +1,4 @@
-/**
+/*
  * @name  node.js
  * @description  dom、node模块，提供dom对象的CRUD
  * @date  2015.05.12
@@ -8,19 +8,29 @@ var Node = {}
 // 将node以某元素子元素的形式插入到该元素内容的最后面
 Node.append = function(node) {
 
-    if (this.nodes.length === 1) {
+    var nodes = this.nodes.length
 
-        this.nodes.appendChild(node)
+    if (nodes.length === 1) {
+
+        nodes.appendChild(node)
 
     } else {
 
         // 循环复制插入节点
-        this.nodes.forEach(function(value) {
+        for (var i = 0; i < nodes.length; i++) {
 
             var n = node.cloneNode(true)
 
-            value.appendChild(n)
-        })            
+            nodes[i].appendChild(n)
+        }
+
+        // 循环复制插入节点
+        // this.nodes.forEach(function(value) {
+
+        //     var n = node.cloneNode(true)
+
+        //     value.appendChild(n)
+        // })            
     }
 
     return this
@@ -29,19 +39,29 @@ Node.append = function(node) {
 // 将node以某元素子元素的形式插入到该元素内容的最前面
 Node.prepend = function(node) {
 
-    if (this.nodes.nodeName) {
+    var nodes = this.nodes
 
-        this.nodes.insertBefore(node, this.nodes.childNodes[0])
+    if (nodes.nodeName) {
+
+        nodes.insertBefore(node, nodes.childNodes[0])
 
     } else {
 
         // 循环复制插入节点
-        this.nodes.forEach(function(v) {
+        for (var i = 0; i < nodes.length; i++) {
 
             var n = node.cloneNode(true)
 
-            v.insertBefore(n, v.childNodes[0])
-        })            
+            nodes[i].insertBefore(n, nodes[i].childNodes[0])
+
+        }
+        
+        // nodes.forEach(function(v) {
+
+        //     var n = node.cloneNode(true)
+
+        //     v.insertBefore(n, v.childNodes[0])
+        // })            
     }
 
     return this
@@ -50,18 +70,25 @@ Node.prepend = function(node) {
 // 克隆节点，如果include_all为true，会克隆该元素所包含的所有子节点
 Node.clone = function(include) {
 
-    if (this.nodes.nodeName) {
+    var nodes = this.nodes
 
-        return this.nodes.cloneNode(include)
+    if (nodes.nodeName) {
+
+        return nodes.cloneNode(include)
 
     } else {
 
         var arr = []
 
-        this.nodes.forEach(function(v) {
+        for (var i = 0; i < nodes.length; i++) {
 
-            arr.push(v.cloneNode(include))    
-        })
+            arr.push(nodes[i].cloneNode(include))
+        }
+
+        // nodes.forEach(function(v) {
+
+        //     arr.push(v.cloneNode(include))
+        // })
 
         return arr
     }
@@ -80,10 +107,15 @@ Node.html = function(html) {
 
         } else {
 
-            nodes.forEach(function(v, i, a) {
+            for (var i = 0; i < nodes.length; i++) {
 
-                v.innerHTML = html
-            })
+                nodes[i].innerHTML = html
+            }
+
+            // nodes.forEach(function(v, i, a) {
+
+            //     v.innerHTML = html
+            // })
         }
 
         return this
@@ -163,4 +195,7 @@ Node.last = function() {
  * 2015.5.21
  * 在eq中添加了try-catch处理，目前的写法并不完美，但足够使用
  * 增加了first、last和remove方法
+ * 2015.6.8
+ * 修改了append、prepend、clone和html方法
  */
+ 

@@ -78,7 +78,7 @@ Http.ajax = function(param, events) {
     var data = param.data || null
 
     var req = new XMLHttpRequest()
-
+    
     req.open(type, url)
 
     // 如果有传入loadStart和progress参数

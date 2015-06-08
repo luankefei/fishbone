@@ -11,9 +11,9 @@ var Animate = {}
 Animate.init = function(params, duration, easing, callback) {
 
     // 这是fishbone对象
-    this
+    console.log(this)
     // 这是fishbone对象里面的dom数组
-    this.nodes
+    console.log(this.nodes)
 
 
 

@@ -23,7 +23,10 @@ Route.getHash = function() {
     Route.hash = hash
 
     // 将去掉#!后的url显示在地址栏中
-    history.replaceState(null, null, hash)
+    if (W3C) {
+
+        history.replaceState(null, null, hash)
+    }
 
     return hash
 }
@@ -190,10 +193,17 @@ Route.provider = function(paths) {
         // TODO: path需要支持数组形式
         if (path instanceof Array) {
 
-            path.forEach(function(v, i, a) {
+            for (var i = 0; i < path.length; i++) {
 
-                routes[v] = route
-            })
+                var key = path[i]
+
+                routes[key] = route
+            }
+
+            // path.forEach(function(v, i, a) {
+
+            //     routes[v] = route
+            // })
         
         } else {
 
@@ -241,4 +251,6 @@ Route.provider = function(paths) {
  * 修改了hashchange
  * 2015.6.3
  * 增加了resetResource函数
+ * 2015.6.8
+ * 修改了getHash和when，IE 8测试通过
  */

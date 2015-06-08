@@ -75,10 +75,15 @@ Event.on = function(type, handler) {
 
     } else {
 
-        target.forEach(function(v, i, a) {
+        for (var i = 0; i < target.length; i++) {
 
-            Event.addEvent(v, type, handler)
-        })
+            Event.addEvent(target[i], type, handler)
+        }
+
+        // target.forEach(function(v, i, a) {
+
+        //     Event.addEvent(v, type, handler)
+        // })
     }
 }
 
