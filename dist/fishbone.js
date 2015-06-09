@@ -1147,6 +1147,7 @@ seajs.config = function(configData) {
  * @description  此文件是种子模块，定义了大量私有变量，提供extend等基础api
  * @date  2015.05.07
  * @version  0.0.2
+ * @author  sunken
  */
 var W3C = DOC.dispatchEvent //IE9开始支持W3C的事件模型与getComputedStyle取样式值
 var html = DOC.documentElement //HTML元素
@@ -1287,12 +1288,14 @@ mix($.fn, {
  * @deprecated  2015.6.4
  */
 
-
+// TODO: IE 8 defineProperties
+// TODO: IE 8 forEach
 
 /**
  * @name  prototype.js
  * @description  对象原型扩展模块，该文件为侵入式设计
  * @date  2015.05.12
+ * @author  sunken
  */
 String.prototype.byteLen = function(target, fix) {
 
@@ -1464,7 +1467,7 @@ Http.ajax = function(param, events) {
     var data = param.data || null
 
     var req = new XMLHttpRequest()
-
+    
     req.open(type, url)
 
     // 如果有传入loadStart和progress参数
@@ -1537,29 +1540,40 @@ Http.socket = function() {}
  * 修改了getScript函数，依赖了seajs
  */
  
-/**
+/*
  * @name  node.js
  * @description  dom、node模块，提供dom对象的CRUD
  * @date  2015.05.12
+ * @author sunken
  */
 var Node = {}
 
 // 将node以某元素子元素的形式插入到该元素内容的最后面
 Node.append = function(node) {
 
-    if (this.nodes.length === 1) {
+    var nodes = this.nodes.length
 
-        this.nodes.appendChild(node)
+    if (nodes.length === 1) {
+
+        nodes.appendChild(node)
 
     } else {
 
         // 循环复制插入节点
-        this.nodes.forEach(function(value) {
+        for (var i = 0; i < nodes.length; i++) {
 
             var n = node.cloneNode(true)
 
-            value.appendChild(n)
-        })            
+            nodes[i].appendChild(n)
+        }
+
+        // 循环复制插入节点
+        // this.nodes.forEach(function(value) {
+
+        //     var n = node.cloneNode(true)
+
+        //     value.appendChild(n)
+        // })            
     }
 
     return this
@@ -1568,19 +1582,29 @@ Node.append = function(node) {
 // 将node以某元素子元素的形式插入到该元素内容的最前面
 Node.prepend = function(node) {
 
-    if (this.nodes.nodeName) {
+    var nodes = this.nodes
 
-        this.nodes.insertBefore(node, this.nodes.childNodes[0])
+    if (nodes.nodeName) {
+
+        nodes.insertBefore(node, nodes.childNodes[0])
 
     } else {
 
         // 循环复制插入节点
-        this.nodes.forEach(function(v) {
+        for (var i = 0; i < nodes.length; i++) {
 
             var n = node.cloneNode(true)
 
-            v.insertBefore(n, v.childNodes[0])
-        })            
+            nodes[i].insertBefore(n, nodes[i].childNodes[0])
+
+        }
+        
+        // nodes.forEach(function(v) {
+
+        //     var n = node.cloneNode(true)
+
+        //     v.insertBefore(n, v.childNodes[0])
+        // })            
     }
 
     return this
@@ -1589,18 +1613,25 @@ Node.prepend = function(node) {
 // 克隆节点，如果include_all为true，会克隆该元素所包含的所有子节点
 Node.clone = function(include) {
 
-    if (this.nodes.nodeName) {
+    var nodes = this.nodes
 
-        return this.nodes.cloneNode(include)
+    if (nodes.nodeName) {
+
+        return nodes.cloneNode(include)
 
     } else {
 
         var arr = []
 
-        this.nodes.forEach(function(v) {
+        for (var i = 0; i < nodes.length; i++) {
 
-            arr.push(v.cloneNode(include))    
-        })
+            arr.push(nodes[i].cloneNode(include))
+        }
+
+        // nodes.forEach(function(v) {
+
+        //     arr.push(v.cloneNode(include))
+        // })
 
         return arr
     }
@@ -1619,10 +1650,15 @@ Node.html = function(html) {
 
         } else {
 
-            nodes.forEach(function(v, i, a) {
+            for (var i = 0; i < nodes.length; i++) {
 
-                v.innerHTML = html
-            })
+                nodes[i].innerHTML = html
+            }
+
+            // nodes.forEach(function(v, i, a) {
+
+            //     v.innerHTML = html
+            // })
         }
 
         return this
@@ -1702,11 +1738,14 @@ Node.last = function() {
  * 2015.5.21
  * 在eq中添加了try-catch处理，目前的写法并不完美，但足够使用
  * 增加了first、last和remove方法
+ * 2015.6.8
+ * 修改了append、prepend、clone和html方法
  */
+ 
 /**
- * @name event.js
- * @description 事件模块
- * @date 2015.5.25
+ * @name  event.js
+ * @description  事件模块
+ * @date  2015.5.25
  */
 
 var Event = {}
@@ -1780,10 +1819,15 @@ Event.on = function(type, handler) {
 
     } else {
 
-        target.forEach(function(v, i, a) {
+        for (var i = 0; i < target.length; i++) {
 
-            Event.addEvent(v, type, handler)
-        })
+            Event.addEvent(target[i], type, handler)
+        }
+
+        // target.forEach(function(v, i, a) {
+
+        //     Event.addEvent(v, type, handler)
+        // })
     }
 }
 
@@ -1834,6 +1878,7 @@ Event.off = function() {}
  * @name module.js
  * @description 定义模块
  * @date 2015.5.26
+ * @author sunken
  */
 var Module = {}
 
@@ -1905,9 +1950,9 @@ Module.component.init = function(name, handler) {
 
 
 /**
- * @name css.js
- * @description css模块，改变fishbone对象的样式
- * @date 2015.5.30
+ * @name  css.js
+ * @description  css模块，改变fishbone对象的样式
+ * @date  2015.5.30
  */
 var Css = {}
 
@@ -2030,9 +2075,9 @@ Css.init = function(key, value) {
 
 
 /**
- * @name attr.js
- * @description 属性操作模块
- * @date 2015.6.2
+ * @name  attr.js
+ * @description  属性操作模块
+ * @date  2015.6.2
  */
 var Attr = {}
 
@@ -2047,7 +2092,7 @@ Attr.setAttr = function(key, value) {
     
     if (this.nodes.nodeName) {
 
-        this.nodes.setAttribute(key, value)    
+        this.nodes.setAttribute(key, value)
 
     } else {
    
@@ -2082,11 +2127,11 @@ Attr.init = function(key, value) {
  * 增加了getAttr、setAttr和init
  * 测试通过
  */
- 
 /*
  * @name  route.js
  * @description  路由模块
  * @date  2015.5.21
+ * @author  sunken
  */
 var Route = {}
 
@@ -2108,7 +2153,10 @@ Route.getHash = function() {
     Route.hash = hash
 
     // 将去掉#!后的url显示在地址栏中
-    history.replaceState(null, null, hash)
+    if (W3C) {
+
+        history.replaceState(null, null, hash)
+    }
 
     return hash
 }
@@ -2166,9 +2214,11 @@ if (W3C) {
 
                 if (value === true) {
 
-                    // 加载js和file
-                    Route.loadJs(Route.routes[Route.hash]['js'])
-                    Route.loadTempalte(Route.routes[Route.hash]['template'])
+                    var hash = Route.routes[Route.hash]
+
+                    Route.loadJs(hash['js'])
+                    Route.loadTempalte(hash['template'])
+                    Route.setTitle(hash['title'])
                 }
             }
         }
@@ -2209,10 +2259,18 @@ Route.loadJs = function(arr) {
 
         jsReady += 1
 
-        if (jsReady === arr.length) {
+        if (arr === undefined || jsReady === arr.length) {
 
             Route.jsReady = true
         }
+    }
+
+    // 如果没有声明css，直接执行回调
+    if (arr === undefined) {
+
+        callback.call(null)
+
+        return
     }
 
     for (var i = 0; i < arr.length; i++) {
@@ -2221,7 +2279,17 @@ Route.loadJs = function(arr) {
     }
 }
 
+// 重置页面的标题
+Route.setTitle = function(title) {
+
+    if (title !== undefined) {
+
+        document.title = title
+    }
+}
+
 // 根据Route.routes加载css
+// TODO: loadCss和loadJs的结构相似
 Route.loadCss = function(arr) {
 
     var cssReady = 0
@@ -2230,8 +2298,7 @@ Route.loadCss = function(arr) {
 
         cssReady += 1
 
-        if (cssReady === arr.length) {
-
+        if (arr === undefined || cssReady === arr.length) {
 
             if (W3C) {
 
@@ -2239,10 +2306,22 @@ Route.loadCss = function(arr) {
 
             } else {
 
-                Route.loadJs(Route.routes[Route.hash]['js'])
-                Route.loadTempalte(Route.routes[Route.hash]['template'])
+                var hash = Route.routes[Route.hash]
+
+                Route.loadJs(hash['js'])
+                Route.loadTempalte(hash['template'])
+
+                Route.setTitle(hash['title'])
             }
         }
+    }
+
+    // 如果没有声明css，直接执行回调
+    if (arr === undefined) {
+
+        callback.call(null)
+
+        return
     }
 
     for (var i = 0; i < arr.length; i++) {
@@ -2250,9 +2329,6 @@ Route.loadCss = function(arr) {
         Http.getCss(arr[i], callback)
     }
 }
-
-// Route.resetCss = function() {}
-// Route.resetJs = function() {}
 
 // TODO: provider可以考虑改成类
 Route.provider = function(paths) {
@@ -2275,10 +2351,17 @@ Route.provider = function(paths) {
         // TODO: path需要支持数组形式
         if (path instanceof Array) {
 
-            path.forEach(function(v, i, a) {
+            for (var i = 0; i < path.length; i++) {
 
-                routes[v] = route
-            })
+                var key = path[i]
+
+                routes[key] = route
+            }
+
+            // path.forEach(function(v, i, a) {
+
+            //     routes[v] = route
+            // })
         
         } else {
 
@@ -2326,14 +2409,18 @@ Route.provider = function(paths) {
  * 修改了hashchange
  * 2015.6.3
  * 增加了resetResource函数
+ * 2015.6.8
+ * 修改了getHash和when，IE 8测试通过
+ * 2015.6.9
+ * 修改了loadCss和loadJs，现在when函数的css和js变成了可选项
+ * 修改了loadCss，在callback中重置了页面标题
  */
 
 /**
- * @name animate.js
- * @description 动画模块
- * @date 2015.6.5
+ * @name  animate.js
+ * @description  动画模块
+ * @date  2015.6.5
  */
-
 
 var Animate = {}
 
@@ -2341,9 +2428,9 @@ var Animate = {}
 Animate.init = function(params, duration, easing, callback) {
 
     // 这是fishbone对象
-    this
+    console.log(this)
     // 这是fishbone对象里面的dom数组
-    this.nodes
+    console.log(this.nodes)
 
 
 
@@ -2367,7 +2454,7 @@ Animate.init = function(params, duration, easing, callback) {
  * @name  extend.js
  * @description  此文件用来向命名空间注册api
  * @date  2015.05.12
- * @author: sunken
+ * @author  sunken
  */
 
 

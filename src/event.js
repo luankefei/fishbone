@@ -1,7 +1,7 @@
 /**
- * @name event.js
- * @description 事件模块
- * @date 2015.5.25
+ * @name  event.js
+ * @description  事件模块
+ * @date  2015.5.25
  */
 
 var Event = {}

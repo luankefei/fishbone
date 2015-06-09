@@ -2,6 +2,7 @@
  * @name  node.js
  * @description  dom、node模块，提供dom对象的CRUD
  * @date  2015.05.12
+ * @author sunken
  */
 var Node = {}
 

@@ -2,6 +2,7 @@
  * @name  route.js
  * @description  路由模块
  * @date  2015.5.21
+ * @author  sunken
  */
 var Route = {}
 
@@ -84,9 +85,11 @@ if (W3C) {
 
                 if (value === true) {
 
-                    // 加载js和file
-                    Route.loadJs(Route.routes[Route.hash]['js'])
-                    Route.loadTempalte(Route.routes[Route.hash]['template'])
+                    var hash = Route.routes[Route.hash]
+
+                    Route.loadJs(hash['js'])
+                    Route.loadTempalte(hash['template'])
+                    Route.setTitle(hash['title'])
                 }
             }
         }
@@ -127,10 +130,18 @@ Route.loadJs = function(arr) {
 
         jsReady += 1
 
-        if (jsReady === arr.length) {
+        if (arr === undefined || jsReady === arr.length) {
 
             Route.jsReady = true
         }
+    }
+
+    // 如果没有声明css，直接执行回调
+    if (arr === undefined) {
+
+        callback.call(null)
+
+        return
     }
 
     for (var i = 0; i < arr.length; i++) {
@@ -139,7 +150,17 @@ Route.loadJs = function(arr) {
     }
 }
 
+// 重置页面的标题
+Route.setTitle = function(title) {
+
+    if (title !== undefined) {
+
+        document.title = title
+    }
+}
+
 // 根据Route.routes加载css
+// TODO: loadCss和loadJs的结构相似
 Route.loadCss = function(arr) {
 
     var cssReady = 0
@@ -148,8 +169,7 @@ Route.loadCss = function(arr) {
 
         cssReady += 1
 
-        if (cssReady === arr.length) {
-
+        if (arr === undefined || cssReady === arr.length) {
 
             if (W3C) {
 
@@ -157,10 +177,22 @@ Route.loadCss = function(arr) {
 
             } else {
 
-                Route.loadJs(Route.routes[Route.hash]['js'])
-                Route.loadTempalte(Route.routes[Route.hash]['template'])
+                var hash = Route.routes[Route.hash]
+
+                Route.loadJs(hash['js'])
+                Route.loadTempalte(hash['template'])
+
+                Route.setTitle(hash['title'])
             }
         }
+    }
+
+    // 如果没有声明css，直接执行回调
+    if (arr === undefined) {
+
+        callback.call(null)
+
+        return
     }
 
     for (var i = 0; i < arr.length; i++) {
@@ -168,9 +200,6 @@ Route.loadCss = function(arr) {
         Http.getCss(arr[i], callback)
     }
 }
-
-// Route.resetCss = function() {}
-// Route.resetJs = function() {}
 
 // TODO: provider可以考虑改成类
 Route.provider = function(paths) {
@@ -253,4 +282,7 @@ Route.provider = function(paths) {
  * 增加了resetResource函数
  * 2015.6.8
  * 修改了getHash和when，IE 8测试通过
+ * 2015.6.9
+ * 修改了loadCss和loadJs，现在when函数的css和js变成了可选项
+ * 修改了loadCss，在callback中重置了页面标题
  */

@@ -1,8 +1,8 @@
 
 /**
- * @name attr.js
- * @description 属性操作模块
- * @date 2015.6.2
+ * @name  attr.js
+ * @description  属性操作模块
+ * @date  2015.6.2
  */
 var Attr = {}
 

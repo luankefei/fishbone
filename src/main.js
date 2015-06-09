@@ -3,6 +3,7 @@
  * @description  此文件是种子模块，定义了大量私有变量，提供extend等基础api
  * @date  2015.05.07
  * @version  0.0.2
+ * @author  sunken
  */
 var W3C = DOC.dispatchEvent //IE9开始支持W3C的事件模型与getComputedStyle取样式值
 var html = DOC.documentElement //HTML元素

@@ -1,8 +1,8 @@
 
 /**
- * @name css.js
- * @description css模块，改变fishbone对象的样式
- * @date 2015.5.30
+ * @name  css.js
+ * @description  css模块，改变fishbone对象的样式
+ * @date  2015.5.30
  */
 var Css = {}
 

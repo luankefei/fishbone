@@ -3,7 +3,7 @@
  * @name  extend.js
  * @description  此文件用来向命名空间注册api
  * @date  2015.05.12
- * @author: sunken
+ * @author  sunken
  */
 
 

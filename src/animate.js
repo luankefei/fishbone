@@ -1,9 +1,8 @@
 /**
- * @name animate.js
- * @description 动画模块
- * @date 2015.6.5
+ * @name  animate.js
+ * @description  动画模块
+ * @date  2015.6.5
  */
-
 
 var Animate = {}
 

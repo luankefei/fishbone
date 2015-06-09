@@ -2,6 +2,7 @@
  * @name module.js
  * @description 定义模块
  * @date 2015.5.26
+ * @author sunken
  */
 var Module = {}
 
