@@ -162,15 +162,26 @@ Node.eq = function(index) {
 
     var n = null
 
-    try {
+    if (this.nodes instanceof Array) {
 
         n = this.nodes[index]
-        n = $.fn.init(n)
+        
+    } else if (index === 0) {
 
-    } catch(e) {
-
-        console.error('$.fn.eq只能用于复数节点集合')
+        n = this.nodes
     }
+
+    n = $.fn.init(n)
+
+    // try {
+
+    //     n = this.nodes[index]
+    //     n = $.fn.init(n)
+
+    // } catch(e) {
+
+    //     console.error('$.fn.eq只能用于复数节点集合')
+    // }
 
     return n
 }

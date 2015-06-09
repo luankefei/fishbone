@@ -1502,7 +1502,7 @@ Http.ajax = function(param, events) {
             
             } catch(e) {
 
-                throw 'json parse error'
+                //throw 'json parse error'
             }
 
             param.success && param.success(res)
@@ -1704,15 +1704,26 @@ Node.eq = function(index) {
 
     var n = null
 
-    try {
+    if (this.nodes instanceof Array) {
 
         n = this.nodes[index]
-        n = $.fn.init(n)
+        
+    } else if (index === 0) {
 
-    } catch(e) {
-
-        console.error('$.fn.eq只能用于复数节点集合')
+        n = this.nodes
     }
+
+    n = $.fn.init(n)
+
+    // try {
+
+    //     n = this.nodes[index]
+    //     n = $.fn.init(n)
+
+    // } catch(e) {
+
+    //     console.error('$.fn.eq只能用于复数节点集合')
+    // }
 
     return n
 }
@@ -1752,9 +1763,6 @@ var Event = {}
 
 // 添加事件
 Event.addEvent = function(target, type, handler) {
-
-    console.log('add event')
-    console.log(target)
 
     if (target.addEventListener) {
         target.addEventListener(type, handler, false)
@@ -2144,8 +2152,8 @@ Attr.init = function(key, value) {
 var Route = {}
 
 
-Route.cssReady = false
-Route.jsReady = false
+// Route.cssReady = false
+// Route.jsReady = false
 Route.hash = null
 
 // 根据当前url返回hash，并处理history
@@ -2214,12 +2222,9 @@ Route.resetResource = function() {
     //         links[i].remove()
     //     }
     // }
-    
 
+    // TODO: 应该判断dom标签是否带有href或src属性，否则视为页面内部代码，不清除
     for (var i = 0; i < doms.nodes.length; i++) {
-
-        console.log(i)
-        console.log(doms)
 
         var type = doms.eq(i).attr('data-type')
 
@@ -2249,22 +2254,41 @@ if (W3C) {
             enumerable: true,
             configurable: true,
           
-            get: function() { return this.value },
+            get: function() { return this.cssReadyValue },
             set: function(value) { 
 
-                this.value = value
+                this.cssReadyValue = value
+
+                if (value === true) {
+
+                    var hash = Route.routes[Route.hash]
+
+                    Route.loadTempalte(hash['template'])
+                }
+            }
+        },
+
+        templateReady: {
+
+            enumerable: true,
+            configurable: true,
+          
+            get: function() { return this.templateReady },
+            set: function(value) { 
+
+                //console.log('templateReady')
+
+                this.templateReadyValue = value
 
                 if (value === true) {
 
                     var hash = Route.routes[Route.hash]
 
                     Route.loadJs(hash['js'])
-                    Route.loadTempalte(hash['template'])
-                    Route.setTitle(hash['title'])
                 }
-            }
-        }
-    })
+            }   // end setter
+        }   // end jsReady
+    })  // end defineProperties
 }
 
 // } else {
@@ -2289,6 +2313,20 @@ Route.loadTempalte = function(url) {
 
         // 加载成功之后，将data复制到view中
         $('#fs-view').html(data)
+
+        console.log('load template')
+
+        if (W3C) {
+
+            Route.templateReady = true
+
+        } else {
+
+            var hash = Route.routes[Route.hash]
+
+            Route.loadJs(hash['js'])
+            Route.setTitle(hash['title'])
+        }
     })
 }
 
@@ -2303,11 +2341,14 @@ Route.loadJs = function(arr) {
 
         if (arr === undefined || jsReady === arr.length) {
 
-            Route.jsReady = true
+            if (W3C) {
+
+                Route.jsReady = true
+            }
         }
     }
 
-    // 如果没有声明css，直接执行回调
+    // 如果没有声明js，直接执行回调
     if (arr === undefined) {
 
         callback.call(null)
@@ -2350,10 +2391,8 @@ Route.loadCss = function(arr) {
 
                 var hash = Route.routes[Route.hash]
 
-                Route.loadJs(hash['js'])
-                Route.loadTempalte(hash['template'])
 
-                Route.setTitle(hash['title'])
+                Route.loadTempalte(hash['template'])
             }
         }
     }
@@ -2456,6 +2495,7 @@ Route.provider = function(paths) {
  * 2015.6.9
  * 修改了loadCss和loadJs，现在when函数的css和js变成了可选项
  * 修改了loadCss，在callback中重置了页面标题
+ * 增加了Route.templateReady，让加载流程变成线性
  */
 
 /**

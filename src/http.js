@@ -113,7 +113,7 @@ Http.ajax = function(param, events) {
             
             } catch(e) {
 
-                throw 'json parse error'
+                //throw 'json parse error'
             }
 
             param.success && param.success(res)

@@ -9,9 +9,6 @@ var Event = {}
 // 添加事件
 Event.addEvent = function(target, type, handler) {
 
-    console.log('add event')
-    console.log(target)
-
     if (target.addEventListener) {
         target.addEventListener(type, handler, false)
 
