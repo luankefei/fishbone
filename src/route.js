@@ -35,6 +35,11 @@ Route.getHash = function() {
 // 模块加载的入口
 Route.load = function(routes) {
 
+    if (routes === undefined) {
+
+        return
+    }
+
     // 先充值页面不需要的css和js
     Route.resetResource()
 
@@ -44,10 +49,40 @@ Route.load = function(routes) {
 
 // 清除当前页面不需要的css、js
 Route.resetResource = function() {
-
+    
     var doms = $('link, script')
 
+    // var scripts = document.getElementsByTagName('script')
+    // var links = document.getElementsByTagName('link')
+
+    // for (var i = 0; i < scripts.length; i++) {
+
+    //     var type = scripts[i].getAttribute('data-type')
+    //     var src = scripts[i].getAttribute('src')
+
+    //     if (typeof src === 'string' && type !== 'common') {
+
+    //         console.log(scripts[i])
+
+    //         scripts[i].remove()
+    //     }
+    // }
+
+    // for (var i = 0; i < links.length; i++) {
+
+    //     var type = links[i].getAttribute('data-type')
+
+    //     if (type !== 'common') {
+
+    //         links[i].remove()
+    //     }
+    // }
+    
+
     for (var i = 0; i < doms.nodes.length; i++) {
+
+        console.log(i)
+        console.log(doms)
 
         var type = doms.eq(i).attr('data-type')
 
@@ -69,7 +104,6 @@ Route.resetStatus = function() {
 // 添加data属性
 // IE8 Dom only
 // if (W3C) {
-
 if (W3C) {
 
     Object.defineProperties(Route, {
@@ -251,7 +285,7 @@ Route.provider = function(paths) {
         Route.routes = routes
 
         // 激活hashChange事件
-        $('window').on('hashchange', hashChange)
+        $(window).on('hashchange', hashChange)
 
         // 重置模块加载状态
         Route.resetStatus()

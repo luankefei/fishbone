@@ -8,6 +8,10 @@ var Event = {}
 
 // 添加事件
 Event.addEvent = function(target, type, handler) {
+
+    console.log('add event')
+    console.log(target)
+
     if (target.addEventListener) {
         target.addEventListener(type, handler, false)
 
@@ -69,16 +73,19 @@ Event.on = function(type, handler) {
     var target = this.nodes
 
     // 根据nodeName判断单个绑定或循环绑定
-    if (target.nodeName) {
-
-        Event.addEvent(target, type, handler)
-
-    } else {
+    // target可能是window或document对象，判断条件从nodeName改成是否是array
+    if (target instanceof Array) {
 
         for (var i = 0; i < target.length; i++) {
 
             Event.addEvent(target[i], type, handler)
         }
+
+    } else {
+
+        Event.addEvent(target, type, handler)
+
+        
 
         // target.forEach(function(v, i, a) {
 
@@ -94,6 +101,7 @@ Event.ready = function(handler) {
     var handle = null
 
     if (this.nodes !== document) {
+
         return
     }
 

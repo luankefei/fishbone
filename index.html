@@ -4,65 +4,33 @@
     <meta charset="UTF-8">
     <meta id="viewport" name='viewport' content='initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no'>
     <title>首页 - sunken.me</title>
-    <link data-type='common' rel="stylesheet" href="/css/common.css" />
-    <link data-type='common' rel="stylesheet" href="/css/media.css" />
-    <link data-type='common' rel="stylesheet" href="/css/layout.css" />
-    <link data-type='common' rel="stylesheet" href="/css/ui.css" />
     
 </head>
 <body>
-    <div class="wrapper">
-        <div id="nav">
-            <nav>
-                <div class="container">
-                    <ul>
-                        <li class="selected">
-                            <a href="/">首页</a>
-                        </li>
-                        <li>
-                            <a href="">留言</a>
-                        </li>
-                        <li>
-                            <a href="/#/about">关于</a>
-                        </li>
-                    </ul>
-                </div>
-            </nav>
-            <div id="load-bar"></div>
-        </div>
 
-        <header>
-            <div class="container">
-                <img src="/images/logo.png" alt="www.sunken.me" id="logo" />
-                <div class="slogan">想法、层次、评论、戏剧性、流言</div>
-            </div>
-            
-        </header>
+    <a href="/#!/list">list</a>
+    <a href="/#/list">list2</a>
 
-        <div id="fs-view" class="container clearfix" data-view=""></div>
-
-        <footer>
-            <span>design by sunken, all rights reserved</span>
-            <a href="/#/about">关于我</a>
-            <a href="#">作品展示</a>
-        </footer>
-    </div>
+    <div id="fs-view"></div>
 
     <script src="dist/fishbone.js"></script>
 
     <script>
 
+    // $(document).ready(function() {
+
+    //     console.log('123')
+
+
+    // })
+
     var route = $.route
         .provider()
-        .when(['', '/', '/index'], {
-
-            //css: ['/css/index.css'],
-            //js: ['/js/index.js'],
+        .when(['/list'], {
             template: '/views/index.html',
             title: 'fishbone'
         })
         .otherwise('/')
-
 
     </script>
     

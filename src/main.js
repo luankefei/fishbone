@@ -88,7 +88,7 @@ mix($.fn, {
     init: function(expr) {
 
         // 如果传入的是dom节点
-        if (expr.nodeName) {
+        if (expr.nodeName || expr === window) {
 
             this.nodes = expr
             this.selector = null

@@ -1232,7 +1232,7 @@ mix($.fn, {
     init: function(expr) {
 
         // 如果传入的是dom节点
-        if (expr.nodeName) {
+        if (expr.nodeName || expr === window) {
 
             this.nodes = expr
             this.selector = null
@@ -1752,6 +1752,10 @@ var Event = {}
 
 // 添加事件
 Event.addEvent = function(target, type, handler) {
+
+    console.log('add event')
+    console.log(target)
+
     if (target.addEventListener) {
         target.addEventListener(type, handler, false)
 
@@ -1813,16 +1817,19 @@ Event.on = function(type, handler) {
     var target = this.nodes
 
     // 根据nodeName判断单个绑定或循环绑定
-    if (target.nodeName) {
-
-        Event.addEvent(target, type, handler)
-
-    } else {
+    // target可能是window或document对象，判断条件从nodeName改成是否是array
+    if (target instanceof Array) {
 
         for (var i = 0; i < target.length; i++) {
 
             Event.addEvent(target[i], type, handler)
         }
+
+    } else {
+
+        Event.addEvent(target, type, handler)
+
+        
 
         // target.forEach(function(v, i, a) {
 
@@ -1838,6 +1845,7 @@ Event.ready = function(handler) {
     var handle = null
 
     if (this.nodes !== document) {
+
         return
     }
 
@@ -2164,6 +2172,11 @@ Route.getHash = function() {
 // 模块加载的入口
 Route.load = function(routes) {
 
+    if (routes === undefined) {
+
+        return
+    }
+
     // 先充值页面不需要的css和js
     Route.resetResource()
 
@@ -2173,10 +2186,40 @@ Route.load = function(routes) {
 
 // 清除当前页面不需要的css、js
 Route.resetResource = function() {
-
+    
     var doms = $('link, script')
 
+    // var scripts = document.getElementsByTagName('script')
+    // var links = document.getElementsByTagName('link')
+
+    // for (var i = 0; i < scripts.length; i++) {
+
+    //     var type = scripts[i].getAttribute('data-type')
+    //     var src = scripts[i].getAttribute('src')
+
+    //     if (typeof src === 'string' && type !== 'common') {
+
+    //         console.log(scripts[i])
+
+    //         scripts[i].remove()
+    //     }
+    // }
+
+    // for (var i = 0; i < links.length; i++) {
+
+    //     var type = links[i].getAttribute('data-type')
+
+    //     if (type !== 'common') {
+
+    //         links[i].remove()
+    //     }
+    // }
+    
+
     for (var i = 0; i < doms.nodes.length; i++) {
+
+        console.log(i)
+        console.log(doms)
 
         var type = doms.eq(i).attr('data-type')
 
@@ -2198,7 +2241,6 @@ Route.resetStatus = function() {
 // 添加data属性
 // IE8 Dom only
 // if (W3C) {
-
 if (W3C) {
 
     Object.defineProperties(Route, {
@@ -2380,7 +2422,7 @@ Route.provider = function(paths) {
         Route.routes = routes
 
         // 激活hashChange事件
-        $('window').on('hashchange', hashChange)
+        $(window).on('hashchange', hashChange)
 
         // 重置模块加载状态
         Route.resetStatus()
