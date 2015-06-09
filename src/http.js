@@ -1,10 +1,10 @@
-
-/**
+/*
  * @name  http.js
  * @description  数据请求模块，负责实现ajax、comet、websocket
  * @date  2015.05.12
  * @version  0.0.1
  */
+
 var Http = {}
 
 var accepts = {
@@ -21,20 +21,23 @@ defaults = {
     type: 'GET',
     contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
     async: true
-    //jsonp: 'callback'
+        //jsonp: 'callback'
 }
 
 // ajax获取js文件
+// TODO: 这里暂时修改使用seajs的api
 Http.getScript = function(url, callback) {
 
-    var script = document.createElement('script')
-    var body = document.querySelector('body')
+    seajs.use(url, callback)
 
-    script.src = url
-    script.type = 'text/javascript'
-    script.onload = callback.call(this)
-   
-    body.appendChild(script)
+    // var script = document.createElement('script')
+    // var body = document.querySelector('body')
+
+    // script.src = url
+    // script.type = 'text/javascript'
+    // script.onload = callback.call(this)
+
+    // body.appendChild(script)
 }
 
 // ajax获取css文件
@@ -46,7 +49,13 @@ Http.getCss = function(url, callback) {
 
     link.href = url
     link.rel = 'stylesheet'
-    link.onload = callback.call(this)
+
+    // IE 8兼容
+    //link.onload = callback.call(this)
+    link.onload = function() {
+
+        callback.call(this)
+    }
 
     head.appendChild(link)
 }
@@ -56,13 +65,14 @@ Http.get = function(url, callback) {
 
     var param = defaults
 
+    param.success = callback
+
     param.url = url
 
-    Http.ajax(param, callback)
+    Http.ajax(param)
 }
 
-// 第三个参数为自定义事件，用来支持xmlhttprequest 2.0的新增事件
-Http.ajax = function(param, callback, events) {
+Http.ajax = function(param, events) {
 
     var url = param.url
     var type = param.type ? param.type.toUpperCase() : defaults.type
@@ -81,13 +91,33 @@ Http.ajax = function(param, callback, events) {
         }
     }
 
+    // 调用beforeSend，这里面不能写异步函数
+    param.beforeSend && param.beforeSend(req)
+
     req.onreadystatechange = function() {
 
-        if (req.status === 200 && req.readyState === 4) {
+        if (req.readyState === 4 && req.status === 200) {
 
+            // 应该判断是否是json
             var res = req.responseText
 
-            callback && callback(res)
+            try {
+
+                if (W3C) {
+
+                    res = JSON.parse(res)
+
+                } else {
+
+                    res = eval('[' + res + ']')
+                }
+            
+            } catch(e) {
+
+                throw 'json parse error'
+            }
+
+            param.success && param.success(res)
         }
     }
 
@@ -104,7 +134,7 @@ Http.jsonp = function(url, namespace, funcName, callback) {
     script.src = url + '?type=jsonp&callbackName=' + funcName
     script.id = 'jsonp'
     script.onload = callback
-    
+
     window[funcName] = namespace.funcName
 
     body.appendChild(script)
@@ -115,7 +145,10 @@ Http.comet = function() {}
 Http.socket = function() {}
 
 /**
- * 2015.05.12 
+ * 2015.5.12
  * 创建http模块
  * 添加ajax、jsonp两个顶级接口。ajax支持httprequest 2.0
+ * 2015.6.4
+ * 修改了getScript函数，依赖了seajs
  */
+ 

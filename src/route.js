@@ -5,6 +5,11 @@
  */
 var Route = {}
 
+// if (W3C) {
+
+//     Route.cssReady
+
+// }
 Route.cssReady = false
 Route.jsReady = false
 Route.hash = null
@@ -23,13 +28,6 @@ Route.getHash = function() {
 
     // 将去掉#!后的url显示在地址栏中
     history.replaceState(null, null, hash)
-
-    console.log('hash')
-    console.log(hash)
-    console.log(hash.length)
-    console.log(encodeURI(hash))
-    console.log(hash == '' || hash == '/' || hash == 'index' || hash == ' ')
-
 
     return hash
 }
@@ -69,26 +67,46 @@ Route.resetStatus = function() {
 }
 
 // 添加data属性
-Object.defineProperties(Route, {
+// IE8 Dom only
+// if (W3C) {
+
+if (W3C) {
+
+    Object.defineProperties(Route, {
         
-    cssReady: {
-        enumerable: true,
-        configurable: true,
-      
-        get: function() { return this.value },
-        set: function(value) { 
+        cssReady: {
+            enumerable: true,
+            configurable: true,
+          
+            get: function() { return this.value },
+            set: function(value) { 
 
-            this.value = value
+                this.value = value
 
-            if (value === true) {
+                if (value === true) {
 
-                // 加载js和file
-                Route.loadJs(Route.routes[Route.hash]['js'])
-                Route.loadTempalte(Route.routes[Route.hash]['template'])
-            }            
+                    // 加载js和file
+                    Route.loadJs(Route.routes[Route.hash]['js'])
+                    Route.loadTempalte(Route.routes[Route.hash]['template'])
+                }
+            }
         }
-    }
-})
+    })
+}
+
+// } else {
+
+//     // IE 8 兼容
+//     Event.addEvent(Route, 'propertychange', function(e) {
+        
+//         if (Route['cssReady'] === true) {
+
+//             // 加载js和file
+//             Route.loadJs(Route.routes[Route.hash]['js'])
+//             Route.loadTempalte(Route.routes[Route.hash]['template'])
+//         }
+//     })
+// }
 
 // 加载页面模板代码
 Route.loadTempalte = function(url) {
@@ -132,9 +150,16 @@ Route.loadCss = function(arr) {
 
         if (cssReady === arr.length) {
 
-            // TODO: 在route模块中需要一些全局属性来标记完成
-            // TODO: 加载依然是观察者
-            Route.cssReady = true
+
+            if (W3C) {
+
+                Route.cssReady = true
+
+            } else {
+
+                Route.loadJs(Route.routes[Route.hash]['js'])
+                Route.loadTempalte(Route.routes[Route.hash]['template'])
+            }
         }
     }
 
@@ -154,8 +179,6 @@ Route.provider = function(paths) {
         routes = {}
 
     var hashChange = function() {
-
-        console.log('hashChange 的加载')
 
         var hash = Route.getHash()
 
@@ -192,34 +215,21 @@ Route.provider = function(paths) {
         Route.routes = routes
 
         // 激活hashChange事件
-        window.addEventListener('hashchange', hashChange)
+        $('window').on('hashchange', hashChange)
 
         // 重置模块加载状态
         Route.resetStatus()
-
 
         // 处理url直接访问的加载情况
         // TODO: 这里的代码和hashChange中的重复
         ! function() {
 
-            console.log('! function 的加载')
-
             var hash = Route.getHash()
-
-
-            console.log('! function 的 hash')
-            console.log(hash)
-
-            console.log(Route.routes)
 
             // 在这里分析routes，然后分别调用加载
             var routes = Route.routes[hash]
 
-            console.log('! function 的 routes')
-            console.log(routes)
-
             Route.load(routes)
-
         }()
     }
 
@@ -235,4 +245,3 @@ Route.provider = function(paths) {
  * 2015.6.3
  * 增加了resetResource函数
  */
- 

@@ -49,7 +49,6 @@ Attr.init = function(key, value) {
 }
 
 
-
 /**
  * 2015.6.2
  * 创建模块

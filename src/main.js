@@ -1,4 +1,4 @@
-/**
+/*
  * @name  main.js
  * @description  此文件是种子模块，定义了大量私有变量，提供extend等基础api
  * @date  2015.05.07
@@ -34,6 +34,7 @@ function mix(receiver, supplier) {
     while ((supplier = args[i++])) {
         for (key in supplier) { //允许对象糅杂，用户保证都是对象
             if (Object.prototype.hasOwnProperty.call(supplier, key) && (ride || !(key in receiver))) {
+
                 receiver[key] = supplier[key]
             }
         }
@@ -41,6 +42,38 @@ function mix(receiver, supplier) {
 
     return receiver
 }
+
+
+// 将类数组对象转成数组
+// TODO: catch部分的代码是jquery源码
+function makeArray(arrayLike) {
+
+    var arr = []
+
+    try {
+
+        arr = Array.prototype.slice.call(arrayLike)
+    
+    } catch(e) {
+
+        var i = arrayLike.length
+
+        if (i == null || typeof arrayLike === 'string') {
+
+            arr[0] = arrayLike
+        
+        } else {
+
+            while(i) {
+
+                arr[--i] = arrayLike[i]
+            }
+        }
+    }
+
+    return arr
+}
+
 
 mix($.fn, {
 
@@ -53,6 +86,7 @@ mix($.fn, {
 
     // 传入的expr可能是dom对象
     init: function(expr) {
+
 
         // 如果传入的是dom节点
         if (expr.nodeName) {
@@ -74,20 +108,20 @@ mix($.fn, {
             } else {
 
                 this.nodes = DOC.querySelectorAll(expr)
-                    // 将nodeList转为数组
-                this.nodes = Array.prototype.slice.call(this.nodes)
+                // 将nodeList转为数组
+                this.nodes = makeArray(this.nodes)
             }
         }
 
-        var obj = Object.create($.fn)
-
+        //var obj = Object.create($.fn)
+        var obj = new Object($.fn)
+        
         obj.nodes = this.nodes
         obj.selector = this.selector
 
         return obj
     }
 })
-
 
 /**
  * 2015.5.11 整合了原有的module.js模块，使框架结构更清晰
@@ -100,4 +134,7 @@ mix($.fn, {
  * 重写了$函数，返回$.fn.init的结果，返回后的内容为dom对象与$.fn对象的并集
  * 2015.5.20
  * 更换了打包方式，移除了amd模块
+ * 2015.6.5
+ * 增加了makeArray函数
  */
+ 
