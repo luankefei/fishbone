@@ -24,10 +24,11 @@ Route.getHash = function() {
     Route.hash = hash
 
     // 将去掉#!后的url显示在地址栏中
-    if (W3C) {
+    // TODO: 开启debug模式时不使用
+    // if (W3C) {
 
-        history.replaceState(null, null, hash)
-    }
+    //     history.replaceState(null, null, hash)
+    // }
 
     return hash
 }
@@ -273,6 +274,8 @@ Route.provider = function(paths) {
         routes = {}
 
     var hashChange = function() {
+
+        console.log('hashchange')
 
         var hash = Route.getHash()
 

@@ -17,18 +17,12 @@
 
     <script>
 
-    // $(document).ready(function() {
-
-    //     console.log('123')
-
-
-    // })
-
     var route = $.route
         .provider()
         .when(['/list'], {
             template: '/load.html',
-            title: 'fishbone'
+            title: 'fishbone',
+            js: ['/test.js']
         })
         .otherwise('/')
 

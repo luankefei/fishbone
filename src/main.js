@@ -87,12 +87,21 @@ mix($.fn, {
     // 传入的expr可能是dom对象
     init: function(expr) {
 
+        // var reg = new RegExp('/^<([a-z]+)([^<]+)*(?:>(.*)<\/\1>|\s+\/>)$/')
+        // var html = reg.test(expr)
+
+        // // 如果传入的是html代码
+        // if (html) {
+
+        //     console.log('是html')
+
+
         // 如果传入的是dom节点
         if (expr.nodeName || expr === window) {
 
             this.nodes = expr
             this.selector = null
-
+        
         } else {
 
             // 记录选择器，方便后面使用	

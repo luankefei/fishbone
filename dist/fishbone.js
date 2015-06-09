@@ -1231,12 +1231,21 @@ mix($.fn, {
     // 传入的expr可能是dom对象
     init: function(expr) {
 
+        // var reg = new RegExp('/^<([a-z]+)([^<]+)*(?:>(.*)<\/\1>|\s+\/>)$/')
+        // var html = reg.test(expr)
+
+        // // 如果传入的是html代码
+        // if (html) {
+
+        //     console.log('是html')
+
+
         // 如果传入的是dom节点
         if (expr.nodeName || expr === window) {
 
             this.nodes = expr
             this.selector = null
-
+        
         } else {
 
             // 记录选择器，方便后面使用	
@@ -1850,28 +1859,68 @@ Event.on = function(type, handler) {
 Event.ready = function(handler) {
 
     var eventFn = W3C ? 'DOMContentLoaded' : 'readystatechange'
-    var handle = null
+    var handle = handler
 
     if (this.nodes !== document) {
 
         return
     }
+    
+    // 如果domReady已经结束，直接执行回调
+    if (DOC.readyState !== 'complete') {
 
-    if (eventFn === 'readystatechange') {
+        //console.log(DOC.readyState)
+        if (eventFn === 'readystatechange') {
 
-        handle = function() {
+            handle = function() {
 
-            if (DOC.readyState === 'complete') {
+                if (DOC.readyState === 'complete') {
 
-                Function.call(handler)
+                    Function.call(handler)
+                }
             }
+
         }
-        
-    } else {
 
         Event.addEvent(this.nodes, eventFn, handle, false)
+
+    } else {
+
+        handle.call(null)
     }
 }
+
+// Event.ready = function(handler) {
+
+//     console.log('ready')
+
+//     var eventFn = W3C ? 'DOMContentLoaded' : 'readystatechange'
+//     var handle = null
+
+//     if (this.nodes !== document) {
+
+//         return
+//     }
+
+
+//     //console.log(DOC.readyState)
+
+
+//     if (eventFn === 'readystatechange') {
+
+//         handle = function() {
+
+//             if (DOC.readyState === 'complete') {
+
+//                 Function.call(handler)
+//             }
+//         }
+        
+//     } else {
+
+//         Event.addEvent(this.nodes, eventFn, handle, false)
+//     }
+// }
 
 // TODO: 还没做
 Event.off = function() {}
@@ -2169,10 +2218,11 @@ Route.getHash = function() {
     Route.hash = hash
 
     // 将去掉#!后的url显示在地址栏中
-    if (W3C) {
+    // TODO: 开启debug模式时不使用
+    // if (W3C) {
 
-        history.replaceState(null, null, hash)
-    }
+    //     history.replaceState(null, null, hash)
+    // }
 
     return hash
 }
@@ -2419,6 +2469,8 @@ Route.provider = function(paths) {
 
     var hashChange = function() {
 
+        console.log('hashchange')
+
         var hash = Route.getHash()
 
         // 在这里分析routes，然后分别调用加载
@@ -2538,7 +2590,6 @@ Animate.init = function(params, duration, easing, callback) {
  * @date  2015.05.12
  * @author  sunken
  */
-
 
 // Fishbone对象扩展，
 mix($, {

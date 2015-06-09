@@ -6,7 +6,6 @@
  * @author  sunken
  */
 
-
 // Fishbone对象扩展，
 mix($, {
 

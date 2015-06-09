@@ -95,28 +95,68 @@ Event.on = function(type, handler) {
 Event.ready = function(handler) {
 
     var eventFn = W3C ? 'DOMContentLoaded' : 'readystatechange'
-    var handle = null
+    var handle = handler
 
     if (this.nodes !== document) {
 
         return
     }
+    
+    // 如果domReady已经结束，直接执行回调
+    if (DOC.readyState !== 'complete') {
 
-    if (eventFn === 'readystatechange') {
+        //console.log(DOC.readyState)
+        if (eventFn === 'readystatechange') {
 
-        handle = function() {
+            handle = function() {
 
-            if (DOC.readyState === 'complete') {
+                if (DOC.readyState === 'complete') {
 
-                Function.call(handler)
+                    Function.call(handler)
+                }
             }
+
         }
-        
-    } else {
 
         Event.addEvent(this.nodes, eventFn, handle, false)
+
+    } else {
+
+        handle.call(null)
     }
 }
+
+// Event.ready = function(handler) {
+
+//     console.log('ready')
+
+//     var eventFn = W3C ? 'DOMContentLoaded' : 'readystatechange'
+//     var handle = null
+
+//     if (this.nodes !== document) {
+
+//         return
+//     }
+
+
+//     //console.log(DOC.readyState)
+
+
+//     if (eventFn === 'readystatechange') {
+
+//         handle = function() {
+
+//             if (DOC.readyState === 'complete') {
+
+//                 Function.call(handler)
+//             }
+//         }
+        
+//     } else {
+
+//         Event.addEvent(this.nodes, eventFn, handle, false)
+//     }
+// }
 
 // TODO: 还没做
 Event.off = function() {}
