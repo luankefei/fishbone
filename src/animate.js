@@ -6,19 +6,56 @@
 
 var Animate = {}
 
+Animate.linear = function(t, b, c, d) {
+    //t：times,b:begin,c:change,d:duration
+    return t / d * c + b;
+}
 
-Animate.init = function(params, duration, easing, callback) {
+Animate.init = function(params, duration, callback) {
 
-    // 这是fishbone对象
-    console.log(this)
-    // 这是fishbone对象里面的dom数组
-    console.log(this.nodes)
+    var ele = this;
+
+    clearInterval(ele.timer)
+    var oChange = {}
+    var oBegin = {}
+    var unit = {}
+    for (var attr in params) {
+        var begin = parseFloat($(ele).css(attr))
+        unit[attr] = $(ele).css(attr).slice(begin.toString().length)
+        var change = params[attr] - begin;
+        oChange[attr] = change;
+        oBegin[attr] = begin;
+    }
+    var times = 0;
+    var interval = 13;
+
+    function step() {
+        times += interval;
+        if (times < duration) {
+            for (var attr in params) {
+                var change = oChange[attr];
+                var begin = oBegin[attr];
+                var val = Animate.linear(times, begin, change, duration) + unit[attr];
+                $(ele).css(attr, val)
+                    // setTimeout(step,interval)
+            }
+        } else {
+            for (var attr in params) {
+                $(ele).css(attr, params[attr] + unit[attr])
+            }
+            clearInterval(ele.timer);
+            ele.timer = null;
+            if (typeof callback == "function") {
+                callback.call(ele);
+            }
+        }
+    }
 
 
+    ele.timer = window.setInterval(step, interval);
 
+    return this;
 
-
-    callback.call(this)
 }
 
 
