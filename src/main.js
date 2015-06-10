@@ -96,7 +96,7 @@ mix($.fn, {
 
         } else {
 
-            // 记录选择器，方便后面使用	
+            // 记录选择器，方便后面使用 
             this.selector = expr
 
             var arrExp = expr.split(' ')

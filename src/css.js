@@ -1,8 +1,7 @@
-
 /**
- * @name css.js
- * @description css模块，改变fishbone对象的样式
- * @date 2015.5.30
+ * @name  css.js
+ * @description  css模块，改变fishbone对象的样式
+ * @date  2015.5.30
  */
 var Css = {}
 
@@ -38,7 +37,6 @@ Css.calculateChange = function(key, value) {
     oldValue = Number.parseInt(oldValue.substring(0, oldValue.length - 2))
     // 去掉px后取整
     value = Number.parseInt(value.substring(0, value.length - 2))
-    
     value = oldValue + value + 'px'
 
     return value
@@ -81,14 +79,22 @@ Css.setCss = function(key, value) {
 Css.getCss = function(key) {
 
     var value = null
-    var nodes = this.nodes
+    var node = this.nodes
 
-    if (!nodes.nodeName) {
+    if (!this.nodes.nodeName) {
        
-        nodes = this.nodes[0]
+        node = this.nodes[0]
     }
 
-    value = global.getComputedStyle(nodes, null).getPropertyValue(key)
+    // IE 8 supoort, Opera
+    if (!node.currentStyle) {
+
+        value = global.getComputedStyle(node, false).getPropertyValue(key)
+
+    } else {
+
+        value = node.currentStyle[key]
+    }
 
     return value
 }

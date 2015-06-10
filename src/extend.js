@@ -15,17 +15,17 @@ mix($, {
     ajax: Http.ajax,
     jsonp: Http.jsonp,
     route: Route,
-	on: Event.on,
-	live: Event.live,
+    on: Event.on,
+    live: Event.live,
     
     module: Module.init,
     component: Module.component.init
 })
 
 mix($.fn, {
-	on: Event.on,
-	live: Event.live,
-	ready: Event.ready,
+    on: Event.on,
+    live: Event.live,
+    ready: Event.ready,
     css: Css.init,
     attr: Attr.init,
     first: Node.first,
