@@ -79,6 +79,7 @@ function makeArray(arrayLike) {
 }
 
 // 初始化fishbone对象
+// TODO: 分支较多，结构不清晰。对length和selector的赋值不统一
 function init(expr) {
 
     // 分支1，如果传入的是dom节点

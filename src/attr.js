@@ -62,7 +62,6 @@ Attr.addClass = function(name) {
 
             className = className.split(' ')
 
-
             for (var j = 0; j < className.length; j++) {
 
                 // 如果已经包含，不重复添加
