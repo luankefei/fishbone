@@ -4,24 +4,25 @@
  * @date  2015.05.12
  * @version  0.0.1
  */
+
 var Http = {}
 
 var accepts = {
 
-        xml: 'application/xml, text/xml',
-        html: 'text/html',
-        text: 'text/plain',
-        json: 'application/json, text/javascript',
-        script: 'text/javascript, application/javascript',
-        '*': ['*/'] + ['*'] //避免被压缩掉
-    },
-    defaults = {
+    xml: 'application/xml, text/xml',
+    html: 'text/html',
+    text: 'text/plain',
+    json: 'application/json, text/javascript',
+    script: 'text/javascript, application/javascript',
+    '*': ['*/'] + ['*'] //避免被压缩掉
+},
+defaults = {
 
-        type: 'GET',
-        contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
-        async: true
-            //jsonp: 'callback'
-    }
+    type: 'GET',
+    contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+    async: true
+        //jsonp: 'callback'
+}
 
 // ajax获取js文件
 // TODO: 这里暂时修改使用seajs的api

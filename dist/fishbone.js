@@ -1235,20 +1235,31 @@ function init(expr) {
 
     } else if (expr === 'body') {
 
+<<<<<<< HEAD
+
+        // 如果传入的是dom节点
+        if (expr.nodeName) {
+=======
         this[0] = DOC
         this.selector = expr
         this.length = 1
+>>>>>>> fish1/master
 
     // 分支3，传入的是dom数组
     } else if (expr instanceof Array) {
 
         for (var i = 0; i < expr.length; i++) {
 
+<<<<<<< HEAD
+            // 记录选择器，方便后面使用 
+            this.selector = expr
+=======
             this[i] = expr[i]
         }
 
         this.length = expr.length
         this.selector = null
+>>>>>>> fish1/master
 
     // 分支4，使用选择器获取dom元素
     } else {
@@ -1436,24 +1447,25 @@ Array.prototype.last = function() {
  * @date  2015.05.12
  * @version  0.0.1
  */
+
 var Http = {}
 
 var accepts = {
 
-        xml: 'application/xml, text/xml',
-        html: 'text/html',
-        text: 'text/plain',
-        json: 'application/json, text/javascript',
-        script: 'text/javascript, application/javascript',
-        '*': ['*/'] + ['*'] //避免被压缩掉
-    },
-    defaults = {
+    xml: 'application/xml, text/xml',
+    html: 'text/html',
+    text: 'text/plain',
+    json: 'application/json, text/javascript',
+    script: 'text/javascript, application/javascript',
+    '*': ['*/'] + ['*'] //避免被压缩掉
+},
+defaults = {
 
-        type: 'GET',
-        contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
-        async: true
-            //jsonp: 'callback'
-    }
+    type: 'GET',
+    contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+    async: true
+        //jsonp: 'callback'
+}
 
 // ajax获取js文件
 // TODO: 这里暂时修改使用seajs的api
@@ -1750,15 +1762,15 @@ Event.removeEvent = function(target, type, handler) {
 
         target['on' + type] = null
 
-        return
+        return 
     }
-
+    
     if (target.removeEventListener) {
         target.removeEventListener(type, handler, false)
 
     } else {
 
-        target.detechEvent('on' + type, handler)
+        target.detachEvent('on' + type, handler)
     }
 }
 
@@ -1796,6 +1808,7 @@ Event.on = function(type, handler) {
 
 // domReady
 Event.ready = function(handler) {
+
 
     var eventFn = W3C ? 'DOMContentLoaded' : 'readystatechange'
     var handle = handler
@@ -1919,7 +1932,6 @@ Module.component.init = function(name, handler) {
  * 重写了模块
  */
 
-
 /**
  * @name  css.js
  * @description  css模块，改变fishbone对象的样式
@@ -1993,6 +2005,22 @@ Css.setCss = function(key, value) {
 Css.getCss = function(key) {
 
     var value = null
+<<<<<<< HEAD
+    var node = this.nodes
+
+    if (!this.nodes.nodeName) {
+       
+        node = this.nodes[0]
+    }
+
+    // IE 8 supoort, Opera
+    if (!node.currentStyle) {
+
+        value = global.getComputedStyle(node, false).getPropertyValue(key)
+
+    } else {
+
+=======
     var node = null
     
     // 只返回第一个对象的值   
@@ -2005,6 +2033,7 @@ Css.getCss = function(key) {
 
     } else {
 
+>>>>>>> fish1/master
         value = node.currentStyle[key]
     }
 
@@ -2044,6 +2073,10 @@ Css.init = function(key, value) {
  * 修改了getCss，在IE 8 和 Opera上使用currentStyle代替getComputedStyle
  */
 
+<<<<<<< HEAD
+
+=======
+>>>>>>> fish1/master
 /**
  * @name  attr.js
  * @description  属性操作模块
@@ -2508,6 +2541,67 @@ Route.provider = function(paths) {
  */
 
 /**
+<<<<<<< HEAD
+ * @name animate.js
+ * @description 动画模块
+ * @date 2015.6.5
+ */
+
+
+var Animate = {}
+
+Animate.linear = function(t, b, c, d) {
+    //t：times,b:begin,c:change,d:duration
+    return t / d * c + b;
+
+}
+
+Animate.init = function(params, duration,callback) {
+
+    var ele = this.nodes;
+
+    clearInterval(ele.timer)
+    var oChange = {}
+    var oBegin = {}
+    var unit={}
+    for (var attr in params) {
+        var begin =parseFloat($(ele).css(attr))
+        unit[attr]=$(ele).css(attr).slice(begin.toString().length)
+        var change = params[attr] - begin;
+        oChange[attr] = change;
+        oBegin[attr] = begin;
+    }
+    var times = 0;
+    var interval = 13;
+
+    function step() {
+        times += interval;
+        if (times < duration) {
+            for (var attr in params) {
+                var change = oChange[attr];
+                var begin = oBegin[attr];
+                var val = Animate.linear(times, begin, change, duration)+unit[attr];
+               $(ele).css(attr,val)
+               // setTimeout(step,interval)
+            }
+        } else {
+            for (var attr in params) {
+                $(ele).css(attr,params[attr]+unit[attr])
+            }
+            clearInterval(ele.timer);
+            ele.timer = null;
+            if (typeof callback == "function") {
+                callback.call(ele);
+            }
+        }
+    }
+
+
+    ele.timer=window.setInterval(step, interval);
+
+    return this;
+
+=======
  * @name  animate.js
  * @description  动画模块
  * @date  2015.6.5
@@ -2528,6 +2622,7 @@ Animate.init = function(params, duration, easing, callback) {
 
 
     callback.call(this)
+>>>>>>> fish1/master
 }
 
 
@@ -2540,6 +2635,10 @@ Animate.init = function(params, duration, easing, callback) {
  * 2015.6.5
  * 创建模块
  */
+<<<<<<< HEAD
+
+=======
+>>>>>>> fish1/master
 
 /**
  * @name  extend.js
@@ -2556,17 +2655,17 @@ mix($, {
     ajax: Http.ajax,
     jsonp: Http.jsonp,
     route: Route,
-	on: Event.on,
-	live: Event.live,
+    on: Event.on,
+    live: Event.live,
     
     module: Module.init,
     component: Module.component.init
 })
 
 mix($.fn, {
-	on: Event.on,
-	live: Event.live,
-	ready: Event.ready,
+    on: Event.on,
+    live: Event.live,
+    ready: Event.ready,
     css: Css.init,
     attr: Attr.init,
     addClass: Attr.addClass,

@@ -92,9 +92,15 @@ function init(expr) {
 
     } else if (expr === 'body') {
 
+<<<<<<< HEAD
+
+        // 如果传入的是dom节点
+        if (expr.nodeName) {
+=======
         this[0] = DOC
         this.selector = expr
         this.length = 1
+>>>>>>> fish1/master
 
     // 分支3，传入的是dom数组
     } else if (expr instanceof Array) {
@@ -117,7 +123,12 @@ function init(expr) {
 
         if (arrExp.length === 1 && arrExp[0].charAt(0) === '#') {
 
+<<<<<<< HEAD
+            // 记录选择器，方便后面使用 
+            this.selector = expr
+=======
             this[0] = DOC.querySelector(arrExp[0])
+>>>>>>> fish1/master
 
             this.length = 1
 

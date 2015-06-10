@@ -31,15 +31,15 @@ Event.removeEvent = function(target, type, handler) {
 
         target['on' + type] = null
 
-        return
+        return 
     }
-
+    
     if (target.removeEventListener) {
         target.removeEventListener(type, handler, false)
 
     } else {
 
-        target.detechEvent('on' + type, handler)
+        target.detachEvent('on' + type, handler)
     }
 }
 
@@ -77,6 +77,7 @@ Event.on = function(type, handler) {
 
 // domReady
 Event.ready = function(handler) {
+
 
     var eventFn = W3C ? 'DOMContentLoaded' : 'readystatechange'
     var handle = handler
