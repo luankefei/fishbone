@@ -1229,109 +1229,101 @@ mix($.fn, {
     length: 0,
 
     // 传入的expr可能是dom对象
-    // init: function(expr) {
-
-    //     // 分支1: 处理空白字符串,null,undefined参数
-    //     if (!expr) {
-    //         return this
-    //     }
-
-
-    //     var f = []
-
-    //     // 如果传入的是dom节点
-    //     if (expr.nodeName || expr === window) {
-
-    //         f.push(expr)
-    //         f.selector = null
-        
-    //     } else {
-
-    //         // 记录选择器，方便后面使用 
-    //         this.selector = expr
-
-    //         var arrExp = expr.split(' ')
-
-    //         if (arrExp.length === 1 && arrExp[0].charAt(0) === '#') {
-
-    //             f.push(DOC.querySelector(arrExp[0]))
-
-    //         } else {
-
-    //             var nodes = DOC.querySelectorAll(expr)
-
-    //             for (var i = 0; i < nodes.length; i++) {
-
-    //                 f.push(nodes[i])
-    //             }
-
-    //             // 将nodeList转为数组
-    //             //this.nodes = makeArray(this.nodes)
-    //         }
-    //     }
-
-
-        
-
-
-    //     // f.prototype = new Object()
-
-    //     // mix(f.prototype, $.fn)
-
-    //     // console.log(f)
-    //     //var obj = Object.create($.fn)
-    //     //f.__proto__ = $.fn
-    //     //var obj = new Object($.fn)
-        
-    //     //obj.nodes = this.nodes
-    //     //obj.selector = this.selector
-
-    //     return f
-    // }
-
     init: function(expr) {
 
-        // var reg = new RegExp('/^<([a-z]+)([^<]+)*(?:>(.*)<\/\1>|\s+\/>)$/')
-        // var html = reg.test(expr)
+        // 分支1: 处理空白字符串,null,undefined参数
+        if (!expr) {
+            return this
+        }
 
-        // // 如果传入的是html代码
-        // if (html) {
 
-        //     console.log('是html')
+        var f = []
 
         // 如果传入的是dom节点
         if (expr.nodeName || expr === window) {
 
-            this.nodes = expr
-            this.selector = null
+            f.push(expr)
+            f.selector = null
         
         } else {
 
-            // 记录选择器，方便后面使用	
+            // 记录选择器，方便后面使用 
             this.selector = expr
 
             var arrExp = expr.split(' ')
 
             if (arrExp.length === 1 && arrExp[0].charAt(0) === '#') {
 
-                this.nodes = DOC.querySelector(arrExp[0])
+                f.push(DOC.querySelector(arrExp[0]))
 
             } else {
 
-                this.nodes = DOC.querySelectorAll(expr)
+                var nodes = DOC.querySelectorAll(expr)
+
+                for (var i = 0; i < nodes.length; i++) {
+
+                    f.push(nodes[i])
+                }
+
                 // 将nodeList转为数组
-                this.nodes = makeArray(this.nodes)
+                //this.nodes = makeArray(this.nodes)
             }
         }
 
-        //var obj = Object.create($.fn)
-        var obj = new Object($.fn)
-        
-        obj.nodes = this.nodes
-        obj.selector = this.selector
 
-        return obj
+        
+
+
+        // f.prototype = new Object()
+
+        // mix(f.prototype, $.fn)
+
+        // console.log(f)
+        //var obj = Object.create($.fn)
+        //f.__proto__ = $.fn
+        //var obj = new Object($.fn)
+        
+        //obj.nodes = this.nodes
+        //obj.selector = this.selector
+
+        return f
     }
+
+    // init: function(expr) {
+
+    //     // 如果传入的是dom节点
+    //     if (expr.nodeName || expr === window) {
+
+    //         this.nodes = expr
+    //         this.selector = null
+        
+    //     } else {
+
+    //         // 记录选择器，方便后面使用	
+    //         this.selector = expr
+
+    //         var arrExp = expr.split(' ')
+
+    //         if (arrExp.length === 1 && arrExp[0].charAt(0) === '#') {
+
+    //             this.nodes = DOC.querySelector(arrExp[0])
+
+    //         } else {
+
+    //             this.nodes = DOC.querySelectorAll(expr)
+    //             // 将nodeList转为数组
+    //             this.nodes = makeArray(this.nodes)
+    //         }
+    //     }
+
+    //     //var obj = Object.create($.fn)
+    //     var obj = new Object($.fn)
+        
+    //     obj.nodes = this.nodes
+    //     obj.selector = this.selector
+
+    //     return obj
+    // }
 })
 
 /**
@@ -1362,7 +1354,7 @@ mix($.fn, {
 /**
  * @name  prototype.js
  * @description  对象原型扩展模块，该文件为侵入式设计
- * @date  2015.05.12
+ * @date  2015.5.12
  * @author  sunken
  */
 String.prototype.byteLen = function(target, fix) {
@@ -1404,11 +1396,13 @@ Array.prototype.flatten = function(target) {
     })
 }
 
+// 取数组中的最小值
 Array.prototype.min = function(target) {
 
     return Math.min.apply(0, target)
 }
 
+// 取数组中的最大值
 Array.prototype.max = function(target) {
 
     return Math.max.apply(0, target)
@@ -1450,7 +1444,10 @@ Array.prototype.last = function() {
     return this[this.length - 1]
 }
 
-// 过滤数组中的undefined、null和' '
+/**
+ * 2015.5.12
+ * 创建模块
+ */
 
 
 
@@ -2550,8 +2547,6 @@ if (W3C) {
           
             get: function() { return this.templateReady },
             set: function(value) { 
-
-                //console.log('templateReady')
 
                 this.templateReadyValue = value
 

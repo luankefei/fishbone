@@ -92,7 +92,6 @@ mix($.fn, {
     //         return this
     //     }
 
-
     //     var f = []
 
     //     // 如果传入的是dom节点
@@ -146,14 +145,6 @@ mix($.fn, {
     // }
 
     init: function(expr) {
-
-        // var reg = new RegExp('/^<([a-z]+)([^<]+)*(?:>(.*)<\/\1>|\s+\/>)$/')
-        // var html = reg.test(expr)
-
-        // // 如果传入的是html代码
-        // if (html) {
-
-        //     console.log('是html')
 
         // 如果传入的是dom节点
         if (expr.nodeName || expr === window) {

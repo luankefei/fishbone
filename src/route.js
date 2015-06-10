@@ -132,8 +132,6 @@ if (W3C) {
             get: function() { return this.templateReady },
             set: function(value) { 
 
-                //console.log('templateReady')
-
                 this.templateReadyValue = value
 
                 if (value === true) {
