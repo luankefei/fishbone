@@ -1,13 +1,14 @@
 /**
- * @name event.js
- * @description 事件模块
- * @date 2015.5.25
+ * @name  event.js
+ * @description  事件模块
+ * @date  2015.5.25
  */
 
 var Event = {}
 
 // 添加事件
 Event.addEvent = function(target, type, handler) {
+
     if (target.addEventListener) {
         target.addEventListener(type, handler, false)
 
@@ -66,19 +67,11 @@ Event.live = function(type, handler) {
 // 对外暴露的事件绑定api
 Event.on = function(type, handler) {
 
-    var target = this.nodes
-
     // 根据nodeName判断单个绑定或循环绑定
-    if (target.nodeName) {
+    // target可能是window或document对象，判断条件从nodeName改成是否是array
+    for (var i = 0; i < this.length; i++) {
 
-        Event.addEvent(target, type, handler)
-
-    } else {
-
-        target.forEach(function(v, i, a) {
-
-            Event.addEvent(v, type, handler)
-        })
+        Event.addEvent(this[i], type, handler)
     }
 }
 
@@ -87,29 +80,39 @@ Event.ready = function(handler) {
 
 
     var eventFn = W3C ? 'DOMContentLoaded' : 'readystatechange'
-    var handle = null
+    var handle = handler
 
-    if (this.nodes !== document) {
+    if (this[0] !== document) {
+
         return
     }
+    
+    // 如果domReady已经结束，直接执行回调
+    if (DOC.readyState !== 'complete') {
 
-    if (eventFn === 'readystatechange') {
+        //console.log(DOC.readyState)
+        if (eventFn === 'readystatechange') {
 
-        handle = function() {
+            handle = function() {
 
-            if (DOC.readyState === 'complete') {
+                if (DOC.readyState === 'complete') {
 
-                Function.call(handler)
+                    Function.call(handler)
+                }
             }
+
         }
+        
+        Event.addEvent(this[0], eventFn, handle)
+
     } else {
 
-        Event.addEvent(this.nodes, eventFn, handle, false)
+        handle.call(null)
     }
 }
 
-Event.unbind = function() {}
-
+// TODO: 还没做
+Event.off = function() {}
 
 /**
  * 2015.5.25
@@ -120,4 +123,6 @@ Event.unbind = function() {}
  * 2015.5.26
  * 重写了live函数，初步测试可用，但事件通过document绑定，还有优化空间
  * 添加了ready函数
+ * 2015.6.5
+ * 将unbind更名为off
  */

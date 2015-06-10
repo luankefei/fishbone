@@ -4,3 +4,5 @@
  * @deprecated  2015.6.4
  */
 
+// TODO: IE 8 defineProperties
+// TODO: IE 8 forEach

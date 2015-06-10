@@ -57,19 +57,11 @@ Css.setCss = function(key, value) {
     // 处理连缀写法
     key = Css.handleSeperator(key)
 
-    if (this.nodes.nodeName !== undefined) {
-        
-        // 可能所有变化量都是带px的 
-        this.nodes.style[key] = value
-    
-    } else {
+    for (var i = 0, length = this.length; i < length; i++) {
 
-        for (var i = 0, length = this.nodes.length; i < length; i++) {
-       
-            this.nodes[i].style[key] = value
-        }
+        this[i].style[key] = value
     }
-
+    
     return this
 }
 
@@ -79,6 +71,7 @@ Css.setCss = function(key, value) {
 Css.getCss = function(key) {
 
     var value = null
+<<<<<<< HEAD
     var node = this.nodes
 
     if (!this.nodes.nodeName) {
@@ -91,6 +84,18 @@ Css.getCss = function(key) {
 
         value = global.getComputedStyle(node, false).getPropertyValue(key)
 
+=======
+    var node = null
+    
+    // 只返回第一个对象的值   
+    node = this[0]
+    
+    // IE 8 supoort, Opera
+    if (nodes.currentStyle) {
+
+        value = global.getComputedStyle(node, false).getPropertyValue(key)
+
+>>>>>>> fish1/master
     } else {
 
         value = node.currentStyle[key]
@@ -128,4 +133,10 @@ Css.init = function(key, value) {
  * 修改了setCss，增加了变化量判断流程
  * 修改了setCss，修改了变化量的处理，暂时跑通，但缺乏对百分比的支持
  * 修改了init的返回值，get应该返回value，set则返回this
+<<<<<<< HEAD
  */
+=======
+ * 2015.6.10
+ * 修改了getCss，在IE 8 和 Opera上使用currentStyle代替getComputedStyle
+ */
+>>>>>>> fish1/master

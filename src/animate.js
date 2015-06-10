@@ -1,9 +1,8 @@
 /**
- * @name animate.js
- * @description 动画模块
- * @date 2015.6.5
+ * @name  animate.js
+ * @description  动画模块
+ * @date  2015.6.5
  */
-
 
 var Animate = {}
 
@@ -11,7 +10,19 @@ Animate.linear = function(t, b, c, d) {
     //t：times,b:begin,c:change,d:duration
     return t / d * c + b;
 
+<<<<<<< HEAD
 }
+=======
+Animate.init = function(params, duration, easing, callback) {
+
+    // 这是fishbone对象
+    console.log(this)
+    // 这是fishbone对象里面的dom数组
+    console.log(this.nodes)
+
+
+
+>>>>>>> fish1/master
 
 Animate.init = function(params, duration,callback) {
 

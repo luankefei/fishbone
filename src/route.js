@@ -2,16 +2,13 @@
  * @name  route.js
  * @description  路由模块
  * @date  2015.5.21
+ * @author  sunken
  */
 var Route = {}
 
-// if (W3C) {
 
-//     Route.cssReady
-
-// }
-Route.cssReady = false
-Route.jsReady = false
+// Route.cssReady = false
+// Route.jsReady = false
 Route.hash = null
 
 // 根据当前url返回hash，并处理history
@@ -27,13 +24,22 @@ Route.getHash = function() {
     Route.hash = hash
 
     // 将去掉#!后的url显示在地址栏中
-    history.replaceState(null, null, hash)
+    // TODO: 开启debug模式时不使用
+    // if (W3C) {
+
+    //     history.replaceState(null, null, hash)
+    // }
 
     return hash
 }
 
 // 模块加载的入口
 Route.load = function(routes) {
+
+    if (routes === undefined) {
+
+        return
+    }
 
     // 先充值页面不需要的css和js
     Route.resetResource()
@@ -44,9 +50,10 @@ Route.load = function(routes) {
 
 // 清除当前页面不需要的css、js
 Route.resetResource = function() {
-
+    
     var doms = $('link, script')
 
+    // TODO: 应该判断dom标签是否带有href或src属性，否则视为页面内部代码，不清除
     for (var i = 0; i < doms.nodes.length; i++) {
 
         var type = doms.eq(i).attr('data-type')
@@ -69,7 +76,6 @@ Route.resetStatus = function() {
 // 添加data属性
 // IE8 Dom only
 // if (W3C) {
-
 if (W3C) {
 
     Object.defineProperties(Route, {
@@ -78,25 +84,45 @@ if (W3C) {
             enumerable: true,
             configurable: true,
           
-            get: function() { return this.value },
+            get: function() { return this.cssReadyValue },
             set: function(value) { 
 
-                this.value = value
+                this.cssReadyValue = value
 
                 if (value === true) {
 
-                    // 加载js和file
-                    Route.loadJs(Route.routes[Route.hash]['js'])
-                    Route.loadTempalte(Route.routes[Route.hash]['template'])
+                    var hash = Route.routes[Route.hash]
+
+                    Route.loadTempalte(hash['template'])
                 }
             }
-        }
-    })
+        },
+
+        templateReady: {
+
+            enumerable: true,
+            configurable: true,
+          
+            get: function() { return this.templateReady },
+            set: function(value) { 
+
+                this.templateReadyValue = value
+
+                if (value === true) {
+
+                    var hash = Route.routes[Route.hash]
+
+                    Route.loadJs(hash['js'])
+                }
+            }   // end setter
+        }   // end jsReady
+    })  // end defineProperties
 }
 
 // } else {
 
 //     // IE 8 兼容
+//     // propertychange也只能对dom对象使用
 //     Event.addEvent(Route, 'propertychange', function(e) {
         
 //         if (Route['cssReady'] === true) {
@@ -113,8 +139,22 @@ Route.loadTempalte = function(url) {
 
     Http.get(url, function(data) {
 
+        var view = $('#fs-view')
+
         // 加载成功之后，将data复制到view中
         $('#fs-view').html(data)
+
+        if (W3C) {
+
+            Route.templateReady = true
+
+        } else {
+
+            var hash = Route.routes[Route.hash]
+
+            Route.loadJs(hash['js'])
+            Route.setTitle(hash['title'])
+        }
     })
 }
 
@@ -127,10 +167,21 @@ Route.loadJs = function(arr) {
 
         jsReady += 1
 
-        if (jsReady === arr.length) {
+        if (arr === undefined || jsReady === arr.length) {
 
-            Route.jsReady = true
+            if (W3C) {
+
+                Route.jsReady = true
+            }
         }
+    }
+
+    // 如果没有声明js，直接执行回调
+    if (arr === undefined) {
+
+        callback.call(null)
+
+        return
     }
 
     for (var i = 0; i < arr.length; i++) {
@@ -139,7 +190,17 @@ Route.loadJs = function(arr) {
     }
 }
 
+// 重置页面的标题
+Route.setTitle = function(title) {
+
+    if (title !== undefined) {
+
+        document.title = title
+    }
+}
+
 // 根据Route.routes加载css
+// TODO: loadCss和loadJs的结构相似
 Route.loadCss = function(arr) {
 
     var cssReady = 0
@@ -148,8 +209,7 @@ Route.loadCss = function(arr) {
 
         cssReady += 1
 
-        if (cssReady === arr.length) {
-
+        if (arr === undefined || cssReady === arr.length) {
 
             if (W3C) {
 
@@ -157,10 +217,20 @@ Route.loadCss = function(arr) {
 
             } else {
 
-                Route.loadJs(Route.routes[Route.hash]['js'])
-                Route.loadTempalte(Route.routes[Route.hash]['template'])
+                var hash = Route.routes[Route.hash]
+
+
+                Route.loadTempalte(hash['template'])
             }
         }
+    }
+
+    // 如果没有声明css，直接执行回调
+    if (arr === undefined) {
+
+        callback.call(null)
+
+        return
     }
 
     for (var i = 0; i < arr.length; i++) {
@@ -168,9 +238,6 @@ Route.loadCss = function(arr) {
         Http.getCss(arr[i], callback)
     }
 }
-
-// Route.resetCss = function() {}
-// Route.resetJs = function() {}
 
 // TODO: provider可以考虑改成类
 Route.provider = function(paths) {
@@ -193,10 +260,17 @@ Route.provider = function(paths) {
         // TODO: path需要支持数组形式
         if (path instanceof Array) {
 
-            path.forEach(function(v, i, a) {
+            for (var i = 0; i < path.length; i++) {
 
-                routes[v] = route
-            })
+                var key = path[i]
+
+                routes[key] = route
+            }
+
+            // path.forEach(function(v, i, a) {
+
+            //     routes[v] = route
+            // })
         
         } else {
 
@@ -215,7 +289,7 @@ Route.provider = function(paths) {
         Route.routes = routes
 
         // 激活hashChange事件
-        $('window').on('hashchange', hashChange)
+        $(window).on('hashchange', hashChange)
 
         // 重置模块加载状态
         Route.resetStatus()
@@ -244,4 +318,10 @@ Route.provider = function(paths) {
  * 修改了hashchange
  * 2015.6.3
  * 增加了resetResource函数
+ * 2015.6.8
+ * 修改了getHash和when，IE 8测试通过
+ * 2015.6.9
+ * 修改了loadCss和loadJs，现在when函数的css和js变成了可选项
+ * 修改了loadCss，在callback中重置了页面标题
+ * 增加了Route.templateReady，让加载流程变成线性
  */

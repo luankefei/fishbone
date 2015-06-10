@@ -1142,21 +1142,25 @@ seajs.config = function(configData) {
 
 !function(global, DOC) {
 
-/*
+/**
  * @name  main.js
  * @description  此文件是种子模块，定义了大量私有变量，提供extend等基础api
  * @date  2015.05.07
- * @version  0.0.2
+ * @author  sunken
  */
 var W3C = DOC.dispatchEvent //IE9开始支持W3C的事件模型与getComputedStyle取样式值
 var html = DOC.documentElement //HTML元素
 var head = DOC.head || DOC.getElementsByTagName('head')
-var version = 1
+var version = 2
 
 // 命名空间，传入css表达式或dom对象，返回一个fishbone对象
+// function $(selector) {
+
+//     return $.fn.init(selector)
+// }
 function $(selector) {
 
-    return $.fn.init(selector)
+    return new $.fn.init(selector)
 }
 
 $.fn = $.prototype
@@ -1218,6 +1222,82 @@ function makeArray(arrayLike) {
     return arr
 }
 
+// 初始化fishbone对象
+function init(expr) {
+
+    // 分支1，如果传入的是dom节点
+    if (expr.nodeName || expr === window) {
+
+        this[0] = expr
+        this.selector = null
+    
+        this.length = 1
+
+    } else if (expr === 'body') {
+
+<<<<<<< HEAD
+
+        // 如果传入的是dom节点
+        if (expr.nodeName) {
+=======
+        this[0] = DOC
+        this.selector = expr
+        this.length = 1
+>>>>>>> fish1/master
+
+    // 分支3，传入的是dom数组
+    } else if (expr instanceof Array) {
+
+        for (var i = 0; i < expr.length; i++) {
+
+<<<<<<< HEAD
+            // 记录选择器，方便后面使用 
+            this.selector = expr
+=======
+            this[i] = expr[i]
+        }
+
+        this.length = expr.length
+        this.selector = null
+>>>>>>> fish1/master
+
+    // 分支4，使用选择器获取dom元素
+    } else {
+
+        // 记录选择器，方便后面使用 
+        this.selector = expr
+
+        var arrExp = expr.split(' ')
+
+        if (arrExp.length === 1 && arrExp[0].charAt(0) === '#') {
+
+            this[0] = DOC.querySelector(arrExp[0])
+
+            this.length = 1
+
+
+        } else {
+
+            var nodes = DOC.querySelectorAll(expr)
+
+            for (var i = 0; i < nodes.length; i++) {
+
+                this[i] = nodes[i]
+            }
+
+            this.length = nodes.length
+            // 将nodeList转为数组
+            //this = makeArray(this)
+        }
+    }
+    
+    // 让浏览器以为是数组
+    //this.splice = function() {}
+
+    return this
+}
+
+init.prototype = $.fn
 
 mix($.fn, {
 
@@ -1227,44 +1307,9 @@ mix($.fn, {
     fishbone: version,
     constructor: $,
     length: 0,
+    splice: function() {},
 
-    // 传入的expr可能是dom对象
-    init: function(expr) {
-
-
-        // 如果传入的是dom节点
-        if (expr.nodeName) {
-
-            this.nodes = expr
-            this.selector = null
-
-        } else {
-
-            // 记录选择器，方便后面使用 
-            this.selector = expr
-
-            var arrExp = expr.split(' ')
-
-            if (arrExp.length === 1 && arrExp[0].charAt(0) === '#') {
-
-                this.nodes = DOC.querySelector(arrExp[0])
-
-            } else {
-
-                this.nodes = DOC.querySelectorAll(expr)
-                // 将nodeList转为数组
-                this.nodes = makeArray(this.nodes)
-            }
-        }
-
-        //var obj = Object.create($.fn)
-        var obj = new Object($.fn)
-        
-        obj.nodes = this.nodes
-        obj.selector = this.selector
-
-        return obj
-    }
+    init: init
 })
 
 /**
@@ -1280,6 +1325,10 @@ mix($.fn, {
  * 更换了打包方式，移除了amd模块
  * 2015.6.5
  * 增加了makeArray函数
+ * 修改了init函数，为兼容IE 8 将Object.create更换为new Object
+ * 2015.6.10
+ * 修改了$和init函数，调用$会返回init的实例
+ * 修改了fishbone对象的结构，现在看起来更像jquery
  */
  
 /**
@@ -1288,12 +1337,14 @@ mix($.fn, {
  * @deprecated  2015.6.4
  */
 
-
+// TODO: IE 8 defineProperties
+// TODO: IE 8 forEach
 
 /**
  * @name  prototype.js
  * @description  对象原型扩展模块，该文件为侵入式设计
- * @date  2015.05.12
+ * @date  2015.5.12
+ * @author  sunken
  */
 String.prototype.byteLen = function(target, fix) {
 
@@ -1334,11 +1385,13 @@ Array.prototype.flatten = function(target) {
     })
 }
 
+// 取数组中的最小值
 Array.prototype.min = function(target) {
 
     return Math.min.apply(0, target)
 }
 
+// 取数组中的最大值
 Array.prototype.max = function(target) {
 
     return Math.max.apply(0, target)
@@ -1380,7 +1433,10 @@ Array.prototype.last = function() {
     return this[this.length - 1]
 }
 
-// 过滤数组中的undefined、null和' '
+/**
+ * 2015.5.12
+ * 创建模块
+ */
 
 
 
@@ -1466,7 +1522,7 @@ Http.ajax = function(param, events) {
     var data = param.data || null
 
     var req = new XMLHttpRequest()
-
+    
     req.open(type, url)
 
     // 如果有传入loadStart和progress参数
@@ -1501,7 +1557,7 @@ Http.ajax = function(param, events) {
             
             } catch(e) {
 
-                throw 'json parse error'
+                //throw 'json parse error'
             }
 
             param.success && param.success(res)
@@ -1539,121 +1595,86 @@ Http.socket = function() {}
  * 修改了getScript函数，依赖了seajs
  */
  
+
 /**
  * @name  node.js
  * @description  dom、node模块，提供dom对象的CRUD
  * @date  2015.05.12
+ * @author sunken
  */
 var Node = {}
 
 // 将node以某元素子元素的形式插入到该元素内容的最后面
 Node.append = function(node) {
 
-    if (this.nodes.length === 1) {
+    var nodes = []
 
-        this.nodes.appendChild(node)
+    // 循环复制插入节点
+    for (var i = 0; i < this.length; i++) {
 
-    } else {
+        var n = node.cloneNode(true)
 
-        // 循环复制插入节点
-        this.nodes.forEach(function(value) {
-
-            var n = node.cloneNode(true)
-
-            value.appendChild(n)
-        })            
+        this[i].appendChild(n)
+        nodes.push(n)
     }
 
-    return this
+    return new $.fn.init(nodes)
 }
 
 // 将node以某元素子元素的形式插入到该元素内容的最前面
 Node.prepend = function(node) {
 
-    if (this.nodes.nodeName) {
+    // 循环复制插入节点
+    for (var i = 0; i < nodes.length; i++) {
 
-        this.nodes.insertBefore(node, this.nodes.childNodes[0])
+        var n = node.cloneNode(true)
 
-    } else {
+        nodes[i].insertBefore(n, nodes[i].childNodes[0])
 
-        // 循环复制插入节点
-        this.nodes.forEach(function(v) {
-
-            var n = node.cloneNode(true)
-
-            v.insertBefore(n, v.childNodes[0])
-        })            
     }
-
+  
     return this
 }
 
 // 克隆节点，如果include_all为true，会克隆该元素所包含的所有子节点
 Node.clone = function(include) {
 
-    if (this.nodes.nodeName) {
+    var arr = []
 
-        return this.nodes.cloneNode(include)
+    for (var i = 0; i < nodes.length; i++) {
 
-    } else {
-
-        var arr = []
-
-        this.nodes.forEach(function(v) {
-
-            arr.push(v.cloneNode(include))    
-        })
-
-        return arr
+        arr.push(nodes[i].cloneNode(include))
     }
+
+
+    return arr
 }
 
 // 修改元素的innerHTML
 Node.html = function(html) {
 
-    var nodes = this.nodes
-
     if (html !== undefined) {
 
-        if (nodes.nodeName) {
+        for (var i = 0; i < this.length; i++) {
 
-            nodes.innerHTML = html            
-
-        } else {
-
-            nodes.forEach(function(v, i, a) {
-
-                v.innerHTML = html
-            })
+            this[i].innerHTML = html
         }
 
         return this
 
-
     } else {
 
-        return nodes.nodeName ? nodes.innerHTML : ''
+        return this[0].innerHTML
     }
 }
 
 // 移除元素
 Node.remove = function() {
 
-    var nodes = this.nodes
+    for (var i = 0, length = this.length; i < length; i++) {
 
-    if (nodes instanceof Array) {
-
-        for (var i = 0, length = nodes.length; i < length; i++) {
-
-            var node = nodes[i]
-
-            node.parentNode.removeChild(node)
-        }
-
-    } else {
-
-        nodes.parentNode.removeChild(nodes)
-    }
+        this[i].parentNode.removeChild(this[i])
+    }    
 
     // TODO: 如果返回this，这个对象会包含已经删除节点对象的引用
     return null
@@ -1670,15 +1691,8 @@ Node.eq = function(index) {
 
     var n = null
 
-    try {
-
-        n = this.nodes[index]
-        n = $.fn.init(n)
-
-    } catch(e) {
-
-        console.error('$.fn.eq只能用于复数节点集合')
-    }
+    n = this.nodes[index]
+    n = $.fn.init(n)
 
     return n
 }
@@ -1690,8 +1704,13 @@ Node.first = function() {
 
 Node.last = function() {
 
-    return Node.eq.call(this, this.nodes.length - 1)   
+    return Node.eq.call(this, this.length - 1)   
 }
+
+Node.each = function() {}
+Node.show = function() {}
+Node.hide = function() {}
+Node.wrap = function() {}
 
 // 遍历所有对象
 // Node.each = function() {
@@ -1704,17 +1723,23 @@ Node.last = function() {
  * 2015.5.21
  * 在eq中添加了try-catch处理，目前的写法并不完美，但足够使用
  * 增加了first、last和remove方法
+ * 2015.6.8
+ * 修改了append、prepend、clone和html方法
+ * 2015.6.10
+ * 修改了append，现在返回一个fishbone对象，内含新添加的dom元素
  */
+ 
 /**
- * @name event.js
- * @description 事件模块
- * @date 2015.5.25
+ * @name  event.js
+ * @description  事件模块
+ * @date  2015.5.25
  */
 
 var Event = {}
 
 // 添加事件
 Event.addEvent = function(target, type, handler) {
+
     if (target.addEventListener) {
         target.addEventListener(type, handler, false)
 
@@ -1773,19 +1798,11 @@ Event.live = function(type, handler) {
 // 对外暴露的事件绑定api
 Event.on = function(type, handler) {
 
-    var target = this.nodes
-
     // 根据nodeName判断单个绑定或循环绑定
-    if (target.nodeName) {
+    // target可能是window或document对象，判断条件从nodeName改成是否是array
+    for (var i = 0; i < this.length; i++) {
 
-        Event.addEvent(target, type, handler)
-
-    } else {
-
-        target.forEach(function(v, i, a) {
-
-            Event.addEvent(v, type, handler)
-        })
+        Event.addEvent(this[i], type, handler)
     }
 }
 
@@ -1794,29 +1811,39 @@ Event.ready = function(handler) {
 
 
     var eventFn = W3C ? 'DOMContentLoaded' : 'readystatechange'
-    var handle = null
+    var handle = handler
 
-    if (this.nodes !== document) {
+    if (this[0] !== document) {
+
         return
     }
+    
+    // 如果domReady已经结束，直接执行回调
+    if (DOC.readyState !== 'complete') {
 
-    if (eventFn === 'readystatechange') {
+        //console.log(DOC.readyState)
+        if (eventFn === 'readystatechange') {
 
-        handle = function() {
+            handle = function() {
 
-            if (DOC.readyState === 'complete') {
+                if (DOC.readyState === 'complete') {
 
-                Function.call(handler)
+                    Function.call(handler)
+                }
             }
+
         }
+        
+        Event.addEvent(this[0], eventFn, handle)
+
     } else {
 
-        Event.addEvent(this.nodes, eventFn, handle, false)
+        handle.call(null)
     }
 }
 
-Event.unbind = function() {}
-
+// TODO: 还没做
+Event.off = function() {}
 
 /**
  * 2015.5.25
@@ -1827,14 +1854,16 @@ Event.unbind = function() {}
  * 2015.5.26
  * 重写了live函数，初步测试可用，但事件通过document绑定，还有优化空间
  * 添加了ready函数
+ * 2015.6.5
+ * 将unbind更名为off
  */
 
 /**
  * @name module.js
  * @description 定义模块
  * @date 2015.5.26
+ * @author sunken
  */
-
 var Module = {}
 
 // 组件类，生成基本结构
@@ -1962,19 +1991,11 @@ Css.setCss = function(key, value) {
     // 处理连缀写法
     key = Css.handleSeperator(key)
 
-    if (this.nodes.nodeName !== undefined) {
-        
-        // 可能所有变化量都是带px的 
-        this.nodes.style[key] = value
-    
-    } else {
+    for (var i = 0, length = this.length; i < length; i++) {
 
-        for (var i = 0, length = this.nodes.length; i < length; i++) {
-       
-            this.nodes[i].style[key] = value
-        }
+        this[i].style[key] = value
     }
-
+    
     return this
 }
 
@@ -1984,6 +2005,7 @@ Css.setCss = function(key, value) {
 Css.getCss = function(key) {
 
     var value = null
+<<<<<<< HEAD
     var node = this.nodes
 
     if (!this.nodes.nodeName) {
@@ -1998,6 +2020,20 @@ Css.getCss = function(key) {
 
     } else {
 
+=======
+    var node = null
+    
+    // 只返回第一个对象的值   
+    node = this[0]
+    
+    // IE 8 supoort, Opera
+    if (nodes.currentStyle) {
+
+        value = global.getComputedStyle(node, false).getPropertyValue(key)
+
+    } else {
+
+>>>>>>> fish1/master
         value = node.currentStyle[key]
     }
 
@@ -2033,78 +2069,160 @@ Css.init = function(key, value) {
  * 修改了setCss，增加了变化量判断流程
  * 修改了setCss，修改了变化量的处理，暂时跑通，但缺乏对百分比的支持
  * 修改了init的返回值，get应该返回value，set则返回this
+ * 2015.6.10
+ * 修改了getCss，在IE 8 和 Opera上使用currentStyle代替getComputedStyle
  */
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> fish1/master
 /**
- * @name attr.js
- * @description 属性操作模块
- * @date 2015.6.2
+ * @name  attr.js
+ * @description  属性操作模块
+ * @date  2015.6.2
+ * @author  sunken
  */
-
 var Attr = {}
 
 // 获取属性
-Attr.getAttr = function(key) {
+Attr.getAttr = function(name) {
 
-    return this.nodes.nodeName ? this.nodes.getAttribute(key) : this.nodes[0].getAttribute(key)
+    return this[0].getAttribute(name)
 }
 
 // 设置属性
-Attr.setAttr = function(key, value) {
-    
-    if (this.nodes.nodeName) {
+Attr.setAttr = function(name, value) {
 
-        this.nodes.setAttribute(key, value)    
+    for (var i = 0; i < this.length; i++) {
 
-    } else {
-   
-        for (var i = 0; i < this.nodes.length; i++) {
-
-            this.nodes[i].setAttribute(key, value)
-        } 
+        this[i].setAttribute(name, value)
     }
 
     return this
 }
 
-Attr.init = function(key, value) {
-   
+Attr.hasAttr = function(name) {}
+
+Attr.removeAttr = function(name) {}
+
+Attr.init = function(name, value) {
+
     var returnValue = null
 
     if (value === undefined) {
-    
-        returnValue = Attr.getAttr.call(this, key)
+
+        returnValue = Attr.getAttr.call(this, name)
 
     } else {
 
-        returnValue = Attr.setAttr.call(this, key, value)
+        returnValue = Attr.setAttr.call(this, name, value)
     }
 
     return returnValue
 }
 
+// 为dom节点的className属性追加其他name
+// TODO: 急需重构
+Attr.addClass = function(name) {
+
+    var hasClass = false
+
+    for (var i = 0; i < this.length; i++) {
+
+        var className = this[i].className
+
+        // 如果没有class，直接赋值
+        if (!className) {
+
+            this[i].className = name
+
+        } else {
+
+            className = className.split(' ')
+
+
+            for (var j = 0; j < className.length; j++) {
+
+                // 如果已经包含，不重复添加
+                if (className[j] === name) {
+
+                    hasClass = true
+
+                    break
+                }
+            }
+
+            // 如果没有重名class，进行赋值
+            if (hasClass === false) {
+
+                this[i].className = this[i].className + ' ' + name
+
+            } else {
+
+                // 重置hasClass
+                hasClass = false
+            }
+        }
+    }
+
+    return this
+}
+
+Attr.removeClass = function(name) {
+
+    for (var i = 0; i < this.length; i++) {
+
+        var className = this[i].className.split(' ')
+
+        for (j = 0; j < className.length; j++) {
+
+            if (className[j] === name) {
+
+                className.splice(j, 1)
+
+                break
+            }
+        }
+
+        this[i].className = className.join(' ')
+    }
+
+    return this
+}
+
+
+Attr.toggleClass = function() {}
+
+
+Attr.replaceClass = function() {}
+
+// 获取表单元素的value
+Attr.val = function() {
+
+
+}
 
 /**
  * 2015.6.2
  * 创建模块
  * 增加了getAttr、setAttr和init
  * 测试通过
+ * 2015.6.10
+ * 增加了addClass、removeClass
  */
+ 
 /*
  * @name  route.js
  * @description  路由模块
  * @date  2015.5.21
+ * @author  sunken
  */
 var Route = {}
 
-// if (W3C) {
 
-//     Route.cssReady
-
-// }
-Route.cssReady = false
-Route.jsReady = false
+// Route.cssReady = false
+// Route.jsReady = false
 Route.hash = null
 
 // 根据当前url返回hash，并处理history
@@ -2120,13 +2238,22 @@ Route.getHash = function() {
     Route.hash = hash
 
     // 将去掉#!后的url显示在地址栏中
-    history.replaceState(null, null, hash)
+    // TODO: 开启debug模式时不使用
+    // if (W3C) {
+
+    //     history.replaceState(null, null, hash)
+    // }
 
     return hash
 }
 
 // 模块加载的入口
 Route.load = function(routes) {
+
+    if (routes === undefined) {
+
+        return
+    }
 
     // 先充值页面不需要的css和js
     Route.resetResource()
@@ -2137,9 +2264,10 @@ Route.load = function(routes) {
 
 // 清除当前页面不需要的css、js
 Route.resetResource = function() {
-
+    
     var doms = $('link, script')
 
+    // TODO: 应该判断dom标签是否带有href或src属性，否则视为页面内部代码，不清除
     for (var i = 0; i < doms.nodes.length; i++) {
 
         var type = doms.eq(i).attr('data-type')
@@ -2162,7 +2290,6 @@ Route.resetStatus = function() {
 // 添加data属性
 // IE8 Dom only
 // if (W3C) {
-
 if (W3C) {
 
     Object.defineProperties(Route, {
@@ -2171,25 +2298,45 @@ if (W3C) {
             enumerable: true,
             configurable: true,
           
-            get: function() { return this.value },
+            get: function() { return this.cssReadyValue },
             set: function(value) { 
 
-                this.value = value
+                this.cssReadyValue = value
 
                 if (value === true) {
 
-                    // 加载js和file
-                    Route.loadJs(Route.routes[Route.hash]['js'])
-                    Route.loadTempalte(Route.routes[Route.hash]['template'])
+                    var hash = Route.routes[Route.hash]
+
+                    Route.loadTempalte(hash['template'])
                 }
             }
-        }
-    })
+        },
+
+        templateReady: {
+
+            enumerable: true,
+            configurable: true,
+          
+            get: function() { return this.templateReady },
+            set: function(value) { 
+
+                this.templateReadyValue = value
+
+                if (value === true) {
+
+                    var hash = Route.routes[Route.hash]
+
+                    Route.loadJs(hash['js'])
+                }
+            }   // end setter
+        }   // end jsReady
+    })  // end defineProperties
 }
 
 // } else {
 
 //     // IE 8 兼容
+//     // propertychange也只能对dom对象使用
 //     Event.addEvent(Route, 'propertychange', function(e) {
         
 //         if (Route['cssReady'] === true) {
@@ -2206,8 +2353,22 @@ Route.loadTempalte = function(url) {
 
     Http.get(url, function(data) {
 
+        var view = $('#fs-view')
+
         // 加载成功之后，将data复制到view中
         $('#fs-view').html(data)
+
+        if (W3C) {
+
+            Route.templateReady = true
+
+        } else {
+
+            var hash = Route.routes[Route.hash]
+
+            Route.loadJs(hash['js'])
+            Route.setTitle(hash['title'])
+        }
     })
 }
 
@@ -2220,10 +2381,21 @@ Route.loadJs = function(arr) {
 
         jsReady += 1
 
-        if (jsReady === arr.length) {
+        if (arr === undefined || jsReady === arr.length) {
 
-            Route.jsReady = true
+            if (W3C) {
+
+                Route.jsReady = true
+            }
         }
+    }
+
+    // 如果没有声明js，直接执行回调
+    if (arr === undefined) {
+
+        callback.call(null)
+
+        return
     }
 
     for (var i = 0; i < arr.length; i++) {
@@ -2232,7 +2404,17 @@ Route.loadJs = function(arr) {
     }
 }
 
+// 重置页面的标题
+Route.setTitle = function(title) {
+
+    if (title !== undefined) {
+
+        document.title = title
+    }
+}
+
 // 根据Route.routes加载css
+// TODO: loadCss和loadJs的结构相似
 Route.loadCss = function(arr) {
 
     var cssReady = 0
@@ -2241,8 +2423,7 @@ Route.loadCss = function(arr) {
 
         cssReady += 1
 
-        if (cssReady === arr.length) {
-
+        if (arr === undefined || cssReady === arr.length) {
 
             if (W3C) {
 
@@ -2250,10 +2431,20 @@ Route.loadCss = function(arr) {
 
             } else {
 
-                Route.loadJs(Route.routes[Route.hash]['js'])
-                Route.loadTempalte(Route.routes[Route.hash]['template'])
+                var hash = Route.routes[Route.hash]
+
+
+                Route.loadTempalte(hash['template'])
             }
         }
+    }
+
+    // 如果没有声明css，直接执行回调
+    if (arr === undefined) {
+
+        callback.call(null)
+
+        return
     }
 
     for (var i = 0; i < arr.length; i++) {
@@ -2261,9 +2452,6 @@ Route.loadCss = function(arr) {
         Http.getCss(arr[i], callback)
     }
 }
-
-// Route.resetCss = function() {}
-// Route.resetJs = function() {}
 
 // TODO: provider可以考虑改成类
 Route.provider = function(paths) {
@@ -2286,10 +2474,17 @@ Route.provider = function(paths) {
         // TODO: path需要支持数组形式
         if (path instanceof Array) {
 
-            path.forEach(function(v, i, a) {
+            for (var i = 0; i < path.length; i++) {
 
-                routes[v] = route
-            })
+                var key = path[i]
+
+                routes[key] = route
+            }
+
+            // path.forEach(function(v, i, a) {
+
+            //     routes[v] = route
+            // })
         
         } else {
 
@@ -2308,7 +2503,7 @@ Route.provider = function(paths) {
         Route.routes = routes
 
         // 激活hashChange事件
-        $('window').on('hashchange', hashChange)
+        $(window).on('hashchange', hashChange)
 
         // 重置模块加载状态
         Route.resetStatus()
@@ -2337,9 +2532,16 @@ Route.provider = function(paths) {
  * 修改了hashchange
  * 2015.6.3
  * 增加了resetResource函数
+ * 2015.6.8
+ * 修改了getHash和when，IE 8测试通过
+ * 2015.6.9
+ * 修改了loadCss和loadJs，现在when函数的css和js变成了可选项
+ * 修改了loadCss，在callback中重置了页面标题
+ * 增加了Route.templateReady，让加载流程变成线性
  */
 
 /**
+<<<<<<< HEAD
  * @name animate.js
  * @description 动画模块
  * @date 2015.6.5
@@ -2399,6 +2601,28 @@ Animate.init = function(params, duration,callback) {
 
     return this;
 
+=======
+ * @name  animate.js
+ * @description  动画模块
+ * @date  2015.6.5
+ */
+
+var Animate = {}
+
+
+Animate.init = function(params, duration, easing, callback) {
+
+    // 这是fishbone对象
+    console.log(this)
+    // 这是fishbone对象里面的dom数组
+    console.log(this.nodes)
+
+
+
+
+
+    callback.call(this)
+>>>>>>> fish1/master
 }
 
 
@@ -2411,15 +2635,17 @@ Animate.init = function(params, duration,callback) {
  * 2015.6.5
  * 创建模块
  */
+<<<<<<< HEAD
 
+=======
+>>>>>>> fish1/master
 
 /**
  * @name  extend.js
  * @description  此文件用来向命名空间注册api
  * @date  2015.05.12
- * @author: sunken
+ * @author  sunken
  */
-
 
 // Fishbone对象扩展，
 mix($, {
@@ -2442,6 +2668,10 @@ mix($.fn, {
     ready: Event.ready,
     css: Css.init,
     attr: Attr.init,
+    addClass: Attr.addClass,
+    removeClass: Attr.removeClass,
+    val: Attr.val,
+
     first: Node.first,
     last: Node.last,
     eq: Node.eq,

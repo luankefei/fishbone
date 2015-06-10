@@ -79,7 +79,7 @@ Http.ajax = function(param, events) {
     var data = param.data || null
 
     var req = new XMLHttpRequest()
-
+    
     req.open(type, url)
 
     // 如果有传入loadStart和progress参数
@@ -114,7 +114,7 @@ Http.ajax = function(param, events) {
             
             } catch(e) {
 
-                throw 'json parse error'
+                //throw 'json parse error'
             }
 
             param.success && param.success(res)

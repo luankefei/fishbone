@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta id="viewport" name='viewport' content='initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no'>
     <title>首页 - sunken.me</title>
+<<<<<<< HEAD
     <link data-type='common' rel="stylesheet" href="/css/common.css" />
     <link data-type='common' rel="stylesheet" href="/css/media.css" />
     <link data-type='common' rel="stylesheet" href="/css/layout.css" />
@@ -35,15 +36,49 @@
         <p>2</p>
     </div>
     <script src="dist/fishbone.js"></script>
+=======
+    
+</head>
+<body>
+
+    <a class="a1" href="/#!/list">list</a>
+    <a class="a1 a2" href="/#/list">list2</a>
+    <a href="">LIST3</a>
+
+    <div id="fs-view"></div>
+
+    <script src="dist/fishbone.js"></script>
+    
+    <!--<script src="dist/jquery-2.1.0.min.js"></script>-->
+    
+>>>>>>> fish1/master
     <script>
     function fn(){
         this.style.backgroundColor="#00d8cd"
         console.log($("p"))
     }
 
+<<<<<<< HEAD
     
    console.log($('#a').animate({"opacity":1,"height":1000}, 2000,fn)) /*.animate({"opacity":0},2000)*/
     console.log($("#a"))
+=======
+    // bug
+    //var a = $('a').append(div).css('height', '200px')
+
+    
+
+    //a.addClass('a1').addClass('abcd').addClass('a2').removeClass('abcd')
+
+    var route = $.route
+        .provider()
+        .when(['/list'], {
+            template: '/load.html',
+            title: 'fishbone',
+            js: ['/test.js']
+        })
+        .otherwise('/')
+>>>>>>> fish1/master
 
     </script>
 </body>

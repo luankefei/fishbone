@@ -1,2 +1,2 @@
-# fishbone
-类jquery的spa框架
+# Fishbone
+类jQuery的SPA框架

@@ -3,9 +3,8 @@
  * @name  extend.js
  * @description  此文件用来向命名空间注册api
  * @date  2015.05.12
- * @author: sunken
+ * @author  sunken
  */
-
 
 // Fishbone对象扩展，
 mix($, {
@@ -28,6 +27,10 @@ mix($.fn, {
     ready: Event.ready,
     css: Css.init,
     attr: Attr.init,
+    addClass: Attr.addClass,
+    removeClass: Attr.removeClass,
+    val: Attr.val,
+
     first: Node.first,
     last: Node.last,
     eq: Node.eq,

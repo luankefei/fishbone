@@ -2,7 +2,8 @@
 /**
  * @name  prototype.js
  * @description  对象原型扩展模块，该文件为侵入式设计
- * @date  2015.05.12
+ * @date  2015.5.12
+ * @author  sunken
  */
 String.prototype.byteLen = function(target, fix) {
 
@@ -43,11 +44,13 @@ Array.prototype.flatten = function(target) {
     })
 }
 
+// 取数组中的最小值
 Array.prototype.min = function(target) {
 
     return Math.min.apply(0, target)
 }
 
+// 取数组中的最大值
 Array.prototype.max = function(target) {
 
     return Math.max.apply(0, target)
@@ -89,7 +92,10 @@ Array.prototype.last = function() {
     return this[this.length - 1]
 }
 
-// 过滤数组中的undefined、null和' '
+/**
+ * 2015.5.12
+ * 创建模块
+ */
 
 
 
