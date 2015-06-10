@@ -67,7 +67,7 @@ Node.html = function(html) {
 
     } else {
 
-        return this.length > 1 ? this[0].innerHTML : ''
+        return this[0].innerHTML
     }
 }
 

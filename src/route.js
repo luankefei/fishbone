@@ -53,32 +53,6 @@ Route.resetResource = function() {
     
     var doms = $('link, script')
 
-    // var scripts = document.getElementsByTagName('script')
-    // var links = document.getElementsByTagName('link')
-
-    // for (var i = 0; i < scripts.length; i++) {
-
-    //     var type = scripts[i].getAttribute('data-type')
-    //     var src = scripts[i].getAttribute('src')
-
-    //     if (typeof src === 'string' && type !== 'common') {
-
-    //         console.log(scripts[i])
-
-    //         scripts[i].remove()
-    //     }
-    // }
-
-    // for (var i = 0; i < links.length; i++) {
-
-    //     var type = links[i].getAttribute('data-type')
-
-    //     if (type !== 'common') {
-
-    //         links[i].remove()
-    //     }
-    // }
-
     // TODO: 应该判断dom标签是否带有href或src属性，否则视为页面内部代码，不清除
     for (var i = 0; i < doms.nodes.length; i++) {
 
@@ -165,10 +139,10 @@ Route.loadTempalte = function(url) {
 
     Http.get(url, function(data) {
 
+        var view = $('#fs-view')
+
         // 加载成功之后，将data复制到view中
         $('#fs-view').html(data)
-
-        console.log('load template')
 
         if (W3C) {
 
@@ -272,8 +246,6 @@ Route.provider = function(paths) {
         routes = {}
 
     var hashChange = function() {
-
-        console.log('hashchange')
 
         var hash = Route.getHash()
 

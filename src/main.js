@@ -118,6 +118,9 @@ function init(expr) {
 
             this[0] = DOC.querySelector(arrExp[0])
 
+            this.length = 1
+
+
         } else {
 
             var nodes = DOC.querySelectorAll(expr)

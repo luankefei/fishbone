@@ -1146,13 +1146,12 @@ seajs.config = function(configData) {
  * @name  main.js
  * @description  此文件是种子模块，定义了大量私有变量，提供extend等基础api
  * @date  2015.05.07
- * @version  0.0.2
  * @author  sunken
  */
 var W3C = DOC.dispatchEvent //IE9开始支持W3C的事件模型与getComputedStyle取样式值
 var html = DOC.documentElement //HTML元素
 var head = DOC.head || DOC.getElementsByTagName('head')
-var version = 1
+var version = 2
 
 // 命名空间，传入css表达式或dom对象，返回一个fishbone对象
 // function $(selector) {
@@ -1262,6 +1261,9 @@ function init(expr) {
         if (arrExp.length === 1 && arrExp[0].charAt(0) === '#') {
 
             this[0] = DOC.querySelector(arrExp[0])
+
+            this.length = 1
+
 
         } else {
 
@@ -1650,7 +1652,7 @@ Node.html = function(html) {
 
     } else {
 
-        return this.length > 1 ? this[0].innerHTML : ''
+        return this[0].innerHTML
     }
 }
 
@@ -2232,32 +2234,6 @@ Route.resetResource = function() {
     
     var doms = $('link, script')
 
-    // var scripts = document.getElementsByTagName('script')
-    // var links = document.getElementsByTagName('link')
-
-    // for (var i = 0; i < scripts.length; i++) {
-
-    //     var type = scripts[i].getAttribute('data-type')
-    //     var src = scripts[i].getAttribute('src')
-
-    //     if (typeof src === 'string' && type !== 'common') {
-
-    //         console.log(scripts[i])
-
-    //         scripts[i].remove()
-    //     }
-    // }
-
-    // for (var i = 0; i < links.length; i++) {
-
-    //     var type = links[i].getAttribute('data-type')
-
-    //     if (type !== 'common') {
-
-    //         links[i].remove()
-    //     }
-    // }
-
     // TODO: 应该判断dom标签是否带有href或src属性，否则视为页面内部代码，不清除
     for (var i = 0; i < doms.nodes.length; i++) {
 
@@ -2344,10 +2320,10 @@ Route.loadTempalte = function(url) {
 
     Http.get(url, function(data) {
 
+        var view = $('#fs-view')
+
         // 加载成功之后，将data复制到view中
         $('#fs-view').html(data)
-
-        console.log('load template')
 
         if (W3C) {
 
@@ -2451,8 +2427,6 @@ Route.provider = function(paths) {
         routes = {}
 
     var hashChange = function() {
-
-        console.log('hashchange')
 
         var hash = Route.getHash()
 
