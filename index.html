@@ -16,6 +16,7 @@
         height: 0px;
         left: 0px;
         background-color: #000;
+        opacity:0;
     }
         .p1{
          position: absolute;
@@ -30,12 +31,19 @@
 <body>
     <div id="a">
         <p class="p1"></p>
+        <p>1</p>
+        <p>2</p>
     </div>
     <script src="dist/fishbone.js"></script>
     <script>
+    function fn(){
+        this.style.backgroundColor="#00d8cd"
+        console.log($("p"))
+    }
+
     
-   console.log($('.a').animate({"height":1000}, 2000,3)) /*.animate({"opacity":0},2000)*/
-    // console.log($("#a"))
+   console.log($('#a').animate({"opacity":1,"height":1000}, 2000,fn)) /*.animate({"opacity":0},2000)*/
+    console.log($("#a"))
 
     </script>
 </body>
