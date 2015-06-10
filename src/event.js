@@ -67,27 +67,11 @@ Event.live = function(type, handler) {
 // 对外暴露的事件绑定api
 Event.on = function(type, handler) {
 
-    var target = this.nodes
-
     // 根据nodeName判断单个绑定或循环绑定
     // target可能是window或document对象，判断条件从nodeName改成是否是array
-    if (target instanceof Array) {
+    for (var i = 0; i < this.length; i++) {
 
-        for (var i = 0; i < target.length; i++) {
-
-            Event.addEvent(target[i], type, handler)
-        }
-
-    } else {
-
-        Event.addEvent(target, type, handler)
-
-        
-
-        // target.forEach(function(v, i, a) {
-
-        //     Event.addEvent(v, type, handler)
-        // })
+        Event.addEvent(this[i], type, handler)
     }
 }
 
@@ -97,7 +81,7 @@ Event.ready = function(handler) {
     var eventFn = W3C ? 'DOMContentLoaded' : 'readystatechange'
     var handle = handler
 
-    if (this.nodes !== document) {
+    if (this[0] !== document) {
 
         return
     }
@@ -117,46 +101,14 @@ Event.ready = function(handler) {
             }
 
         }
-
-        Event.addEvent(this.nodes, eventFn, handle, false)
+        
+        Event.addEvent(this[0], eventFn, handle)
 
     } else {
 
         handle.call(null)
     }
 }
-
-// Event.ready = function(handler) {
-
-//     console.log('ready')
-
-//     var eventFn = W3C ? 'DOMContentLoaded' : 'readystatechange'
-//     var handle = null
-
-//     if (this.nodes !== document) {
-
-//         return
-//     }
-
-
-//     //console.log(DOC.readyState)
-
-
-//     if (eventFn === 'readystatechange') {
-
-//         handle = function() {
-
-//             if (DOC.readyState === 'complete') {
-
-//                 Function.call(handler)
-//             }
-//         }
-        
-//     } else {
-
-//         Event.addEvent(this.nodes, eventFn, handle, false)
-//     }
-// }
 
 // TODO: 还没做
 Event.off = function() {}

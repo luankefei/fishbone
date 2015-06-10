@@ -10,143 +10,74 @@ var Node = {}
 // 将node以某元素子元素的形式插入到该元素内容的最后面
 Node.append = function(node) {
 
-    var nodes = this.nodes.length
+    var nodes = []
 
-    if (nodes.length === 1) {
+    // 循环复制插入节点
+    for (var i = 0; i < this.length; i++) {
 
-        nodes.appendChild(node)
+        var n = node.cloneNode(true)
 
-    } else {
-
-        // 循环复制插入节点
-        for (var i = 0; i < nodes.length; i++) {
-
-            var n = node.cloneNode(true)
-
-            nodes[i].appendChild(n)
-        }
-
-        // 循环复制插入节点
-        // this.nodes.forEach(function(value) {
-
-        //     var n = node.cloneNode(true)
-
-        //     value.appendChild(n)
-        // })            
+        this[i].appendChild(n)
+        nodes.push(n)
     }
 
-    return this
+    return new $.fn.init(nodes)
 }
 
 // 将node以某元素子元素的形式插入到该元素内容的最前面
 Node.prepend = function(node) {
 
-    var nodes = this.nodes
+    // 循环复制插入节点
+    for (var i = 0; i < nodes.length; i++) {
 
-    if (nodes.nodeName) {
+        var n = node.cloneNode(true)
 
-        nodes.insertBefore(node, nodes.childNodes[0])
+        nodes[i].insertBefore(n, nodes[i].childNodes[0])
 
-    } else {
-
-        // 循环复制插入节点
-        for (var i = 0; i < nodes.length; i++) {
-
-            var n = node.cloneNode(true)
-
-            nodes[i].insertBefore(n, nodes[i].childNodes[0])
-
-        }
-        
-        // nodes.forEach(function(v) {
-
-        //     var n = node.cloneNode(true)
-
-        //     v.insertBefore(n, v.childNodes[0])
-        // })            
     }
-
+  
     return this
 }
 
 // 克隆节点，如果include_all为true，会克隆该元素所包含的所有子节点
 Node.clone = function(include) {
 
-    var nodes = this.nodes
+    var arr = []
 
-    if (nodes.nodeName) {
+    for (var i = 0; i < nodes.length; i++) {
 
-        return nodes.cloneNode(include)
-
-    } else {
-
-        var arr = []
-
-        for (var i = 0; i < nodes.length; i++) {
-
-            arr.push(nodes[i].cloneNode(include))
-        }
-
-        // nodes.forEach(function(v) {
-
-        //     arr.push(v.cloneNode(include))
-        // })
-
-        return arr
+        arr.push(nodes[i].cloneNode(include))
     }
+
+
+    return arr
 }
 
 // 修改元素的innerHTML
 Node.html = function(html) {
 
-    var nodes = this.nodes
-
     if (html !== undefined) {
 
-        if (nodes.nodeName) {
+        for (var i = 0; i < this.length; i++) {
 
-            nodes.innerHTML = html            
-
-        } else {
-
-            for (var i = 0; i < nodes.length; i++) {
-
-                nodes[i].innerHTML = html
-            }
-
-            // nodes.forEach(function(v, i, a) {
-
-            //     v.innerHTML = html
-            // })
+            this[i].innerHTML = html
         }
 
         return this
 
-
     } else {
 
-        return nodes.nodeName ? nodes.innerHTML : ''
+        return this.length > 1 ? this[0].innerHTML : ''
     }
 }
 
 // 移除元素
 Node.remove = function() {
 
-    var nodes = this.nodes
+    for (var i = 0, length = this.length; i < length; i++) {
 
-    if (nodes instanceof Array) {
-
-        for (var i = 0, length = nodes.length; i < length; i++) {
-
-            var node = nodes[i]
-
-            node.parentNode.removeChild(node)
-        }
-
-    } else {
-
-        nodes.parentNode.removeChild(nodes)
-    }
+        this[i].parentNode.removeChild(this[i])
+    }    
 
     // TODO: 如果返回this，这个对象会包含已经删除节点对象的引用
     return null
@@ -163,26 +94,8 @@ Node.eq = function(index) {
 
     var n = null
 
-    if (this.nodes instanceof Array) {
-
-        n = this.nodes[index]
-        
-    } else if (index === 0) {
-
-        n = this.nodes
-    }
-
+    n = this.nodes[index]
     n = $.fn.init(n)
-
-    // try {
-
-    //     n = this.nodes[index]
-    //     n = $.fn.init(n)
-
-    // } catch(e) {
-
-    //     console.error('$.fn.eq只能用于复数节点集合')
-    // }
 
     return n
 }
@@ -194,9 +107,8 @@ Node.first = function() {
 
 Node.last = function() {
 
-    return Node.eq.call(this, this.nodes.length - 1)   
+    return Node.eq.call(this, this.length - 1)   
 }
-
 
 Node.each = function() {}
 Node.show = function() {}
@@ -216,5 +128,7 @@ Node.wrap = function() {}
  * 增加了first、last和remove方法
  * 2015.6.8
  * 修改了append、prepend、clone和html方法
+ * 2015.6.10
+ * 修改了append，现在返回一个fishbone对象，内含新添加的dom元素
  */
  

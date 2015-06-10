@@ -9,22 +9,15 @@ var Attr = {}
 // 获取属性
 Attr.getAttr = function(name) {
 
-    return this.nodes.nodeName ? this.nodes.getAttribute(name) : this.nodes[0].getAttribute(name)
+    return this[0].getAttribute(name)
 }
 
 // 设置属性
 Attr.setAttr = function(name, value) {
 
-    if (this.nodes.nodeName) {
+    for (var i = 0; i < this.length; i++) {
 
-        this.nodes.setAttribute(name, value)
-
-    } else {
-
-        for (var i = 0; i < this.nodes.length; i++) {
-
-            this.nodes[i].setAttribute(name, value)
-        }
+        this[i].setAttribute(name, value)
     }
 
     return this
@@ -54,68 +47,26 @@ Attr.init = function(name, value) {
 // TODO: 急需重构
 Attr.addClass = function(name) {
 
-    var nodes = this.nodes,
-        hasClass = false
+    var hasClass = false
 
-    if (nodes instanceof Array) {
+    for (var i = 0; i < this.length; i++) {
 
-        for (var i = 0; i < nodes.length; i++) {
-
-            var className = nodes[i].className
-
-            // 如果没有class，直接赋值
-            if (!className) {
-
-                nodes[i].className = name
-
-            } else {
-
-                className = className.split(' ')
-
-
-                for (var j = 0; j < className.length; j++) {
-
-                    // 如果已经包含，不重复添加
-                    if (className[j] === name) {
-
-                        hasClass = true
-
-                        break
-                    }
-                }
-
-                // 如果没有重名class，进行赋值
-                if (hasClass === false) {
-
-                    nodes[i].className = nodes[i].className + ' ' + name
-
-                } else {
-
-                    // 重置hasClass
-                    hasClass = false
-                }
-            }
-        }
-
-
-    } else {
-
-        var className = nodes.className
+        var className = this[i].className
 
         // 如果没有class，直接赋值
         if (!className) {
 
-            nodes.className = name
+            this[i].className = name
 
         } else {
 
             className = className.split(' ')
 
 
-            for (var i = 0; i < className.length; i++) {
+            for (var j = 0; j < className.length; j++) {
 
                 // 如果已经包含，不重复添加
-                if (className[i] === name) {
+                if (className[j] === name) {
 
                     hasClass = true
 
@@ -126,14 +77,14 @@ Attr.addClass = function(name) {
             // 如果没有重名class，进行赋值
             if (hasClass === false) {
 
-                nodes.className = nodes.className + ' ' + name
+                this[i].className = this[i].className + ' ' + name
 
             } else {
 
                 // 重置hasClass
                 hasClass = false
             }
-        }  
+        }
     }
 
     return this
@@ -141,45 +92,25 @@ Attr.addClass = function(name) {
 
 Attr.removeClass = function(name) {
 
-    var nodes = this.nodes
+    for (var i = 0; i < this.length; i++) {
 
-    if (nodes.nodeName) {
+        var className = this[i].className.split(' ')
 
-        var className = nodes.className.split(' ')
+        for (j = 0; j < className.length; j++) {
 
-        for (i = 0; i < className.length; i++) {
+            if (className[j] === name) {
 
-            if (className[i] === name) {
-
-                className.splice(i, 1)
+                className.splice(j, 1)
 
                 break
             }
         }
-        
-        nodes.className = className.join(' ')
 
-    } else {
-
-        for (var i = 0; i < nodes.length; i++) {
-
-            var className = nodes[i].className.split(' ')
-
-            for (j = 0; j < className.length; j++) {
-
-                if (className[j] === name) {
-
-                    className.splice(j, 1)
-
-                    break
-                }
-            }
-
-            nodes[i].className = className.join(' ')
-        }
+        this[i].className = className.join(' ')
     }
-}
 
+    return this
+}
 
 
 Attr.toggleClass = function() {}

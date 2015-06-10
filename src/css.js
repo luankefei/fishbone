@@ -58,19 +58,11 @@ Css.setCss = function(key, value) {
     // 处理连缀写法
     key = Css.handleSeperator(key)
 
-    if (this.nodes.nodeName !== undefined) {
-        
-        // 可能所有变化量都是带px的 
-        this.nodes.style[key] = value
-    
-    } else {
+    for (var i = 0, length = this.length; i < length; i++) {
 
-        for (var i = 0, length = this.nodes.length; i < length; i++) {
-       
-            this.nodes[i].style[key] = value
-        }
+        this[i].style[key] = value
     }
-
+    
     return this
 }
 
@@ -81,12 +73,10 @@ Css.getCss = function(key) {
 
     var value = null
     var node = null
-
-    if (!this.nodes.nodeName) {
-       
-        node = this.nodes[0]
-    }
-
+    
+    // 只返回第一个对象的值   
+    node = this[0]
+    
     // IE 8 supoort, Opera
     if (nodes.currentStyle) {
 

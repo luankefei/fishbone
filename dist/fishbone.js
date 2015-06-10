@@ -1142,7 +1142,7 @@ seajs.config = function(configData) {
 
 !function(global, DOC) {
 
-/*
+/**
  * @name  main.js
  * @description  此文件是种子模块，定义了大量私有变量，提供extend等基础api
  * @date  2015.05.07
@@ -1155,9 +1155,13 @@ var head = DOC.head || DOC.getElementsByTagName('head')
 var version = 1
 
 // 命名空间，传入css表达式或dom对象，返回一个fishbone对象
+// function $(selector) {
+
+//     return $.fn.init(selector)
+// }
 function $(selector) {
 
-    return $.fn.init(selector)
+    return new $.fn.init(selector)
 }
 
 $.fn = $.prototype
@@ -1219,6 +1223,69 @@ function makeArray(arrayLike) {
     return arr
 }
 
+// 初始化fishbone对象
+function init(expr) {
+
+    // 分支1，如果传入的是dom节点
+    if (expr.nodeName || expr === window) {
+
+        this[0] = expr
+        this.selector = null
+    
+        this.length = 1
+
+    } else if (expr === 'body') {
+
+        this[0] = DOC
+        this.selector = expr
+        this.length = 1
+
+    // 分支3，传入的是dom数组
+    } else if (expr instanceof Array) {
+
+        for (var i = 0; i < expr.length; i++) {
+
+            this[i] = expr[i]
+        }
+
+        this.length = expr.length
+        this.selector = null
+
+    // 分支4，使用选择器获取dom元素
+    } else {
+
+        // 记录选择器，方便后面使用 
+        this.selector = expr
+
+        var arrExp = expr.split(' ')
+
+        if (arrExp.length === 1 && arrExp[0].charAt(0) === '#') {
+
+            this[0] = DOC.querySelector(arrExp[0])
+
+        } else {
+
+            var nodes = DOC.querySelectorAll(expr)
+
+            for (var i = 0; i < nodes.length; i++) {
+
+                this[i] = nodes[i]
+            }
+
+            this.length = nodes.length
+            // 将nodeList转为数组
+            //this = makeArray(this)
+        }
+    }
+    
+    // 让浏览器以为是数组
+    //this.splice = function() {}
+
+    return this
+}
+
+init.prototype = $.fn
+
 mix($.fn, {
 
     mix: mix,
@@ -1227,103 +1294,9 @@ mix($.fn, {
     fishbone: version,
     constructor: $,
     length: 0,
+    splice: function() {},
 
-    // 传入的expr可能是dom对象
-    init: function(expr) {
-
-        // 分支1: 处理空白字符串,null,undefined参数
-        if (!expr) {
-            return this
-        }
-
-
-        var f = []
-
-        // 如果传入的是dom节点
-        if (expr.nodeName || expr === window) {
-
-            f.push(expr)
-            f.selector = null
-        
-        } else {
-
-            // 记录选择器，方便后面使用 
-            this.selector = expr
-
-            var arrExp = expr.split(' ')
-
-            if (arrExp.length === 1 && arrExp[0].charAt(0) === '#') {
-
-                f.push(DOC.querySelector(arrExp[0]))
-
-            } else {
-
-                var nodes = DOC.querySelectorAll(expr)
-
-                for (var i = 0; i < nodes.length; i++) {
-
-                    f.push(nodes[i])
-                }
-
-                // 将nodeList转为数组
-                //this.nodes = makeArray(this.nodes)
-            }
-        }
-
-
-        
-
-
-        // f.prototype = new Object()
-
-        // mix(f.prototype, $.fn)
-
-        // console.log(f)
-        //var obj = Object.create($.fn)
-        //f.__proto__ = $.fn
-        //var obj = new Object($.fn)
-        
-        //obj.nodes = this.nodes
-        //obj.selector = this.selector
-
-        return f
-    }
-
-    // init: function(expr) {
-
-    //     // 如果传入的是dom节点
-    //     if (expr.nodeName || expr === window) {
-
-    //         this.nodes = expr
-    //         this.selector = null
-        
-    //     } else {
-
-    //         // 记录选择器，方便后面使用	
-    //         this.selector = expr
-
-    //         var arrExp = expr.split(' ')
-
-    //         if (arrExp.length === 1 && arrExp[0].charAt(0) === '#') {
-
-    //             this.nodes = DOC.querySelector(arrExp[0])
-
-    //         } else {
-
-    //             this.nodes = DOC.querySelectorAll(expr)
-    //             // 将nodeList转为数组
-    //             this.nodes = makeArray(this.nodes)
-    //         }
-    //     }
-
-    //     //var obj = Object.create($.fn)
-    //     var obj = new Object($.fn)
-        
-    //     obj.nodes = this.nodes
-    //     obj.selector = this.selector
-
-    //     return obj
-    // }
+    init: init
 })
 
 /**
@@ -1340,6 +1313,9 @@ mix($.fn, {
  * 2015.6.5
  * 增加了makeArray函数
  * 修改了init函数，为兼容IE 8 将Object.create更换为new Object
+ * 2015.6.10
+ * 修改了$和init函数，调用$会返回init的实例
+ * 修改了fishbone对象的结构，现在看起来更像jquery
  */
  
 /**
@@ -1617,143 +1593,74 @@ var Node = {}
 // 将node以某元素子元素的形式插入到该元素内容的最后面
 Node.append = function(node) {
 
-    var nodes = this.nodes.length
+    var nodes = []
 
-    if (nodes.length === 1) {
+    // 循环复制插入节点
+    for (var i = 0; i < this.length; i++) {
 
-        nodes.appendChild(node)
+        var n = node.cloneNode(true)
 
-    } else {
-
-        // 循环复制插入节点
-        for (var i = 0; i < nodes.length; i++) {
-
-            var n = node.cloneNode(true)
-
-            nodes[i].appendChild(n)
-        }
-
-        // 循环复制插入节点
-        // this.nodes.forEach(function(value) {
-
-        //     var n = node.cloneNode(true)
-
-        //     value.appendChild(n)
-        // })            
+        this[i].appendChild(n)
+        nodes.push(n)
     }
 
-    return this
+    return new $.fn.init(nodes)
 }
 
 // 将node以某元素子元素的形式插入到该元素内容的最前面
 Node.prepend = function(node) {
 
-    var nodes = this.nodes
+    // 循环复制插入节点
+    for (var i = 0; i < nodes.length; i++) {
 
-    if (nodes.nodeName) {
+        var n = node.cloneNode(true)
 
-        nodes.insertBefore(node, nodes.childNodes[0])
+        nodes[i].insertBefore(n, nodes[i].childNodes[0])
 
-    } else {
-
-        // 循环复制插入节点
-        for (var i = 0; i < nodes.length; i++) {
-
-            var n = node.cloneNode(true)
-
-            nodes[i].insertBefore(n, nodes[i].childNodes[0])
-
-        }
-        
-        // nodes.forEach(function(v) {
-
-        //     var n = node.cloneNode(true)
-
-        //     v.insertBefore(n, v.childNodes[0])
-        // })            
     }
-
+  
     return this
 }
 
 // 克隆节点，如果include_all为true，会克隆该元素所包含的所有子节点
 Node.clone = function(include) {
 
-    var nodes = this.nodes
+    var arr = []
 
-    if (nodes.nodeName) {
+    for (var i = 0; i < nodes.length; i++) {
 
-        return nodes.cloneNode(include)
-
-    } else {
-
-        var arr = []
-
-        for (var i = 0; i < nodes.length; i++) {
-
-            arr.push(nodes[i].cloneNode(include))
-        }
-
-        // nodes.forEach(function(v) {
-
-        //     arr.push(v.cloneNode(include))
-        // })
-
-        return arr
+        arr.push(nodes[i].cloneNode(include))
     }
+
+
+    return arr
 }
 
 // 修改元素的innerHTML
 Node.html = function(html) {
 
-    var nodes = this.nodes
-
     if (html !== undefined) {
 
-        if (nodes.nodeName) {
+        for (var i = 0; i < this.length; i++) {
 
-            nodes.innerHTML = html            
-
-        } else {
-
-            for (var i = 0; i < nodes.length; i++) {
-
-                nodes[i].innerHTML = html
-            }
-
-            // nodes.forEach(function(v, i, a) {
-
-            //     v.innerHTML = html
-            // })
+            this[i].innerHTML = html
         }
 
         return this
 
-
     } else {
 
-        return nodes.nodeName ? nodes.innerHTML : ''
+        return this.length > 1 ? this[0].innerHTML : ''
     }
 }
 
 // 移除元素
 Node.remove = function() {
 
-    var nodes = this.nodes
+    for (var i = 0, length = this.length; i < length; i++) {
 
-    if (nodes instanceof Array) {
-
-        for (var i = 0, length = nodes.length; i < length; i++) {
-
-            var node = nodes[i]
-
-            node.parentNode.removeChild(node)
-        }
-
-    } else {
-
-        nodes.parentNode.removeChild(nodes)
-    }
+        this[i].parentNode.removeChild(this[i])
+    }    
 
     // TODO: 如果返回this，这个对象会包含已经删除节点对象的引用
     return null
@@ -1770,26 +1677,8 @@ Node.eq = function(index) {
 
     var n = null
 
-    if (this.nodes instanceof Array) {
-
-        n = this.nodes[index]
-        
-    } else if (index === 0) {
-
-        n = this.nodes
-    }
-
+    n = this.nodes[index]
     n = $.fn.init(n)
-
-    // try {
-
-    //     n = this.nodes[index]
-    //     n = $.fn.init(n)
-
-    // } catch(e) {
-
-    //     console.error('$.fn.eq只能用于复数节点集合')
-    // }
 
     return n
 }
@@ -1801,9 +1690,8 @@ Node.first = function() {
 
 Node.last = function() {
 
-    return Node.eq.call(this, this.nodes.length - 1)   
+    return Node.eq.call(this, this.length - 1)   
 }
-
 
 Node.each = function() {}
 Node.show = function() {}
@@ -1823,6 +1711,8 @@ Node.wrap = function() {}
  * 增加了first、last和remove方法
  * 2015.6.8
  * 修改了append、prepend、clone和html方法
+ * 2015.6.10
+ * 修改了append，现在返回一个fishbone对象，内含新添加的dom元素
  */
  
 /**
@@ -1894,27 +1784,11 @@ Event.live = function(type, handler) {
 // 对外暴露的事件绑定api
 Event.on = function(type, handler) {
 
-    var target = this.nodes
-
     // 根据nodeName判断单个绑定或循环绑定
     // target可能是window或document对象，判断条件从nodeName改成是否是array
-    if (target instanceof Array) {
+    for (var i = 0; i < this.length; i++) {
 
-        for (var i = 0; i < target.length; i++) {
-
-            Event.addEvent(target[i], type, handler)
-        }
-
-    } else {
-
-        Event.addEvent(target, type, handler)
-
-        
-
-        // target.forEach(function(v, i, a) {
-
-        //     Event.addEvent(v, type, handler)
-        // })
+        Event.addEvent(this[i], type, handler)
     }
 }
 
@@ -1924,7 +1798,7 @@ Event.ready = function(handler) {
     var eventFn = W3C ? 'DOMContentLoaded' : 'readystatechange'
     var handle = handler
 
-    if (this.nodes !== document) {
+    if (this[0] !== document) {
 
         return
     }
@@ -1944,46 +1818,14 @@ Event.ready = function(handler) {
             }
 
         }
-
-        Event.addEvent(this.nodes, eventFn, handle, false)
+        
+        Event.addEvent(this[0], eventFn, handle)
 
     } else {
 
         handle.call(null)
     }
 }
-
-// Event.ready = function(handler) {
-
-//     console.log('ready')
-
-//     var eventFn = W3C ? 'DOMContentLoaded' : 'readystatechange'
-//     var handle = null
-
-//     if (this.nodes !== document) {
-
-//         return
-//     }
-
-
-//     //console.log(DOC.readyState)
-
-
-//     if (eventFn === 'readystatechange') {
-
-//         handle = function() {
-
-//             if (DOC.readyState === 'complete') {
-
-//                 Function.call(handler)
-//             }
-//         }
-        
-//     } else {
-
-//         Event.addEvent(this.nodes, eventFn, handle, false)
-//     }
-// }
 
 // TODO: 还没做
 Event.off = function() {}
@@ -2135,19 +1977,11 @@ Css.setCss = function(key, value) {
     // 处理连缀写法
     key = Css.handleSeperator(key)
 
-    if (this.nodes.nodeName !== undefined) {
-        
-        // 可能所有变化量都是带px的 
-        this.nodes.style[key] = value
-    
-    } else {
+    for (var i = 0, length = this.length; i < length; i++) {
 
-        for (var i = 0, length = this.nodes.length; i < length; i++) {
-       
-            this.nodes[i].style[key] = value
-        }
+        this[i].style[key] = value
     }
-
+    
     return this
 }
 
@@ -2158,12 +1992,10 @@ Css.getCss = function(key) {
 
     var value = null
     var node = null
-
-    if (!this.nodes.nodeName) {
-       
-        node = this.nodes[0]
-    }
-
+    
+    // 只返回第一个对象的值   
+    node = this[0]
+    
     // IE 8 supoort, Opera
     if (nodes.currentStyle) {
 
@@ -2221,22 +2053,15 @@ var Attr = {}
 // 获取属性
 Attr.getAttr = function(name) {
 
-    return this.nodes.nodeName ? this.nodes.getAttribute(name) : this.nodes[0].getAttribute(name)
+    return this[0].getAttribute(name)
 }
 
 // 设置属性
 Attr.setAttr = function(name, value) {
 
-    if (this.nodes.nodeName) {
+    for (var i = 0; i < this.length; i++) {
 
-        this.nodes.setAttribute(name, value)
-
-    } else {
-
-        for (var i = 0; i < this.nodes.length; i++) {
-
-            this.nodes[i].setAttribute(name, value)
-        }
+        this[i].setAttribute(name, value)
     }
 
     return this
@@ -2266,68 +2091,26 @@ Attr.init = function(name, value) {
 // TODO: 急需重构
 Attr.addClass = function(name) {
 
-    var nodes = this.nodes,
-        hasClass = false
+    var hasClass = false
 
-    if (nodes instanceof Array) {
+    for (var i = 0; i < this.length; i++) {
 
-        for (var i = 0; i < nodes.length; i++) {
-
-            var className = nodes[i].className
-
-            // 如果没有class，直接赋值
-            if (!className) {
-
-                nodes[i].className = name
-
-            } else {
-
-                className = className.split(' ')
-
-
-                for (var j = 0; j < className.length; j++) {
-
-                    // 如果已经包含，不重复添加
-                    if (className[j] === name) {
-
-                        hasClass = true
-
-                        break
-                    }
-                }
-
-                // 如果没有重名class，进行赋值
-                if (hasClass === false) {
-
-                    nodes[i].className = nodes[i].className + ' ' + name
-
-                } else {
-
-                    // 重置hasClass
-                    hasClass = false
-                }
-            }
-        }
-
-
-    } else {
-
-        var className = nodes.className
+        var className = this[i].className
 
         // 如果没有class，直接赋值
         if (!className) {
 
-            nodes.className = name
+            this[i].className = name
 
         } else {
 
             className = className.split(' ')
 
 
-            for (var i = 0; i < className.length; i++) {
+            for (var j = 0; j < className.length; j++) {
 
                 // 如果已经包含，不重复添加
-                if (className[i] === name) {
+                if (className[j] === name) {
 
                     hasClass = true
 
@@ -2338,14 +2121,14 @@ Attr.addClass = function(name) {
             // 如果没有重名class，进行赋值
             if (hasClass === false) {
 
-                nodes.className = nodes.className + ' ' + name
+                this[i].className = this[i].className + ' ' + name
 
             } else {
 
                 // 重置hasClass
                 hasClass = false
             }
-        }  
+        }
     }
 
     return this
@@ -2353,45 +2136,25 @@ Attr.addClass = function(name) {
 
 Attr.removeClass = function(name) {
 
-    var nodes = this.nodes
+    for (var i = 0; i < this.length; i++) {
 
-    if (nodes.nodeName) {
+        var className = this[i].className.split(' ')
 
-        var className = nodes.className.split(' ')
+        for (j = 0; j < className.length; j++) {
 
-        for (i = 0; i < className.length; i++) {
+            if (className[j] === name) {
 
-            if (className[i] === name) {
-
-                className.splice(i, 1)
+                className.splice(j, 1)
 
                 break
             }
         }
-        
-        nodes.className = className.join(' ')
 
-    } else {
-
-        for (var i = 0; i < nodes.length; i++) {
-
-            var className = nodes[i].className.split(' ')
-
-            for (j = 0; j < className.length; j++) {
-
-                if (className[j] === name) {
-
-                    className.splice(j, 1)
-
-                    break
-                }
-            }
-
-            nodes[i].className = className.join(' ')
-        }
+        this[i].className = className.join(' ')
     }
-}
 
+    return this
+}
 
 
 Attr.toggleClass = function() {}

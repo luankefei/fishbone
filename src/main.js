@@ -1,19 +1,22 @@
-/*
+/**
  * @name  main.js
  * @description  此文件是种子模块，定义了大量私有变量，提供extend等基础api
  * @date  2015.05.07
- * @version  0.0.2
  * @author  sunken
  */
 var W3C = DOC.dispatchEvent //IE9开始支持W3C的事件模型与getComputedStyle取样式值
 var html = DOC.documentElement //HTML元素
 var head = DOC.head || DOC.getElementsByTagName('head')
-var version = 1
+var version = 2
 
 // 命名空间，传入css表达式或dom对象，返回一个fishbone对象
+// function $(selector) {
+
+//     return $.fn.init(selector)
+// }
 function $(selector) {
 
-    return $.fn.init(selector)
+    return new $.fn.init(selector)
 }
 
 $.fn = $.prototype
@@ -75,6 +78,69 @@ function makeArray(arrayLike) {
     return arr
 }
 
+// 初始化fishbone对象
+function init(expr) {
+
+    // 分支1，如果传入的是dom节点
+    if (expr.nodeName || expr === window) {
+
+        this[0] = expr
+        this.selector = null
+    
+        this.length = 1
+
+    } else if (expr === 'body') {
+
+        this[0] = DOC
+        this.selector = expr
+        this.length = 1
+
+    // 分支3，传入的是dom数组
+    } else if (expr instanceof Array) {
+
+        for (var i = 0; i < expr.length; i++) {
+
+            this[i] = expr[i]
+        }
+
+        this.length = expr.length
+        this.selector = null
+
+    // 分支4，使用选择器获取dom元素
+    } else {
+
+        // 记录选择器，方便后面使用 
+        this.selector = expr
+
+        var arrExp = expr.split(' ')
+
+        if (arrExp.length === 1 && arrExp[0].charAt(0) === '#') {
+
+            this[0] = DOC.querySelector(arrExp[0])
+
+        } else {
+
+            var nodes = DOC.querySelectorAll(expr)
+
+            for (var i = 0; i < nodes.length; i++) {
+
+                this[i] = nodes[i]
+            }
+
+            this.length = nodes.length
+            // 将nodeList转为数组
+            //this = makeArray(this)
+        }
+    }
+    
+    // 让浏览器以为是数组
+    //this.splice = function() {}
+
+    return this
+}
+
+init.prototype = $.fn
+
 mix($.fn, {
 
     mix: mix,
@@ -83,102 +149,9 @@ mix($.fn, {
     fishbone: version,
     constructor: $,
     length: 0,
+    splice: function() {},
 
-    // 传入的expr可能是dom对象
-    // init: function(expr) {
-
-    //     // 分支1: 处理空白字符串,null,undefined参数
-    //     if (!expr) {
-    //         return this
-    //     }
-
-    //     var f = []
-
-    //     // 如果传入的是dom节点
-    //     if (expr.nodeName || expr === window) {
-
-    //         f.push(expr)
-    //         f.selector = null
-        
-    //     } else {
-
-    //         // 记录选择器，方便后面使用 
-    //         this.selector = expr
-
-    //         var arrExp = expr.split(' ')
-
-    //         if (arrExp.length === 1 && arrExp[0].charAt(0) === '#') {
-
-    //             f.push(DOC.querySelector(arrExp[0]))
-
-    //         } else {
-
-    //             var nodes = DOC.querySelectorAll(expr)
-
-    //             for (var i = 0; i < nodes.length; i++) {
-
-    //                 f.push(nodes[i])
-    //             }
-
-    //             // 将nodeList转为数组
-    //             //this.nodes = makeArray(this.nodes)
-    //         }
-    //     }
-
-
-        
-
-
-    //     // f.prototype = new Object()
-
-    //     // mix(f.prototype, $.fn)
-
-    //     // console.log(f)
-    //     //var obj = Object.create($.fn)
-    //     //f.__proto__ = $.fn
-    //     //var obj = new Object($.fn)
-        
-    //     //obj.nodes = this.nodes
-    //     //obj.selector = this.selector
-
-    //     return f
-    // }
-
-    init: function(expr) {
-
-        // 如果传入的是dom节点
-        if (expr.nodeName || expr === window) {
-
-            this.nodes = expr
-            this.selector = null
-        
-        } else {
-
-            // 记录选择器，方便后面使用	
-            this.selector = expr
-
-            var arrExp = expr.split(' ')
-
-            if (arrExp.length === 1 && arrExp[0].charAt(0) === '#') {
-
-                this.nodes = DOC.querySelector(arrExp[0])
-
-            } else {
-
-                this.nodes = DOC.querySelectorAll(expr)
-                // 将nodeList转为数组
-                this.nodes = makeArray(this.nodes)
-            }
-        }
-
-        //var obj = Object.create($.fn)
-        var obj = new Object($.fn)
-        
-        obj.nodes = this.nodes
-        obj.selector = this.selector
-
-        return obj
-    }
+    init: init
 })
 
 /**
@@ -195,5 +168,8 @@ mix($.fn, {
  * 2015.6.5
  * 增加了makeArray函数
  * 修改了init函数，为兼容IE 8 将Object.create更换为new Object
+ * 2015.6.10
+ * 修改了$和init函数，调用$会返回init的实例
+ * 修改了fishbone对象的结构，现在看起来更像jquery
  */
  
