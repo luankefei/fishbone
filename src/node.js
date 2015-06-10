@@ -1,4 +1,5 @@
-/*
+
+/**
  * @name  node.js
  * @description  dom、node模块，提供dom对象的CRUD
  * @date  2015.05.12
@@ -195,6 +196,12 @@ Node.last = function() {
 
     return Node.eq.call(this, this.nodes.length - 1)   
 }
+
+
+Node.each = function() {}
+Node.show = function() {}
+Node.hide = function() {}
+Node.wrap = function() {}
 
 // 遍历所有对象
 // Node.each = function() {

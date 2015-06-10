@@ -85,6 +85,66 @@ mix($.fn, {
     length: 0,
 
     // 传入的expr可能是dom对象
+    // init: function(expr) {
+
+    //     // 分支1: 处理空白字符串,null,undefined参数
+    //     if (!expr) {
+    //         return this
+    //     }
+
+
+    //     var f = []
+
+    //     // 如果传入的是dom节点
+    //     if (expr.nodeName || expr === window) {
+
+    //         f.push(expr)
+    //         f.selector = null
+        
+    //     } else {
+
+    //         // 记录选择器，方便后面使用 
+    //         this.selector = expr
+
+    //         var arrExp = expr.split(' ')
+
+    //         if (arrExp.length === 1 && arrExp[0].charAt(0) === '#') {
+
+    //             f.push(DOC.querySelector(arrExp[0]))
+
+    //         } else {
+
+    //             var nodes = DOC.querySelectorAll(expr)
+
+    //             for (var i = 0; i < nodes.length; i++) {
+
+    //                 f.push(nodes[i])
+    //             }
+
+    //             // 将nodeList转为数组
+    //             //this.nodes = makeArray(this.nodes)
+    //         }
+    //     }
+
+
+        
+
+
+    //     // f.prototype = new Object()
+
+    //     // mix(f.prototype, $.fn)
+
+    //     // console.log(f)
+    //     //var obj = Object.create($.fn)
+    //     //f.__proto__ = $.fn
+    //     //var obj = new Object($.fn)
+        
+    //     //obj.nodes = this.nodes
+    //     //obj.selector = this.selector
+
+    //     return f
+    // }
+
     init: function(expr) {
 
         // var reg = new RegExp('/^<([a-z]+)([^<]+)*(?:>(.*)<\/\1>|\s+\/>)$/')
@@ -94,7 +154,6 @@ mix($.fn, {
         // if (html) {
 
         //     console.log('是html')
-
 
         // 如果传入的是dom节点
         if (expr.nodeName || expr === window) {

@@ -161,7 +161,6 @@ Event.ready = function(handler) {
 // TODO: 还没做
 Event.off = function() {}
 
-
 /**
  * 2015.5.25
  * 创建模块

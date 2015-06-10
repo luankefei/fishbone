@@ -8,23 +8,32 @@
 </head>
 <body>
 
-    <a href="/#!/list">list</a>
-    <a href="/#/list">list2</a>
+    <a class="a1" href="/#!/list">list</a>
+    <a class="a1 a2" href="/#/list">list2</a>
+    <a href="">LIST3</a>
 
     <div id="fs-view"></div>
 
     <script src="dist/fishbone.js"></script>
-
+    
+    <!--<script src="dist/jquery-2.1.0.min.js"></script>-->
+    
     <script>
 
-    var route = $.route
-        .provider()
-        .when(['/list'], {
-            template: '/load.html',
-            title: 'fishbone',
-            js: ['/test.js']
-        })
-        .otherwise('/')
+    var a = $('#fs-view')
+
+    a.addClass('a1').addClass('abcd').addClass('a2').removeClass('abcd')
+
+
+
+    // var route = $.route
+    //     .provider()
+    //     .when(['/list'], {
+    //         template: '/load.html',
+    //         title: 'fishbone',
+    //         js: ['/test.js']
+    //     })
+    //     .otherwise('/')
 
     </script>
     

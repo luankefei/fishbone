@@ -80,14 +80,22 @@ Css.setCss = function(key, value) {
 Css.getCss = function(key) {
 
     var value = null
-    var nodes = this.nodes
+    var node = null
 
-    if (!nodes.nodeName) {
+    if (!this.nodes.nodeName) {
        
-        nodes = this.nodes[0]
+        node = this.nodes[0]
     }
 
-    value = global.getComputedStyle(nodes, null).getPropertyValue(key)
+    // IE 8 supoort, Opera
+    if (nodes.currentStyle) {
+
+        value = global.getComputedStyle(node, false).getPropertyValue(key)
+
+    } else {
+
+        value = node.currentStyle[key]
+    }
 
     return value
 }
@@ -121,4 +129,6 @@ Css.init = function(key, value) {
  * 修改了setCss，增加了变化量判断流程
  * 修改了setCss，修改了变化量的处理，暂时跑通，但缺乏对百分比的支持
  * 修改了init的返回值，get应该返回value，set则返回this
+ * 2015.6.10
+ * 修改了getCss，在IE 8 和 Opera上使用currentStyle代替getComputedStyle
  */

@@ -27,6 +27,10 @@ mix($.fn, {
 	ready: Event.ready,
     css: Css.init,
     attr: Attr.init,
+    addClass: Attr.addClass,
+    removeClass: Attr.removeClass,
+    val: Attr.val,
+
     first: Node.first,
     last: Node.last,
     eq: Node.eq,

@@ -1229,6 +1229,66 @@ mix($.fn, {
     length: 0,
 
     // 传入的expr可能是dom对象
+    // init: function(expr) {
+
+    //     // 分支1: 处理空白字符串,null,undefined参数
+    //     if (!expr) {
+    //         return this
+    //     }
+
+
+    //     var f = []
+
+    //     // 如果传入的是dom节点
+    //     if (expr.nodeName || expr === window) {
+
+    //         f.push(expr)
+    //         f.selector = null
+        
+    //     } else {
+
+    //         // 记录选择器，方便后面使用 
+    //         this.selector = expr
+
+    //         var arrExp = expr.split(' ')
+
+    //         if (arrExp.length === 1 && arrExp[0].charAt(0) === '#') {
+
+    //             f.push(DOC.querySelector(arrExp[0]))
+
+    //         } else {
+
+    //             var nodes = DOC.querySelectorAll(expr)
+
+    //             for (var i = 0; i < nodes.length; i++) {
+
+    //                 f.push(nodes[i])
+    //             }
+
+    //             // 将nodeList转为数组
+    //             //this.nodes = makeArray(this.nodes)
+    //         }
+    //     }
+
+
+        
+
+
+    //     // f.prototype = new Object()
+
+    //     // mix(f.prototype, $.fn)
+
+    //     // console.log(f)
+    //     //var obj = Object.create($.fn)
+    //     //f.__proto__ = $.fn
+    //     //var obj = new Object($.fn)
+        
+    //     //obj.nodes = this.nodes
+    //     //obj.selector = this.selector
+
+    //     return f
+    // }
+
     init: function(expr) {
 
         // var reg = new RegExp('/^<([a-z]+)([^<]+)*(?:>(.*)<\/\1>|\s+\/>)$/')
@@ -1238,7 +1298,6 @@ mix($.fn, {
         // if (html) {
 
         //     console.log('是html')
-
 
         // 如果传入的是dom节点
         if (expr.nodeName || expr === window) {
@@ -1549,7 +1608,8 @@ Http.socket = function() {}
  * 修改了getScript函数，依赖了seajs
  */
  
-/*
+
+/**
  * @name  node.js
  * @description  dom、node模块，提供dom对象的CRUD
  * @date  2015.05.12
@@ -1747,6 +1807,12 @@ Node.last = function() {
     return Node.eq.call(this, this.nodes.length - 1)   
 }
 
+
+Node.each = function() {}
+Node.show = function() {}
+Node.hide = function() {}
+Node.wrap = function() {}
+
 // 遍历所有对象
 // Node.each = function() {
 
@@ -1925,7 +1991,6 @@ Event.ready = function(handler) {
 // TODO: 还没做
 Event.off = function() {}
 
-
 /**
  * 2015.5.25
  * 创建模块
@@ -2095,14 +2160,22 @@ Css.setCss = function(key, value) {
 Css.getCss = function(key) {
 
     var value = null
-    var nodes = this.nodes
+    var node = null
 
-    if (!nodes.nodeName) {
+    if (!this.nodes.nodeName) {
        
-        nodes = this.nodes[0]
+        node = this.nodes[0]
     }
 
-    value = global.getComputedStyle(nodes, null).getPropertyValue(key)
+    // IE 8 supoort, Opera
+    if (nodes.currentStyle) {
+
+        value = global.getComputedStyle(node, false).getPropertyValue(key)
+
+    } else {
+
+        value = node.currentStyle[key]
+    }
 
     return value
 }
@@ -2136,54 +2209,203 @@ Css.init = function(key, value) {
  * 修改了setCss，增加了变化量判断流程
  * 修改了setCss，修改了变化量的处理，暂时跑通，但缺乏对百分比的支持
  * 修改了init的返回值，get应该返回value，set则返回this
+ * 2015.6.10
+ * 修改了getCss，在IE 8 和 Opera上使用currentStyle代替getComputedStyle
  */
-
 
 /**
  * @name  attr.js
  * @description  属性操作模块
  * @date  2015.6.2
+ * @author  sunken
  */
 var Attr = {}
 
 // 获取属性
-Attr.getAttr = function(key) {
+Attr.getAttr = function(name) {
 
-    return this.nodes.nodeName ? this.nodes.getAttribute(key) : this.nodes[0].getAttribute(key)
+    return this.nodes.nodeName ? this.nodes.getAttribute(name) : this.nodes[0].getAttribute(name)
 }
 
 // 设置属性
-Attr.setAttr = function(key, value) {
-    
+Attr.setAttr = function(name, value) {
+
     if (this.nodes.nodeName) {
 
-        this.nodes.setAttribute(key, value)
+        this.nodes.setAttribute(name, value)
 
     } else {
-   
+
         for (var i = 0; i < this.nodes.length; i++) {
 
-            this.nodes[i].setAttribute(key, value)
-        } 
+            this.nodes[i].setAttribute(name, value)
+        }
     }
 
     return this
 }
 
-Attr.init = function(key, value) {
-   
+Attr.hasAttr = function(name) {}
+
+Attr.removeAttr = function(name) {}
+
+Attr.init = function(name, value) {
+
     var returnValue = null
 
     if (value === undefined) {
-    
-        returnValue = Attr.getAttr.call(this, key)
+
+        returnValue = Attr.getAttr.call(this, name)
 
     } else {
 
-        returnValue = Attr.setAttr.call(this, key, value)
+        returnValue = Attr.setAttr.call(this, name, value)
     }
 
     return returnValue
+}
+
+// 为dom节点的className属性追加其他name
+// TODO: 急需重构
+Attr.addClass = function(name) {
+
+    var nodes = this.nodes,
+        hasClass = false
+
+    if (nodes instanceof Array) {
+
+        for (var i = 0; i < nodes.length; i++) {
+
+            var className = nodes[i].className
+
+            // 如果没有class，直接赋值
+            if (!className) {
+
+                nodes[i].className = name
+
+            } else {
+
+                className = className.split(' ')
+
+
+                for (var j = 0; j < className.length; j++) {
+
+                    // 如果已经包含，不重复添加
+                    if (className[j] === name) {
+
+                        hasClass = true
+
+                        break
+                    }
+                }
+
+                // 如果没有重名class，进行赋值
+                if (hasClass === false) {
+
+                    nodes[i].className = nodes[i].className + ' ' + name
+
+                } else {
+
+                    // 重置hasClass
+                    hasClass = false
+                }
+            }
+        }
+
+
+    } else {
+
+        var className = nodes.className
+
+        // 如果没有class，直接赋值
+        if (!className) {
+
+            nodes.className = name
+
+        } else {
+
+            className = className.split(' ')
+
+
+            for (var i = 0; i < className.length; i++) {
+
+                // 如果已经包含，不重复添加
+                if (className[i] === name) {
+
+                    hasClass = true
+
+                    break
+                }
+            }
+
+            // 如果没有重名class，进行赋值
+            if (hasClass === false) {
+
+                nodes.className = nodes.className + ' ' + name
+
+            } else {
+
+                // 重置hasClass
+                hasClass = false
+            }
+        }  
+    }
+
+    return this
+}
+
+Attr.removeClass = function(name) {
+
+    var nodes = this.nodes
+
+    if (nodes.nodeName) {
+
+        var className = nodes.className.split(' ')
+
+        for (i = 0; i < className.length; i++) {
+
+            if (className[i] === name) {
+
+                className.splice(i, 1)
+
+                break
+            }
+        }
+        
+        nodes.className = className.join(' ')
+
+    } else {
+
+        for (var i = 0; i < nodes.length; i++) {
+
+            var className = nodes[i].className.split(' ')
+
+            for (j = 0; j < className.length; j++) {
+
+                if (className[j] === name) {
+
+                    className.splice(j, 1)
+
+                    break
+                }
+            }
+
+            nodes[i].className = className.join(' ')
+        }
+    }
+}
+
+
+
+Attr.toggleClass = function() {}
+
+
+Attr.replaceClass = function() {}
+
+// 获取表单元素的value
+Attr.val = function() {
+
+
 }
 
 /**
@@ -2191,7 +2413,10 @@ Attr.init = function(key, value) {
  * 创建模块
  * 增加了getAttr、setAttr和init
  * 测试通过
+ * 2015.6.10
+ * 增加了addClass、removeClass
  */
+ 
 /*
  * @name  route.js
  * @description  路由模块
@@ -2606,13 +2831,16 @@ mix($, {
     component: Module.component.init
 })
 
-mix($.fn, Node)
 mix($.fn, {
 	on: Event.on,
 	live: Event.live,
 	ready: Event.ready,
     css: Css.init,
     attr: Attr.init,
+    addClass: Attr.addClass,
+    removeClass: Attr.removeClass,
+    val: Attr.val,
+
     first: Node.first,
     last: Node.last,
     eq: Node.eq,
