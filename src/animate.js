@@ -9,32 +9,19 @@ var Animate = {}
 Animate.linear = function(t, b, c, d) {
     //t：times,b:begin,c:change,d:duration
     return t / d * c + b;
-
-<<<<<<< HEAD
 }
-=======
-Animate.init = function(params, duration, easing, callback) {
 
-    // 这是fishbone对象
-    console.log(this)
-    // 这是fishbone对象里面的dom数组
-    console.log(this.nodes)
+Animate.init = function(params, duration, callback) {
 
-
-
->>>>>>> fish1/master
-
-Animate.init = function(params, duration,callback) {
-
-    var ele = this.nodes;
+    var ele = this;
 
     clearInterval(ele.timer)
     var oChange = {}
     var oBegin = {}
-    var unit={}
+    var unit = {}
     for (var attr in params) {
-        var begin =parseFloat($(ele).css(attr))
-        unit[attr]=$(ele).css(attr).slice(begin.toString().length)
+        var begin = parseFloat($(ele).css(attr))
+        unit[attr] = $(ele).css(attr).slice(begin.toString().length)
         var change = params[attr] - begin;
         oChange[attr] = change;
         oBegin[attr] = begin;
@@ -48,13 +35,13 @@ Animate.init = function(params, duration,callback) {
             for (var attr in params) {
                 var change = oChange[attr];
                 var begin = oBegin[attr];
-                var val = Animate.linear(times, begin, change, duration)+unit[attr];
-               $(ele).css(attr,val)
-               // setTimeout(step,interval)
+                var val = Animate.linear(times, begin, change, duration) + unit[attr];
+                $(ele).css(attr, val)
+                    // setTimeout(step,interval)
             }
         } else {
             for (var attr in params) {
-                $(ele).css(attr,params[attr]+unit[attr])
+                $(ele).css(attr, params[attr] + unit[attr])
             }
             clearInterval(ele.timer);
             ele.timer = null;
@@ -65,7 +52,7 @@ Animate.init = function(params, duration,callback) {
     }
 
 
-    ele.timer=window.setInterval(step, interval);
+    ele.timer = window.setInterval(step, interval);
 
     return this;
 
