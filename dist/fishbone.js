@@ -1223,6 +1223,7 @@ function makeArray(arrayLike) {
 }
 
 // 初始化fishbone对象
+// TODO: 分支较多，结构不清晰。对length和selector的赋值不统一
 function init(expr) {
 
     // 分支1，如果传入的是dom节点
@@ -1235,31 +1236,20 @@ function init(expr) {
 
     } else if (expr === 'body') {
 
-<<<<<<< HEAD
-
-        // 如果传入的是dom节点
-        if (expr.nodeName) {
-=======
         this[0] = DOC
         this.selector = expr
         this.length = 1
->>>>>>> fish1/master
 
     // 分支3，传入的是dom数组
     } else if (expr instanceof Array) {
 
         for (var i = 0; i < expr.length; i++) {
 
-<<<<<<< HEAD
-            // 记录选择器，方便后面使用 
-            this.selector = expr
-=======
             this[i] = expr[i]
         }
 
         this.length = expr.length
         this.selector = null
->>>>>>> fish1/master
 
     // 分支4，使用选择器获取dom元素
     } else {
@@ -1271,10 +1261,10 @@ function init(expr) {
 
         if (arrExp.length === 1 && arrExp[0].charAt(0) === '#') {
 
+            // 记录选择器，方便后面使用 
+            this.selector = expr
             this[0] = DOC.querySelector(arrExp[0])
-
             this.length = 1
-
 
         } else {
 
@@ -2005,14 +1995,11 @@ Css.setCss = function(key, value) {
 Css.getCss = function(key) {
 
     var value = null
-<<<<<<< HEAD
-    var node = this.nodes
-
-    if (!this.nodes.nodeName) {
-       
-        node = this.nodes[0]
-    }
-
+    var node = null
+    
+    // 只返回第一个对象的值   
+    node = this[0]
+    
     // IE 8 supoort, Opera
     if (!node.currentStyle) {
 
@@ -2020,20 +2007,6 @@ Css.getCss = function(key) {
 
     } else {
 
-=======
-    var node = null
-    
-    // 只返回第一个对象的值   
-    node = this[0]
-    
-    // IE 8 supoort, Opera
-    if (nodes.currentStyle) {
-
-        value = global.getComputedStyle(node, false).getPropertyValue(key)
-
-    } else {
-
->>>>>>> fish1/master
         value = node.currentStyle[key]
     }
 
@@ -2071,12 +2044,9 @@ Css.init = function(key, value) {
  * 修改了init的返回值，get应该返回value，set则返回this
  * 2015.6.10
  * 修改了getCss，在IE 8 和 Opera上使用currentStyle代替getComputedStyle
+ * 2015.6.11
+ * 修改了getCss，fix bug
  */
-
-<<<<<<< HEAD
-
-=======
->>>>>>> fish1/master
 /**
  * @name  attr.js
  * @description  属性操作模块
@@ -2140,7 +2110,6 @@ Attr.addClass = function(name) {
         } else {
 
             className = className.split(' ')
-
 
             for (var j = 0; j < className.length; j++) {
 
@@ -2541,32 +2510,32 @@ Route.provider = function(paths) {
  */
 
 /**
-<<<<<<< HEAD
- * @name animate.js
- * @description 动画模块
- * @date 2015.6.5
+ * @name  animate.js
+ * @description  动画模块
+ * @date  2015.6.5
  */
-
 
 var Animate = {}
 
 Animate.linear = function(t, b, c, d) {
     //t：times,b:begin,c:change,d:duration
     return t / d * c + b;
-
 }
 
-Animate.init = function(params, duration,callback) {
+Animate.init = function(params, duration, callback) {
 
-    var ele = this.nodes;
+    var ele = this;
 
-    clearInterval(ele.timer)
+    console.log(ele)
+
+    //clearInterval(ele.timer)
     var oChange = {}
     var oBegin = {}
-    var unit={}
+    var unit = {}
     for (var attr in params) {
-        var begin =parseFloat($(ele).css(attr))
-        unit[attr]=$(ele).css(attr).slice(begin.toString().length)
+
+        var begin = parseFloat(ele.css(attr))
+        unit[attr] = ele.css(attr).slice(begin.toString().length)
         var change = params[attr] - begin;
         oChange[attr] = change;
         oBegin[attr] = begin;
@@ -2580,13 +2549,13 @@ Animate.init = function(params, duration,callback) {
             for (var attr in params) {
                 var change = oChange[attr];
                 var begin = oBegin[attr];
-                var val = Animate.linear(times, begin, change, duration)+unit[attr];
-               $(ele).css(attr,val)
-               // setTimeout(step,interval)
+                var val = Animate.linear(times, begin, change, duration) + unit[attr];
+                ele.css(attr, val)
+                    // setTimeout(step,interval)
             }
         } else {
             for (var attr in params) {
-                $(ele).css(attr,params[attr]+unit[attr])
+                ele.css(attr, params[attr] + unit[attr])
             }
             clearInterval(ele.timer);
             ele.timer = null;
@@ -2597,32 +2566,10 @@ Animate.init = function(params, duration,callback) {
     }
 
 
-    ele.timer=window.setInterval(step, interval);
+    ele.timer = window.setInterval(step, interval);
 
     return this;
 
-=======
- * @name  animate.js
- * @description  动画模块
- * @date  2015.6.5
- */
-
-var Animate = {}
-
-
-Animate.init = function(params, duration, easing, callback) {
-
-    // 这是fishbone对象
-    console.log(this)
-    // 这是fishbone对象里面的dom数组
-    console.log(this.nodes)
-
-
-
-
-
-    callback.call(this)
->>>>>>> fish1/master
 }
 
 
@@ -2635,10 +2582,7 @@ Animate.init = function(params, duration, easing, callback) {
  * 2015.6.5
  * 创建模块
  */
-<<<<<<< HEAD
 
-=======
->>>>>>> fish1/master
 
 /**
  * @name  extend.js

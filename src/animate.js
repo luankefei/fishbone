@@ -15,13 +15,16 @@ Animate.init = function(params, duration, callback) {
 
     var ele = this;
 
-    clearInterval(ele.timer)
+    console.log(ele)
+
+    //clearInterval(ele.timer)
     var oChange = {}
     var oBegin = {}
     var unit = {}
     for (var attr in params) {
-        var begin = parseFloat($(ele).css(attr))
-        unit[attr] = $(ele).css(attr).slice(begin.toString().length)
+
+        var begin = parseFloat(ele.css(attr))
+        unit[attr] = ele.css(attr).slice(begin.toString().length)
         var change = params[attr] - begin;
         oChange[attr] = change;
         oBegin[attr] = begin;
@@ -36,12 +39,12 @@ Animate.init = function(params, duration, callback) {
                 var change = oChange[attr];
                 var begin = oBegin[attr];
                 var val = Animate.linear(times, begin, change, duration) + unit[attr];
-                $(ele).css(attr, val)
+                ele.css(attr, val)
                     // setTimeout(step,interval)
             }
         } else {
             for (var attr in params) {
-                $(ele).css(attr, params[attr] + unit[attr])
+                ele.css(attr, params[attr] + unit[attr])
             }
             clearInterval(ele.timer);
             ele.timer = null;
