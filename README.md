@@ -5,18 +5,42 @@
 main.js -> node.js -> http.js -> event.js -> css.js -> attr.js -> animate.js -> route.js -> module.js -> prototype.js
 
 ## API文档
-_$.mix(receiver, supplier)  传入两个对象，将对象2的属性/方法合并到对象1，返回对象1_
+
+### 工具
+_$.mix (receiver, supplier)  传入两个对象，将supplier的属性/方法合并到receiver，返回receiver
 
 ```javascript
 var obj1 = { name: 'zhang san' }
 var obj2 = { age: 18 }
 
-$.mix(obj1, obj2)   // obj1 { name: 'zhangsan', age: 18 }
+$.mix(obj1, obj2)   // { name: 'zhangsan', age: 18 }
 ```
 
-$.get
+### http请求
 
-$.ajax
+_$.get (url, callback)  对url发送get请求，在请求成功后执行callback_
+
+```javascript
+$.get('/www.sunken.me/user/1', function(data) {
+
+    console.log(data)  // { id: 1,  name: 'sunken' } 
+})
+```
+
+_$.ajax (params, events)  http请求的通用接口，支持HttpRequest 2.0的新事件_
+
+```javascript
+$.ajax({
+
+    url: 'http://sunken.me/user/1'
+    type: 'GET',
+    data: null
+    success: function(data) {
+
+        console.log(data)  // { id: 1, name: 'sunken' }
+    }
+})
+```
 
 $.jsonp
 
