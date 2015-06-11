@@ -100,7 +100,7 @@ input.value = 'zhang san'  // log: input changed
 
 _$.route 创建路由模块_
 
-_route.provider () 返回路由模块的provider _
+_route.provider () 返回路由模块的provider_
 
 _provider.when ([path], route)  传入一组url，匹配成功后执行route规则_
 
