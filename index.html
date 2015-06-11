@@ -9,7 +9,6 @@
     <style>
     
     div {
-
         float: left;
         width: 0.05%;
         height: 50px;
@@ -21,8 +20,9 @@
     
     <div>
         <a href=""></a>
-        <span></span>
-        <span></span>
+        <span>111</span>
+        <span>222</span>
+        <input type="text" value="123">
     </div>
 
 <!--     <a class="a1" href="/#!/list">list</a>
@@ -45,14 +45,14 @@
     <script>
 
 
-    var span = $('div').css('height', '100px')
-            .css('width', '1000px')
-            .css('background', 'red')
-            .find('span')
-            .text('1234')
-            .text()
+    // var span = $('div').css('height', '100px')
+    //         .css('width', '1000px')
+    //         .css('background', 'red')
+    //         .find('span')
+    //         .text('1234')
+    //         .text()
 
-    console.log(span)
+    // console.log(span)
     
     
     // $('div').css('height', '100px')
@@ -61,8 +61,6 @@
     //console.log($("#a"))
     // bug
     //var a = $('a').append(div).css('height', '200px')
-
-    
 
     //a.addClass('a1').addClass('abcd').addClass('a2').removeClass('abcd')
 
@@ -80,3 +78,38 @@
 </body>
 
 </html>
+
+<script>
+    var span = $('span').eq(1).text('333').index()
+
+    console.log(span)
+
+
+    var value = $('input').val('444')
+
+    console.log(value)
+
+</script>
+
+<!--
+
+<script>
+
+$.jsonp('http://www.sunken.me/user/1', 'doSomething', function() {
+
+    console.log('sueccss')
+})
+    
+
+$.get('http://www.sunken.me/user/1', function(data) {
+
+    console.log(data)
+})
+
+$.mix(obj1, obj2)   // obj1 { name: 'zhangsan', age: 18 }
+
+
+
+</script>
+
+-->

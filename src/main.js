@@ -23,7 +23,6 @@ $.fn = $.prototype
 
 // 糅杂，为一个对象添加更多成员
 function mix(receiver, supplier) {
-
     var args = [].slice.call(arguments),
         i = 1,
         key, //如果最后参数是布尔，判定是否覆写同名属性

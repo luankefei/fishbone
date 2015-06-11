@@ -126,7 +126,7 @@ Http.ajax = function(param, events) {
 }
 
 // 尽量使用CORS
-Http.jsonp = function(url, namespace, funcName, callback) {
+Http.jsonp = function(url, funcName, callback) {
 
     var script = document.createElement('script')
     var body = document.querySelector('body')
@@ -135,7 +135,7 @@ Http.jsonp = function(url, namespace, funcName, callback) {
     script.id = 'jsonp'
     script.onload = callback
 
-    window[funcName] = namespace.funcName
+    window[funcName] = funcName
 
     body.appendChild(script)
 }

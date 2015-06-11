@@ -104,15 +104,13 @@ Node.after = function() {}
 
 Node.before = function() {}
 
-Node.width = function() {}
-
 // TODO: 如果this.nodes不是数组，这里会报错
 Node.eq = function(index) {
 
     var n = null
 
-    n = this.nodes[index]
-    n = $.fn.init(n)
+    n = this[index]
+    n = new $.fn.init(n)
 
     return n
 }
@@ -145,7 +143,38 @@ Node.find = function(expr) {
     return new $.fn.init(nodes)
 }
 
+// 获取当前元素在父节点中的下标
+Node.index = function() {
 
+    var brothers = this[0].parentNode.children
+
+    for (var i = 0; i < brothers.length; i++) {
+
+        if (brothers[i] === this[0]) {
+
+            return i
+        }
+    }
+}
+
+// 获取/设置当前节点的值
+Node.val = function(value) {
+
+    if (value === undefined) {
+
+        return this[0].nodeName === 'INPUT' ? this[0].value : ''
+    }
+
+    for (var i = 0; i < this.length; i++) {
+
+        if (this[i].nodeName === 'INPUT') {
+
+            this[i].value = value
+        }
+    }
+
+    return this
+}
 
 Node.each = function() {}
 Node.show = function() {}
@@ -169,5 +198,7 @@ Node.wrap = function() {}
  * 修改了append，现在返回一个fishbone对象，内含新添加的dom元素
  * 2015.6.11
  * 增加了find、text方法
+ * 增加了index方法
+ * 增加了val方法
  */
  

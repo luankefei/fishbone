@@ -14,8 +14,8 @@ mix($, {
     ajax: Http.ajax,
     jsonp: Http.jsonp,
     route: Route,
-    on: Event.on,
-    live: Event.live,
+    // on: Event.on,
+    // live: Event.live,
     
     module: Module.init,
     component: Module.component.init
@@ -29,18 +29,19 @@ mix($.fn, {
     attr: Attr.init,
     addClass: Attr.addClass,
     removeClass: Attr.removeClass,
-    val: Attr.val,
-
+    
+    val: Node.val,
     first: Node.first,
     last: Node.last,
     eq: Node.eq,
     remove: Node.remove,
     html: Node.html,
+    text: Node.text,
     clone: Node.clone,
     append: Node.append,
     prepend: Node.prepend,
     find: Node.find,
-    text: Node.text,
+    index: Node.index,
     animate: Animate.init
 })
 /**

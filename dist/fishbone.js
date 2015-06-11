@@ -1167,7 +1167,6 @@ $.fn = $.prototype
 
 // 糅杂，为一个对象添加更多成员
 function mix(receiver, supplier) {
-
     var args = [].slice.call(arguments),
         i = 1,
         key, //如果最后参数是布尔，判定是否覆写同名属性
@@ -1559,7 +1558,7 @@ Http.ajax = function(param, events) {
 }
 
 // 尽量使用CORS
-Http.jsonp = function(url, namespace, funcName, callback) {
+Http.jsonp = function(url, funcName, callback) {
 
     var script = document.createElement('script')
     var body = document.querySelector('body')
@@ -1568,7 +1567,7 @@ Http.jsonp = function(url, namespace, funcName, callback) {
     script.id = 'jsonp'
     script.onload = callback
 
-    window[funcName] = namespace.funcName
+    window[funcName] = funcName
 
     body.appendChild(script)
 }
@@ -1691,15 +1690,13 @@ Node.after = function() {}
 
 Node.before = function() {}
 
-Node.width = function() {}
-
 // TODO: 如果this.nodes不是数组，这里会报错
 Node.eq = function(index) {
 
     var n = null
 
-    n = this.nodes[index]
-    n = $.fn.init(n)
+    n = this[index]
+    n = new $.fn.init(n)
 
     return n
 }
@@ -1732,7 +1729,38 @@ Node.find = function(expr) {
     return new $.fn.init(nodes)
 }
 
+// 获取当前元素在父节点中的下标
+Node.index = function() {
 
+    var brothers = this[0].parentNode.children
+
+    for (var i = 0; i < brothers.length; i++) {
+
+        if (brothers[i] === this[0]) {
+
+            return i
+        }
+    }
+}
+
+// 获取/设置当前节点的值
+Node.val = function(value) {
+
+    if (value === undefined) {
+
+        return this[0].nodeName === 'INPUT' ? this[0].value : ''
+    }
+
+    for (var i = 0; i < this.length; i++) {
+
+        if (this[i].nodeName === 'INPUT') {
+
+            this[i].value = value
+        }
+    }
+
+    return this
+}
 
 Node.each = function() {}
 Node.show = function() {}
@@ -1756,6 +1784,8 @@ Node.wrap = function() {}
  * 修改了append，现在返回一个fishbone对象，内含新添加的dom元素
  * 2015.6.11
  * 增加了find、text方法
+ * 增加了index方法
+ * 增加了val方法
  */
  
 /**
@@ -2638,8 +2668,8 @@ mix($, {
     ajax: Http.ajax,
     jsonp: Http.jsonp,
     route: Route,
-    on: Event.on,
-    live: Event.live,
+    // on: Event.on,
+    // live: Event.live,
     
     module: Module.init,
     component: Module.component.init
@@ -2653,18 +2683,19 @@ mix($.fn, {
     attr: Attr.init,
     addClass: Attr.addClass,
     removeClass: Attr.removeClass,
-    val: Attr.val,
-
+    
+    val: Node.val,
     first: Node.first,
     last: Node.last,
     eq: Node.eq,
     remove: Node.remove,
     html: Node.html,
+    text: Node.text,
     clone: Node.clone,
     append: Node.append,
     prepend: Node.prepend,
     find: Node.find,
-    text: Node.text,
+    index: Node.index,
     animate: Animate.init
 })
 /**
