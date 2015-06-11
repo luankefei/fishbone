@@ -28,7 +28,7 @@ var obj2 = { age: 18 }
 $.mix(obj1, obj2)   // { name: 'zhangsan', age: 18 }
 ```
 
-### http请求
+### 请求模块
 
 _$.get (url, callback)  对url发送get请求，在请求成功后执行callback_
 
@@ -97,6 +97,7 @@ input.value = 'zhang san'  // log: input changed
 ```
 
 ### 路由模块
+
 _$.route 创建路由模块_
 
 _route.provider () 返回路由模块的provider _
@@ -118,16 +119,21 @@ var provider = $.route
 ```
 
 
+### 组件模块
 
 $.module
 
 $.component
+
+### 事件模块
 
 $.fn.on
 
 $.fn.live
 
 $.fn.ready
+
+### DOM模块
 
 $.fn.css
 
@@ -160,5 +166,7 @@ $.fn.append
 $.fn.prepend
 
 $.fn.find
+
+### 动画模块
 
 $.fn.animate
