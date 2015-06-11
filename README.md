@@ -5,7 +5,7 @@
 main.js -> node.js -> http.js -> event.js -> css.js -> attr.js -> animate.js -> route.js -> module.js -> prototype.js
 
 ## API文档
-_$.mix(receiver, supplier)   传入两个对象，将对象2的属性/方法合并到对象1，返回对象1_
+_$.mix(receiver, supplier)  传入两个对象，将对象2的属性/方法合并到对象1，返回对象1_
 
 ```javascript
 var obj1 = { name: 'zhang san' }
