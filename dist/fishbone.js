@@ -1620,7 +1620,6 @@ Node.prepend = function(node) {
         var n = node.cloneNode(true)
 
         nodes[i].insertBefore(n, nodes[i].childNodes[0])
-
     }
   
     return this
@@ -1640,10 +1639,32 @@ Node.clone = function(include) {
     return arr
 }
 
+// 修改元素的innerText
+Node.text = function(text) {
+
+    if (text === undefined) {
+
+        return this[0].innerText
+
+    } else {
+
+        for (var i = 0; i < this.length; i++) {
+
+            this[i].innerText = text
+        }
+
+        return this
+    }
+}
+
 // 修改元素的innerHTML
 Node.html = function(html) {
 
-    if (html !== undefined) {
+    if (html === undefined) {
+
+        return this[0].innerHTML
+
+    } else {
 
         for (var i = 0; i < this.length; i++) {
 
@@ -1651,10 +1672,6 @@ Node.html = function(html) {
         }
 
         return this
-
-    } else {
-
-        return this[0].innerHTML
     }
 }
 
@@ -1697,6 +1714,26 @@ Node.last = function() {
     return Node.eq.call(this, this.length - 1)   
 }
 
+// 查找子节点，参数是css 2选择器
+Node.find = function(expr) {
+
+    var nodes = []
+
+    for (var i = 0; i < this.length; i++) {
+
+        var result = this[i].querySelectorAll(expr)
+
+        for (var j = 0; j < result.length; j++) {
+
+            nodes.push(result[j])
+        }
+    }
+
+    return new $.fn.init(nodes)
+}
+
+
+
 Node.each = function() {}
 Node.show = function() {}
 Node.hide = function() {}
@@ -1717,6 +1754,8 @@ Node.wrap = function() {}
  * 修改了append、prepend、clone和html方法
  * 2015.6.10
  * 修改了append，现在返回一个fishbone对象，内含新添加的dom元素
+ * 2015.6.11
+ * 增加了find、text方法
  */
  
 /**
@@ -2624,6 +2663,8 @@ mix($.fn, {
     clone: Node.clone,
     append: Node.append,
     prepend: Node.prepend,
+    find: Node.find,
+    text: Node.text,
     animate: Animate.init
 })
 /**

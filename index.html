@@ -18,6 +18,12 @@
     </style>
 </head>
 <body>
+    
+    <div>
+        <a href=""></a>
+        <span></span>
+        <span></span>
+    </div>
 
 <!--     <a class="a1" href="/#!/list">list</a>
     <a class="a1 a2" href="/#/list">list2</a>
@@ -37,6 +43,16 @@
     
     <!--<script src="dist/jquery-2.1.0.min.js"></script>-->
     <script>
+
+
+    var span = $('div').css('height', '100px')
+            .css('width', '1000px')
+            .css('background', 'red')
+            .find('span')
+            .text('1234')
+            .text()
+
+    console.log(span)
     
     
     // $('div').css('height', '100px')

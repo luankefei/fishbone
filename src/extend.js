@@ -39,6 +39,8 @@ mix($.fn, {
     clone: Node.clone,
     append: Node.append,
     prepend: Node.prepend,
+    find: Node.find,
+    text: Node.text,
     animate: Animate.init
 })
 /**
