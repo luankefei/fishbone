@@ -86,7 +86,7 @@ $(document).off('click', handler)  // unbind handler
 _$.live  (type, handler)  类jQuery的事件预绑定，为未来添加的元素绑定事件_
 
 ```javascript
-$('#username').live('change', function() {
+$('input').live('change', function() {
     console.log('input changed')
 })
 
@@ -96,7 +96,28 @@ document.body.appendChild(input)
 input.value = 'zhang san'  // log: input changed
 ```
 
-$.route
+### 路由模块
+_$.route 创建路由模块_
+
+_route.provider () 返回路由模块的provider _
+
+_provider.when ([path], route)  传入一组url，匹配成功后执行route规则_
+
+_provider.otherwise (path) 配置404路径，并激活整个路由模块_
+
+```javascript
+var provider = $.route
+        .provider()
+        .when(['', '/', '/index'], {
+            tempalte: '/index.html',    
+            js: '/index.js',
+            css: '/index.css',
+            title: '首页'
+        })
+        .otherwise('/')
+```
+
+
 
 $.module
 
