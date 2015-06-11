@@ -7,7 +7,7 @@ main.js -> node.js -> http.js -> event.js -> css.js -> attr.js -> animate.js -> 
 ## API文档
 
 ### 工具
-_$.mix (receiver, supplier)  传入两个对象，将supplier的属性/方法合并到receiver，返回receiver
+_$.mix (receiver, supplier)  传入两个对象，将supplier的属性/方法合并到receiver，返回receiver_
 
 ```javascript
 var obj1 = { name: 'zhang san' }
