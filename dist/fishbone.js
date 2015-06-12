@@ -1762,6 +1762,24 @@ Node.val = function(value) {
     return this
 }
 
+// 隐藏元素
+Node.hide = function() {
+
+    for (var i = 0; i < this.length; i++) {
+
+        this[i].style.display = 'none'
+    }
+}
+
+// 显示元素
+Node.show = function() {
+
+    for (var i = 0; i < this.length; i++) {
+
+        this[i].style.display = 'block'
+    }
+} 
+
 Node.each = function() {}
 Node.show = function() {}
 Node.hide = function() {}
@@ -1786,6 +1804,8 @@ Node.wrap = function() {}
  * 增加了find、text方法
  * 增加了index方法
  * 增加了val方法
+ * 2015.6.12
+ * 增加了hide、show方法
  */
  
 /**
@@ -1799,12 +1819,38 @@ var Event = {}
 // 添加事件
 Event.addEvent = function(target, type, handler) {
 
+    // 向target添加事件之前记录在e上
+    if (target.e === undefined) {
+
+        target.e = {}
+    }
+
+    if (target.e[type] === undefined) {
+
+        target.e[type] = []
+    }
+
+    target.e[type].push({
+
+        type: type,
+        handler: handler
+    })
+
     if (target.addEventListener) {
         target.addEventListener(type, handler, false)
 
     } else {
 
         target.attachEvent('on' + type, function(event) {
+
+            event.pageX = original.clientX 
+                    + ( doc && doc.scrollLeft || body && body.scrollLeft || 0 ) 
+                    - ( doc && doc.clientLeft || body && body.clientLeft || 0 )
+
+            event.pageY = original.clientY 
+                    + ( doc && doc.scrollTop || body && body.scrollTop || 0 ) 
+                    - ( doc && doc.clientTop || body && body.clientTop || 0 )
+
             // 把处理和程序作为时间目标的方法调用
             // 传递事件对象
             return handler.call(target, event)
@@ -1814,22 +1860,46 @@ Event.addEvent = function(target, type, handler) {
 
 // 移除事件
 // TODO: handler应该是可选项，如果没有传入，清除所有事件函数
+// TODO: ie 9以下不兼容
 Event.removeEvent = function(target, type, handler) {
 
-    // 对handler进行判断，如果不存在，按照type使用dom 0方式清除事件
+    // 对handler进行判断，如果不存在，按照type清除全部事件
     if (handler === undefined) {
 
-        target['on' + type] = null
+        var events = target.e[type]
 
-        return 
-    }
-    
-    if (target.removeEventListener) {
-        target.removeEventListener(type, handler, false)
+        if (target.removeEventListener) {
+
+            for (var i = 0; i < events.length; i++) {
+
+                if (events[i].type === type) {
+
+                    target.removeEventListener(type, events[i].handler, false)
+                }
+            }
+
+        } else {
+
+            // IE 8
+            for (var i = 0; i < events.length; i++) {
+
+                if (events[i].type === type) {
+
+                    target.detachEvent('on' + type, events[i].handler)
+                }
+            }
+        }
 
     } else {
 
-        target.detachEvent('on' + type, handler)
+
+        if (target.removeEventListener) {
+            target.removeEventListener(type, handler, false)
+
+        } else {
+
+            target.detachEvent('on' + type, handler)
+        }
     }
 }
 
@@ -1901,8 +1971,14 @@ Event.ready = function(handler) {
     }
 }
 
-// TODO: 还没做
-Event.off = function() {}
+// 关闭事件的接口
+Event.off = function(type, handler) {
+
+    for (var i = 0; i < this.length; i++) {
+
+        Event.removeEvent(this[i], type, handler)
+    }
+}
 
 /**
  * 2015.5.25
@@ -2306,7 +2382,7 @@ Route.resetResource = function() {
     var doms = $('link, script')
 
     // TODO: 应该判断dom标签是否带有href或src属性，否则视为页面内部代码，不清除
-    for (var i = 0; i < doms.nodes.length; i++) {
+    for (var i = 0; i < doms.length; i++) {
 
         var type = doms.eq(i).attr('data-type')
 
@@ -2325,67 +2401,6 @@ Route.resetStatus = function() {
     Route.hash = null
 }
 
-// 添加data属性
-// IE8 Dom only
-// if (W3C) {
-if (W3C) {
-
-    Object.defineProperties(Route, {
-        
-        cssReady: {
-            enumerable: true,
-            configurable: true,
-          
-            get: function() { return this.cssReadyValue },
-            set: function(value) { 
-
-                this.cssReadyValue = value
-
-                if (value === true) {
-
-                    var hash = Route.routes[Route.hash]
-
-                    Route.loadTempalte(hash['template'])
-                }
-            }
-        },
-
-        templateReady: {
-
-            enumerable: true,
-            configurable: true,
-          
-            get: function() { return this.templateReady },
-            set: function(value) { 
-
-                this.templateReadyValue = value
-
-                if (value === true) {
-
-                    var hash = Route.routes[Route.hash]
-
-                    Route.loadJs(hash['js'])
-                }
-            }   // end setter
-        }   // end jsReady
-    })  // end defineProperties
-}
-
-// } else {
-
-//     // IE 8 兼容
-//     // propertychange也只能对dom对象使用
-//     Event.addEvent(Route, 'propertychange', function(e) {
-        
-//         if (Route['cssReady'] === true) {
-
-//             // 加载js和file
-//             Route.loadJs(Route.routes[Route.hash]['js'])
-//             Route.loadTempalte(Route.routes[Route.hash]['template'])
-//         }
-//     })
-// }
-
 // 加载页面模板代码
 Route.loadTempalte = function(url) {
 
@@ -2396,17 +2411,10 @@ Route.loadTempalte = function(url) {
         // 加载成功之后，将data复制到view中
         $('#fs-view').html(data)
 
-        if (W3C) {
+        var hash = Route.routes[Route.hash]
 
-            Route.templateReady = true
-
-        } else {
-
-            var hash = Route.routes[Route.hash]
-
-            Route.loadJs(hash['js'])
-            Route.setTitle(hash['title'])
-        }
+        Route.loadJs(hash['js'])
+        Route.setTitle(hash['title'])
     })
 }
 
@@ -2421,10 +2429,10 @@ Route.loadJs = function(arr) {
 
         if (arr === undefined || jsReady === arr.length) {
 
-            if (W3C) {
+            Route.jsReady = true
 
-                Route.jsReady = true
-            }
+            // 重置模块加载状态
+            Route.resetStatus()
         }
     }
 
@@ -2463,17 +2471,9 @@ Route.loadCss = function(arr) {
 
         if (arr === undefined || cssReady === arr.length) {
 
-            if (W3C) {
+            var hash = Route.routes[Route.hash]
 
-                Route.cssReady = true
-
-            } else {
-
-                var hash = Route.routes[Route.hash]
-
-
-                Route.loadTempalte(hash['template'])
-            }
+            Route.loadTempalte(hash['template'])
         }
     }
 
@@ -2518,12 +2518,7 @@ Route.provider = function(paths) {
 
                 routes[key] = route
             }
-
-            // path.forEach(function(v, i, a) {
-
-            //     routes[v] = route
-            // })
-        
+            
         } else {
 
             routes[path] = route    
@@ -2542,9 +2537,6 @@ Route.provider = function(paths) {
 
         // 激活hashChange事件
         $(window).on('hashchange', hashChange)
-
-        // 重置模块加载状态
-        Route.resetStatus()
 
         // 处理url直接访问的加载情况
         // TODO: 这里的代码和hashChange中的重复
@@ -2677,13 +2669,14 @@ mix($, {
 
 mix($.fn, {
     on: Event.on,
+    off: Event.off,
     live: Event.live,
     ready: Event.ready,
     css: Css.init,
     attr: Attr.init,
     addClass: Attr.addClass,
     removeClass: Attr.removeClass,
-    
+
     val: Node.val,
     first: Node.first,
     last: Node.last,

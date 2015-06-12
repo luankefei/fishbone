@@ -41,9 +41,7 @@
         <input type="text" value="123">
     </div>
 
-
-    <script src="dist/fishbone.js"></script>
-    
+    <script src="dist/fishbone.js"></script> 
     <!--<script src="dist/jquery-2.1.0.min.js"></script>-->
    
 </body>
@@ -62,11 +60,11 @@
 
                 obj.css('left', e.pageX + 'px').css('top', e.pageY + 'px')
             })
-        })
 
-        $(document).on('mouseup', function() {
+            $(document).on('mouseup', function() {
 
-            $(this).off('mousemove')
+                $(this).off('mousemove')
+            })
         })
     })
 

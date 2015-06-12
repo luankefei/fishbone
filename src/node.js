@@ -176,6 +176,24 @@ Node.val = function(value) {
     return this
 }
 
+// 隐藏元素
+Node.hide = function() {
+
+    for (var i = 0; i < this.length; i++) {
+
+        this[i].style.display = 'none'
+    }
+}
+
+// 显示元素
+Node.show = function() {
+
+    for (var i = 0; i < this.length; i++) {
+
+        this[i].style.display = 'block'
+    }
+} 
+
 Node.each = function() {}
 Node.show = function() {}
 Node.hide = function() {}
@@ -200,5 +218,7 @@ Node.wrap = function() {}
  * 增加了find、text方法
  * 增加了index方法
  * 增加了val方法
+ * 2015.6.12
+ * 增加了hide、show方法
  */
  

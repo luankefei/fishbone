@@ -73,67 +73,6 @@ Route.resetStatus = function() {
     Route.hash = null
 }
 
-// 添加data属性
-// IE8 Dom only
-// if (W3C) {
-// if (W3C) {
-
-//     Object.defineProperties(Route, {
-        
-//         cssReady: {
-//             enumerable: true,
-//             configurable: true,
-          
-//             get: function() { return this.cssReadyValue },
-//             set: function(value) { 
-
-//                 this.cssReadyValue = value
-
-//                 if (value === true) {
-
-//                     var hash = Route.routes[Route.hash]
-
-//                     Route.loadTempalte(hash['template'])
-//                 }
-//             }
-//         },
-
-//         templateReady: {
-
-//             enumerable: true,
-//             configurable: true,
-          
-//             get: function() { return this.templateReady },
-//             set: function(value) { 
-
-//                 this.templateReadyValue = value
-
-//                 if (value === true) {
-
-//                     var hash = Route.routes[Route.hash]
-
-//                     Route.loadJs(hash['js'])
-//                 }
-//             }   // end setter
-//         }   // end jsReady
-//     })  // end defineProperties
-// }
-
-// } else {
-
-//     // IE 8 兼容
-//     // propertychange也只能对dom对象使用
-//     Event.addEvent(Route, 'propertychange', function(e) {
-        
-//         if (Route['cssReady'] === true) {
-
-//             // 加载js和file
-//             Route.loadJs(Route.routes[Route.hash]['js'])
-//             Route.loadTempalte(Route.routes[Route.hash]['template'])
-//         }
-//     })
-// }
-
 // 加载页面模板代码
 Route.loadTempalte = function(url) {
 
@@ -144,17 +83,10 @@ Route.loadTempalte = function(url) {
         // 加载成功之后，将data复制到view中
         $('#fs-view').html(data)
 
-        // if (W3C) {
-
-        //     Route.templateReady = true
-
-        // } else {
-
         var hash = Route.routes[Route.hash]
 
         Route.loadJs(hash['js'])
         Route.setTitle(hash['title'])
-        // }
     })
 }
 
@@ -211,16 +143,9 @@ Route.loadCss = function(arr) {
 
         if (arr === undefined || cssReady === arr.length) {
 
-            // if (W3C) {
-
-            //     Route.cssReady = true
-
-            // } else {
-
             var hash = Route.routes[Route.hash]
 
             Route.loadTempalte(hash['template'])
-            // }
         }
     }
 
@@ -265,12 +190,7 @@ Route.provider = function(paths) {
 
                 routes[key] = route
             }
-
-            // path.forEach(function(v, i, a) {
-
-            //     routes[v] = route
-            // })
-        
+            
         } else {
 
             routes[path] = route    
