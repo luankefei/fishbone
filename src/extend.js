@@ -23,13 +23,14 @@ mix($, {
 
 mix($.fn, {
     on: Event.on,
+    off: Event.off,
     live: Event.live,
     ready: Event.ready,
     css: Css.init,
     attr: Attr.init,
     addClass: Attr.addClass,
     removeClass: Attr.removeClass,
-    
+
     val: Node.val,
     first: Node.first,
     last: Node.last,

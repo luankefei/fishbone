@@ -9,12 +9,38 @@ var Event = {}
 // 添加事件
 Event.addEvent = function(target, type, handler) {
 
+    // 向target添加事件之前记录在e上
+    if (target.e === undefined) {
+
+        target.e = {}
+    }
+
+    if (target.e[type] === undefined) {
+
+        target.e[type] = []
+    }
+
+    target.e[type].push({
+
+        type: type,
+        handler: handler
+    })
+
     if (target.addEventListener) {
         target.addEventListener(type, handler, false)
 
     } else {
 
         target.attachEvent('on' + type, function(event) {
+
+            event.pageX = original.clientX 
+                    + ( doc && doc.scrollLeft || body && body.scrollLeft || 0 ) 
+                    - ( doc && doc.clientLeft || body && body.clientLeft || 0 )
+
+            event.pageY = original.clientY 
+                    + ( doc && doc.scrollTop || body && body.scrollTop || 0 ) 
+                    - ( doc && doc.clientTop || body && body.clientTop || 0 )
+
             // 把处理和程序作为时间目标的方法调用
             // 传递事件对象
             return handler.call(target, event)
@@ -24,22 +50,46 @@ Event.addEvent = function(target, type, handler) {
 
 // 移除事件
 // TODO: handler应该是可选项，如果没有传入，清除所有事件函数
+// TODO: ie 9以下不兼容
 Event.removeEvent = function(target, type, handler) {
 
-    // 对handler进行判断，如果不存在，按照type使用dom 0方式清除事件
+    // 对handler进行判断，如果不存在，按照type清除全部事件
     if (handler === undefined) {
 
-        target['on' + type] = null
+        var events = target.e[type]
 
-        return 
-    }
-    
-    if (target.removeEventListener) {
-        target.removeEventListener(type, handler, false)
+        if (target.removeEventListener) {
+
+            for (var i = 0; i < events.length; i++) {
+
+                if (events[i].type === type) {
+
+                    target.removeEventListener(type, events[i].handler, false)
+                }
+            }
+
+        } else {
+
+            // IE 8
+            for (var i = 0; i < events.length; i++) {
+
+                if (events[i].type === type) {
+
+                    target.detachEvent('on' + type, events[i].handler)
+                }
+            }
+        }
 
     } else {
 
-        target.detachEvent('on' + type, handler)
+
+        if (target.removeEventListener) {
+            target.removeEventListener(type, handler, false)
+
+        } else {
+
+            target.detachEvent('on' + type, handler)
+        }
     }
 }
 
@@ -111,8 +161,14 @@ Event.ready = function(handler) {
     }
 }
 
-// TODO: 还没做
-Event.off = function() {}
+// 关闭事件的接口
+Event.off = function(type, handler) {
+
+    for (var i = 0; i < this.length; i++) {
+
+        Event.removeEvent(this[i], type, handler)
+    }
+}
 
 /**
  * 2015.5.25

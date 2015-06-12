@@ -8,16 +8,32 @@
 
     <style>
     
+    body {
+
+        background: #ccc;
+    }
+
     div {
         float: left;
         width: 0.05%;
         height: 50px;
+    }
+
+    #drag {
+
+        width: 100px;
+        height: 100px;
+        background: red;
+        position: absolute;
+        z-index: 1;
     }
     
     </style>
 </head>
 <body>
     
+    <div id="drag"></div>
+
     <div>
         <a href=""></a>
         <span>111</span>
@@ -35,13 +51,23 @@
 </html>
 
 <script>
-    var span = $('span').eq(1).text('333').index()
+    
+    $(document).ready(function() {
 
-    console.log(span)
+        $('#drag').on('mousedown', function() {
 
+            var obj = $(this)
 
-    var value = $('input').val('444')
+            $(document).on('mousemove', function(e) {
 
-    console.log(value)
+                obj.css('left', e.pageX + 'px').css('top', e.pageY + 'px')
+            })
+        })
+
+        $(document).on('mouseup', function() {
+
+            $(this).off('mousemove')
+        })
+    })
 
 </script>

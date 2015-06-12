@@ -54,7 +54,7 @@ Route.resetResource = function() {
     var doms = $('link, script')
 
     // TODO: 应该判断dom标签是否带有href或src属性，否则视为页面内部代码，不清除
-    for (var i = 0; i < doms.nodes.length; i++) {
+    for (var i = 0; i < doms.length; i++) {
 
         var type = doms.eq(i).attr('data-type')
 
@@ -76,48 +76,48 @@ Route.resetStatus = function() {
 // 添加data属性
 // IE8 Dom only
 // if (W3C) {
-if (W3C) {
+// if (W3C) {
 
-    Object.defineProperties(Route, {
+//     Object.defineProperties(Route, {
         
-        cssReady: {
-            enumerable: true,
-            configurable: true,
+//         cssReady: {
+//             enumerable: true,
+//             configurable: true,
           
-            get: function() { return this.cssReadyValue },
-            set: function(value) { 
+//             get: function() { return this.cssReadyValue },
+//             set: function(value) { 
 
-                this.cssReadyValue = value
+//                 this.cssReadyValue = value
 
-                if (value === true) {
+//                 if (value === true) {
 
-                    var hash = Route.routes[Route.hash]
+//                     var hash = Route.routes[Route.hash]
 
-                    Route.loadTempalte(hash['template'])
-                }
-            }
-        },
+//                     Route.loadTempalte(hash['template'])
+//                 }
+//             }
+//         },
 
-        templateReady: {
+//         templateReady: {
 
-            enumerable: true,
-            configurable: true,
+//             enumerable: true,
+//             configurable: true,
           
-            get: function() { return this.templateReady },
-            set: function(value) { 
+//             get: function() { return this.templateReady },
+//             set: function(value) { 
 
-                this.templateReadyValue = value
+//                 this.templateReadyValue = value
 
-                if (value === true) {
+//                 if (value === true) {
 
-                    var hash = Route.routes[Route.hash]
+//                     var hash = Route.routes[Route.hash]
 
-                    Route.loadJs(hash['js'])
-                }
-            }   // end setter
-        }   // end jsReady
-    })  // end defineProperties
-}
+//                     Route.loadJs(hash['js'])
+//                 }
+//             }   // end setter
+//         }   // end jsReady
+//     })  // end defineProperties
+// }
 
 // } else {
 
@@ -144,17 +144,17 @@ Route.loadTempalte = function(url) {
         // 加载成功之后，将data复制到view中
         $('#fs-view').html(data)
 
-        if (W3C) {
+        // if (W3C) {
 
-            Route.templateReady = true
+        //     Route.templateReady = true
 
-        } else {
+        // } else {
 
-            var hash = Route.routes[Route.hash]
+        var hash = Route.routes[Route.hash]
 
-            Route.loadJs(hash['js'])
-            Route.setTitle(hash['title'])
-        }
+        Route.loadJs(hash['js'])
+        Route.setTitle(hash['title'])
+        // }
     })
 }
 
@@ -169,10 +169,10 @@ Route.loadJs = function(arr) {
 
         if (arr === undefined || jsReady === arr.length) {
 
-            if (W3C) {
+            Route.jsReady = true
 
-                Route.jsReady = true
-            }
+            // 重置模块加载状态
+            Route.resetStatus()
         }
     }
 
@@ -211,17 +211,16 @@ Route.loadCss = function(arr) {
 
         if (arr === undefined || cssReady === arr.length) {
 
-            if (W3C) {
+            // if (W3C) {
 
-                Route.cssReady = true
+            //     Route.cssReady = true
 
-            } else {
+            // } else {
 
-                var hash = Route.routes[Route.hash]
+            var hash = Route.routes[Route.hash]
 
-
-                Route.loadTempalte(hash['template'])
-            }
+            Route.loadTempalte(hash['template'])
+            // }
         }
     }
 
@@ -290,9 +289,6 @@ Route.provider = function(paths) {
 
         // 激活hashChange事件
         $(window).on('hashchange', hashChange)
-
-        // 重置模块加载状态
-        Route.resetStatus()
 
         // 处理url直接访问的加载情况
         // TODO: 这里的代码和hashChange中的重复

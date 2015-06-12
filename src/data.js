@@ -4,28 +4,15 @@
  * @date  2015.6.10
  */
 
-var Animate = {}
+var Data = {}
 
-
-Animate.init = function(params, duration, easing, callback) {
-
-    // 这是fishbone对象
-    console.log(this)
-    // 这是fishbone对象里面的dom数组
-    console.log(this.nodes)
-
-
-
-    callback.call(this)
+Data.map = {
+    length: 0
 }
 
 
 
-
-
-
-
 /**
- * 2015.6.5
+ * 2015.6.10
  * 创建模块
  */
