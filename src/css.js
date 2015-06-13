@@ -8,7 +8,14 @@ var Css = {}
 // 判断传入setCss的值是否是变化量
 Css.validateChange = function(value) {
     
-    return value[0] === '+' || value[0] === '-'
+    if ((value[0] === '+' || value[0] === '-') && typeof value[value.length - 1] === 'number') {
+
+        return true
+
+    } else {
+
+        return false
+    }
 }
 
 // 处理连缀写法，将css写法转为驼峰式

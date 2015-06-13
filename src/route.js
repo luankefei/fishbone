@@ -84,13 +84,13 @@ Route.loadTempalte = function(url) {
 
         var hash = Route.routes[Route.hash]
 
-        Route.loadJs(hash['js'])
+        Route.loadJs(hash['js'], hash)
         Route.setTitle(hash['title'])
     })
 }
 
 // 加载js文件
-Route.loadJs = function(arr) {
+Route.loadJs = function(arr, hash) {
 
     var jsReady = 0
 
@@ -102,8 +102,12 @@ Route.loadJs = function(arr) {
 
             Route.jsReady = true
 
+            console.log('js loaded')
+
             // 重置模块加载状态
             Route.resetStatus()
+
+            hash['callback'].call(this, hash)
         }
     }
 
@@ -241,4 +245,8 @@ Route.provider = function(paths) {
  * 增加了Route.templateReady，让加载流程变成线性
  * 2015.6.11
  * resetResource更名为resetCss，不再处理js
+ * 2015.6.13
+ * 修改了loadJs：
+ * 1. 在加载结束后会调用hash中的callback
+ * 2. 取消了js的数组写法，只能保留唯一入口
  */
