@@ -179,19 +179,13 @@ Node.val = function(value) {
 // 隐藏元素
 Node.hide = function() {
 
-    for (var i = 0; i < this.length; i++) {
-
-        this[i].style.display = 'none'
-    }
+    return Css.init.call(this, 'display', 'none')
 }
 
 // 显示元素
 Node.show = function() {
 
-    for (var i = 0; i < this.length; i++) {
-
-        this[i].style.display = 'block'
-    }
+    return Css.init.call(this, 'display', 'block')
 } 
 
 Node.each = function() {}
@@ -220,5 +214,6 @@ Node.wrap = function() {}
  * 增加了val方法
  * 2015.6.12
  * 增加了hide、show方法
+ * 修改了hide、show方法，他们现在依赖css模块
  */
  

@@ -102,15 +102,28 @@ Event.live = function(type, handler) {
     // live的实现，模仿jquery。但内部调用queryselector来匹配对象
     document.addEventListener(type, function(e) {
 
+        var loop = 0
+
         var nodes = document.querySelectorAll(selector)
+        var target = e.target
 
-        for (var i = 0; i < nodes.length; i++) {
+        do {
 
-            if (nodes[i] === e.target) {
+            for (var i = 0; i < nodes.length; i++) {
 
-                return handler.call(e.target, e)
+                ++loop
+
+                if (nodes[i] === target) {
+
+                    console.log('live match loop: ' + loop)
+
+                    return handler.call(target, e)
+                }
             }
-        }
+
+            target = target.parentNode
+
+        } while (target !== document)
     })
 }
 

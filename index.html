@@ -13,7 +13,7 @@
         background: #ccc;
     }
 
-    div {
+    /*div {
         float: left;
         width: 0.05%;
         height: 50px;
@@ -26,7 +26,15 @@
         background: red;
         position: absolute;
         z-index: 1;
+    }*/
+    
+    div {
+
+        min-height: 100px;
+        background: #329c8e;
+        margin-bottom: 20px;
     }
+
     
     </style>
 </head>
@@ -43,29 +51,42 @@
 
     <script src="dist/fishbone.js"></script> 
     <!--<script src="dist/jquery-2.1.0.min.js"></script>-->
-   
+
 </body>
 
 </html>
 
 <script>
     
-    $(document).ready(function() {
+    $('div').live('click', function() {
 
-        $('#drag').on('mousedown', function() {
-
-            var obj = $(this)
-
-            $(document).on('mousemove', function(e) {
-
-                obj.css('left', e.pageX + 'px').css('top', e.pageY + 'px')
-            })
-
-            $(document).on('mouseup', function() {
-
-                $(this).off('mousemove')
-            })
-        })
+        console.log('1234')
     })
+
+    var div = document.createElement('div')
+
+    div.innerHTML = '<section><img src="IMG_0026.JPG" alt="" /></section>'
+
+    document.body.appendChild(div)
+
+
+
+    // $(document).ready(function() {
+
+    //     $('#drag').on('mousedown', function() {
+
+    //         var obj = $(this)
+
+    //         $(document).on('mousemove', function(e) {
+
+    //             obj.css('left', e.pageX + 'px').css('top', e.pageY + 'px')
+    //         })
+
+    //         $(document).on('mouseup', function() {
+
+    //             $(this).off('mousemove')
+    //         })
+    //     })
+    // })
 
 </script>

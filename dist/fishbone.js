@@ -1765,19 +1765,13 @@ Node.val = function(value) {
 // 隐藏元素
 Node.hide = function() {
 
-    for (var i = 0; i < this.length; i++) {
-
-        this[i].style.display = 'none'
-    }
+    return Css.init.call(this, 'display', 'none')
 }
 
 // 显示元素
 Node.show = function() {
 
-    for (var i = 0; i < this.length; i++) {
-
-        this[i].style.display = 'block'
-    }
+    return Css.init.call(this, 'display', 'block')
 } 
 
 Node.each = function() {}
@@ -1806,6 +1800,7 @@ Node.wrap = function() {}
  * 增加了val方法
  * 2015.6.12
  * 增加了hide、show方法
+ * 修改了hide、show方法，他们现在依赖css模块
  */
  
 /**
@@ -1912,15 +1907,28 @@ Event.live = function(type, handler) {
     // live的实现，模仿jquery。但内部调用queryselector来匹配对象
     document.addEventListener(type, function(e) {
 
+        var loop = 0
+
         var nodes = document.querySelectorAll(selector)
+        var target = e.target
 
-        for (var i = 0; i < nodes.length; i++) {
+        do {
 
-            if (nodes[i] === e.target) {
+            for (var i = 0; i < nodes.length; i++) {
 
-                return handler.call(e.target, e)
+                ++loop
+
+                if (nodes[i] === target) {
+
+                    console.log('live match loop: ' + loop)
+
+                    return handler.call(target, e)
+                }
             }
-        }
+
+            target = target.parentNode
+
+        } while (target !== document)
     })
 }
 
@@ -2369,19 +2377,18 @@ Route.load = function(routes) {
         return
     }
 
-    // 先充值页面不需要的css和js
-    Route.resetResource()
+    // 先重置页面不需要的css
+    Route.resetCss()
 
     // 这里要保证前面的加载完成，尤其是css完成才能加载file，类似于promise
     Route.loadCss(routes.css)
 }
 
 // 清除当前页面不需要的css、js
-Route.resetResource = function() {
+Route.resetCss = function() {
     
-    var doms = $('link, script')
+    var doms = $('link')
 
-    // TODO: 应该判断dom标签是否带有href或src属性，否则视为页面内部代码，不清除
     for (var i = 0; i < doms.length; i++) {
 
         var type = doms.eq(i).attr('data-type')
@@ -2568,6 +2575,8 @@ Route.provider = function(paths) {
  * 修改了loadCss和loadJs，现在when函数的css和js变成了可选项
  * 修改了loadCss，在callback中重置了页面标题
  * 增加了Route.templateReady，让加载流程变成线性
+ * 2015.6.11
+ * resetResource更名为resetCss，不再处理js
  */
 
 /**

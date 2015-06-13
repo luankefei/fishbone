@@ -41,19 +41,18 @@ Route.load = function(routes) {
         return
     }
 
-    // 先充值页面不需要的css和js
-    Route.resetResource()
+    // 先重置页面不需要的css
+    Route.resetCss()
 
     // 这里要保证前面的加载完成，尤其是css完成才能加载file，类似于promise
     Route.loadCss(routes.css)
 }
 
 // 清除当前页面不需要的css、js
-Route.resetResource = function() {
+Route.resetCss = function() {
     
-    var doms = $('link, script')
+    var doms = $('link')
 
-    // TODO: 应该判断dom标签是否带有href或src属性，否则视为页面内部代码，不清除
     for (var i = 0; i < doms.length; i++) {
 
         var type = doms.eq(i).attr('data-type')
@@ -240,4 +239,6 @@ Route.provider = function(paths) {
  * 修改了loadCss和loadJs，现在when函数的css和js变成了可选项
  * 修改了loadCss，在callback中重置了页面标题
  * 增加了Route.templateReady，让加载流程变成线性
+ * 2015.6.11
+ * resetResource更名为resetCss，不再处理js
  */
