@@ -90,39 +90,30 @@ Route.loadTempalte = function(url) {
 }
 
 // 加载js文件
-Route.loadJs = function(arr, hash) {
+Route.loadJs = function(path, hash) {
 
-    var jsReady = 0
+    function callback() {
 
-    var callback = function() {
+        Route.jsReady = true
 
-        jsReady += 1
+        // 重置模块加载状态
+        Route.resetStatus()
 
-        if (arr === undefined || jsReady === arr.length) {
+        if (hash['callback'] !== undefined) {
 
-            Route.jsReady = true
-
-            console.log('js loaded')
-
-            // 重置模块加载状态
-            Route.resetStatus()
-
-            hash['callback'].call(this, hash)
+            hash['callback'].call(this, hash['js'])
         }
     }
 
     // 如果没有声明js，直接执行回调
-    if (arr === undefined) {
+    if (path === undefined) {
 
         callback.call(null)
 
         return
     }
-
-    for (var i = 0; i < arr.length; i++) {
-
-        Http.getScript(arr[i], callback)
-    }
+    
+    Http.getScript(path, callback)
 }
 
 // 重置页面的标题
