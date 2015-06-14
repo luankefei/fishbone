@@ -21,7 +21,7 @@ Module.Component = function() {
 
     // basic mothod 
     this.init =  function(node) {
-     
+
         this.node = node
 
         // 调用数据的初始化，之后会进入data的set，执行controller.refresh

@@ -18,6 +18,10 @@
         background: #329c8e;
         margin-bottom: 20px;
     }
+
+    #fs-view {
+        background: red;
+    }
     
     </style>
 </head>
@@ -37,39 +41,73 @@
 
     <script src="dist/fishbone.js"></script>
     <!--<script src="index.js"></script>-->
-
-
-
     <!--<script src="dist/jquery-2.1.0.min.js"></script>-->
-
+    <div id="test">fs-replace</div>
 </body>
 
 <script>
-    
 
-    $('#drag, #fs-view, #a, #b').on('click', function(e) {
-
+    // 有bug
+    var dropdown = $.component('dropdown', function(cop) {
         
-        console.log('clicked')
-        console.log(e.target.getAttribute('id'))
+        cop.view = {
+            html: '<div class="dropdown"><ul>fs-replace</ul></div>',
+            init: function(node) {
+                // TODO: 增加格式校验
+                var html = ''
+                var data = cop.data
+                for (var i = 0, length = data.length; i < length; i++) {
+                    html += '<li>' + data[i] + '</li>'
+                }
+                html = cop.view.html.replace('fs-replace', html)
+                // cop.view.html = cop.view.html.replace('fs-replace', html)
+                // node.innerHTML = cop.view.html
+                node.innerHTML = html
+            }
+        }
+        // 事件，数据逻辑
+        cop.controller = {
+            init: function(node) {
+                // 绑定事件
+                cop.controller.registerEvent(node)
+            },
+            registerEvent: function(node) {
+                // 点击时切换下拉列表的隐藏、显示     
+                node.addEventListener('click', function() {
+                    alert(node.getAttribute('id') + '  clicked')
+                },
+                false)
+            },
+            // 数据变更后的刷新操作
+            refresh: function(node) {
 
+                cop.view.init.call(this, node)
+                cop.controller.init(node)
+            }
+        }
+        
+        // 数据读取、存储
+        cop.model = {
+            // TODO: callback没有执行
+            init: function(callback) {
+               
+                cop.data = ['男', '女']
+                // callback && callback()
+            }
+        }
+        return cop
     })
+    var node = document.getElementById('test')
+    var d = dropdown.init(node)
 
-    console.log($('#fs-view').hasClass('a'))
-
-    //var width = $('#fs-view').offset()
-
-    //console.log(width)
-
+    setTimeout(function() {
     
-    // $.route.provider()
-    //     .when(['/', '', '/index'], {
-    //         template: 'load.html',
-    //         js: 'test.js'
-    //     })
-    //     .otherwise('/')
-    //     .scan()
-
+        d.data = ['张三', '李四', '王二']
+    }, 1000)
+    setTimeout(function() {
+        d.data = ['111', '222', '333', '444']
+        
+    }, 5000)
 
 
 

@@ -112,7 +112,7 @@ function init(expr) {
         // 记录选择器，方便后面使用 
         this.selector = expr
 
-        expr = expr.replace(' ', '')
+        //expr = expr.replace(' ', '')
 
         var arrExp = expr.split(',')
         

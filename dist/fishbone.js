@@ -1256,7 +1256,7 @@ function init(expr) {
         // 记录选择器，方便后面使用 
         this.selector = expr
 
-        expr = expr.replace(' ', '')
+        //expr = expr.replace(' ', '')
 
         var arrExp = expr.split(',')
         
@@ -2077,7 +2077,7 @@ Module.Component = function() {
 
     // basic mothod 
     this.init =  function(node) {
-     
+
         this.node = node
 
         // 调用数据的初始化，之后会进入data的set，执行controller.refresh
