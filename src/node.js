@@ -225,6 +225,16 @@ Node.offset = function() {
     }
 }
 
+Node.position = function() {
+
+    return {
+        top: Number.parseInt(Css.init.call(this, 'top')),
+        right: Number.parseInt(Css.init.call(this, 'right')),
+        bottom: Number.parseInt(Css.init.call(this, 'bottom')),
+        left: Number.parseInt(Css.init.call(this, 'left'))
+    }
+}
+
 Node.each = function() {}
 Node.show = function() {}
 Node.hide = function() {}
@@ -253,6 +263,6 @@ Node.wrap = function() {}
  * 增加了hide、show方法
  * 修改了hide、show方法，他们现在依赖css模块
  * 2015.6.14
- * 增加了offset方法
+ * 增加了offset、position方法
  */
  

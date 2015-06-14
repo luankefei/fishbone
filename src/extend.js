@@ -46,6 +46,7 @@ mix($.fn, {
     width: Node.width,
     height: Node.height,
     offset: Node.offset,
+    position: Node.position,
     animate: Animate.init
 })
 /**

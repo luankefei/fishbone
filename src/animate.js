@@ -18,10 +18,11 @@ Animate.init = function(params, duration, callback) {
     //clearInterval(ele.timer)
     var oChange = {}
     var oBegin = {}
+    // 单位
     var unit = {}
     for (var attr in params) {
 
-        var begin = parseFloat(ele.css(attr))
+        var begin = Number.parseFloat(ele.css(attr))
         unit[attr] = ele.css(attr).slice(begin.toString().length)
         var change = params[attr] - begin;
         oChange[attr] = change;
@@ -56,11 +57,7 @@ Animate.init = function(params, duration, callback) {
     ele.timer = window.setInterval(step, interval);
 
     return this;
-
 }
-
-
-
 
 /**
  * 2015.6.5

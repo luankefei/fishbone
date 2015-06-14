@@ -1811,6 +1811,16 @@ Node.offset = function() {
     }
 }
 
+Node.position = function() {
+
+    return {
+        top: Number.parseInt(Css.init.call(this, 'top')),
+        right: Number.parseInt(Css.init.call(this, 'right')),
+        bottom: Number.parseInt(Css.init.call(this, 'bottom')),
+        left: Number.parseInt(Css.init.call(this, 'left'))
+    }
+}
+
 Node.each = function() {}
 Node.show = function() {}
 Node.hide = function() {}
@@ -1839,7 +1849,7 @@ Node.wrap = function() {}
  * 增加了hide、show方法
  * 修改了hide、show方法，他们现在依赖css模块
  * 2015.6.14
- * 增加了offset方法
+ * 增加了offset、position方法
  */
  
 /**
@@ -2651,10 +2661,11 @@ Animate.init = function(params, duration, callback) {
     //clearInterval(ele.timer)
     var oChange = {}
     var oBegin = {}
+    // 单位
     var unit = {}
     for (var attr in params) {
 
-        var begin = parseFloat(ele.css(attr))
+        var begin = Number.parseFloat(ele.css(attr))
         unit[attr] = ele.css(attr).slice(begin.toString().length)
         var change = params[attr] - begin;
         oChange[attr] = change;
@@ -2689,11 +2700,7 @@ Animate.init = function(params, duration, callback) {
     ele.timer = window.setInterval(step, interval);
 
     return this;
-
 }
-
-
-
 
 /**
  * 2015.6.5
@@ -2748,6 +2755,7 @@ mix($.fn, {
     width: Node.width,
     height: Node.height,
     offset: Node.offset,
+    position: Node.position,
     animate: Animate.init
 })
 /**
