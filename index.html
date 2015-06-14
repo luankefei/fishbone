@@ -32,6 +32,9 @@
         <input type="text" value="123">
     </div>
 
+    <div id="a"></div>
+    <div id="b"></div>
+
     <script src="dist/fishbone.js"></script>
     <!--<script src="index.js"></script>-->
 
@@ -43,7 +46,16 @@
 
 <script>
     
-    var width = $('#fs-view').offset()
+
+    $('#drag, #fs-view, #a, #b').on('click', function(e) {
+
+        
+        console.log('clicked')
+        console.log(e.target.getAttribute('id'))
+
+    })
+
+    //var width = $('#fs-view').offset()
 
     //console.log(width)
 
