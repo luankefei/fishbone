@@ -1256,8 +1256,10 @@ function init(expr) {
         // 记录选择器，方便后面使用 
         this.selector = expr
 
-        var arrExp = expr.split(' ')
+        expr = expr.replace(' ', '')
 
+        var arrExp = expr.split(',')
+        
         if (arrExp.length === 1 && arrExp[0].charAt(0) === '#') {
 
             // 记录选择器，方便后面使用 
