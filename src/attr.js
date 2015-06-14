@@ -111,6 +111,23 @@ Attr.removeClass = function(name) {
     return this
 }
 
+// 判断dom节点是否包含class
+Attr.hasClass = function(name) {
+
+    var target = this[0]
+
+    var classes = target.className.split(' ')
+
+    for (var i = 0; i < classes.length; i++) {
+
+        if (classes[i] === name) {
+
+            return true
+        }
+    }
+
+    return false
+}
 
 Attr.toggleClass = function() {}
 
@@ -130,5 +147,7 @@ Attr.val = function() {
  * 测试通过
  * 2015.6.10
  * 增加了addClass、removeClass
+ * 2015.6.14
+ * 增加了hasClass
  */
  

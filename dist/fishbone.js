@@ -1320,6 +1320,8 @@ mix($.fn, {
  * 2015.6.10
  * 修改了$和init函数，调用$会返回init的实例
  * 修改了fishbone对象的结构，现在看起来更像jquery
+ * 2015.6.14
+ * 修改了init函数，修复bug -> 选择器使用空格分割
  */
  
 /**
@@ -2371,6 +2373,23 @@ Attr.removeClass = function(name) {
     return this
 }
 
+// 判断dom节点是否包含class
+Attr.hasClass = function(name) {
+
+    var target = this[0]
+
+    var classes = target.className.split(' ')
+
+    for (var i = 0; i < classes.length; i++) {
+
+        if (classes[i] === name) {
+
+            return true
+        }
+    }
+
+    return false
+}
 
 Attr.toggleClass = function() {}
 
@@ -2390,6 +2409,8 @@ Attr.val = function() {
  * 测试通过
  * 2015.6.10
  * 增加了addClass、removeClass
+ * 2015.6.14
+ * 增加了hasClass
  */
  
 /*
@@ -2741,6 +2762,7 @@ mix($.fn, {
     attr: Attr.init,
     addClass: Attr.addClass,
     removeClass: Attr.removeClass,
+    hasClass: Attr.hasClass,
 
     val: Node.val,
     first: Node.first,

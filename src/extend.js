@@ -30,6 +30,7 @@ mix($.fn, {
     attr: Attr.init,
     addClass: Attr.addClass,
     removeClass: Attr.removeClass,
+    hasClass: Attr.hasClass,
 
     val: Node.val,
     first: Node.first,
