@@ -1584,7 +1584,6 @@ Http.socket = function() {}
  * 修改了getScript函数，依赖了seajs
  */
  
-
 /**
  * @name  node.js
  * @description  dom、node模块，提供dom对象的CRUD
@@ -1620,7 +1619,7 @@ Node.prepend = function(node) {
 
         nodes[i].insertBefore(n, nodes[i].childNodes[0])
     }
-  
+
     return this
 }
 
@@ -1680,7 +1679,7 @@ Node.remove = function() {
     for (var i = 0, length = this.length; i < length; i++) {
 
         this[i].parentNode.removeChild(this[i])
-    }    
+    }
 
     // TODO: 如果返回this，这个对象会包含已经删除节点对象的引用
     return null
@@ -1708,7 +1707,7 @@ Node.first = function() {
 
 Node.last = function() {
 
-    return Node.eq.call(this, this.length - 1)   
+    return Node.eq.call(this, this.length - 1)
 }
 
 // 查找子节点，参数是css 2选择器
@@ -1772,7 +1771,45 @@ Node.hide = function() {
 Node.show = function() {
 
     return Css.init.call(this, 'display', 'block')
-} 
+}
+
+// 获取元素的宽
+Node.width = function() {
+
+    return Number.parseInt(Css.init.call(this, 'width'))
+}
+
+// 获取元素的高
+Node.height = function() {
+
+    return Number.parseInt(Css.init.call(this, 'height'))
+}
+
+// 获取元素的offset
+Node.offset = function() {
+
+    var offsetParent = $(this[0].offsetParent),
+        offset = {
+            top: offsetTop = this[0].offsetTop,
+            left: this[0].offsetLeft
+        },
+        
+        parentOffset = /^body|html$/i.test(offsetParent[0].tagName) ? {
+            top: 0,
+            left: 0
+        } : offsetParent.offset()
+    
+    offset.top -= Number.parseInt(Css.init.call(this, 'margin-top'))
+    offset.left -= Number.parseInt(Css.init.call(this, 'margin-left'))
+
+    parentOffset.top += Number.parseInt(Css.init.call(offsetParent, 'border-top-width'))
+    parentOffset.left += Number.parseInt(Css.init.call(offsetParent, 'border-left-width'))
+    
+    return {
+        top: offset.top - parentOffset.top,
+        left: offset.left - parentOffset.left
+    }
+}
 
 Node.each = function() {}
 Node.show = function() {}
@@ -1801,6 +1838,8 @@ Node.wrap = function() {}
  * 2015.6.12
  * 增加了hide、show方法
  * 修改了hide、show方法，他们现在依赖css模块
+ * 2015.6.14
+ * 增加了offset方法
  */
  
 /**
@@ -2085,7 +2124,14 @@ var Css = {}
 // 判断传入setCss的值是否是变化量
 Css.validateChange = function(value) {
     
-    return value[0] === '+' || value[0] === '-'
+    if ((value[0] === '+' || value[0] === '-') && typeof value[value.length - 1] === 'number') {
+
+        return true
+
+    } else {
+
+        return false
+    }
 }
 
 // 处理连缀写法，将css写法转为驼峰式
@@ -2372,9 +2418,10 @@ Route.getHash = function() {
 // 模块加载的入口
 Route.load = function(routes) {
 
+    // 路由没有匹配，跳转到otherwise
     if (routes === undefined) {
 
-        return
+        window.location.href = Route.otherwise
     }
 
     // 先重置页面不需要的css
@@ -2420,41 +2467,36 @@ Route.loadTempalte = function(url) {
 
         var hash = Route.routes[Route.hash]
 
-        Route.loadJs(hash['js'])
+        Route.loadJs(hash['js'], hash)
         Route.setTitle(hash['title'])
     })
 }
 
 // 加载js文件
-Route.loadJs = function(arr) {
+Route.loadJs = function(path, hash) {
 
-    var jsReady = 0
+    function callback() {
 
-    var callback = function() {
+        Route.jsReady = true
 
-        jsReady += 1
+        // 重置模块加载状态
+        Route.resetStatus()
 
-        if (arr === undefined || jsReady === arr.length) {
+        if (hash['callback'] !== undefined) {
 
-            Route.jsReady = true
-
-            // 重置模块加载状态
-            Route.resetStatus()
+            hash['callback'].call(this, hash['js'])
         }
     }
 
     // 如果没有声明js，直接执行回调
-    if (arr === undefined) {
+    if (path === undefined) {
 
         callback.call(null)
 
         return
     }
-
-    for (var i = 0; i < arr.length; i++) {
-
-        Http.getScript(arr[i], callback)
-    }
+    
+    Http.getScript(path, callback)
 }
 
 // 重置页面的标题
@@ -2538,7 +2580,12 @@ Route.provider = function(paths) {
     this.otherwise = function(path) {
 
         // 这里使用的routes是provider的私有变量
-        routes.otherwise = path
+        Route.otherwise = path
+
+        return provider
+    }
+
+    this.scan = function() {
 
         Route.routes = routes
 
@@ -2577,6 +2624,11 @@ Route.provider = function(paths) {
  * 增加了Route.templateReady，让加载流程变成线性
  * 2015.6.11
  * resetResource更名为resetCss，不再处理js
+ * 2015.6.13
+ * 修改了loadJs：
+ * 1. 在加载结束后会调用hash中的callback
+ * 2. 取消了js的数组写法，只能保留唯一入口
+ * 修改了provider，将路由激活的逻辑放到了scan中
  */
 
 /**
@@ -2595,8 +2647,6 @@ Animate.linear = function(t, b, c, d) {
 Animate.init = function(params, duration, callback) {
 
     var ele = this;
-
-    console.log(ele)
 
     //clearInterval(ele.timer)
     var oChange = {}
@@ -2641,9 +2691,6 @@ Animate.init = function(params, duration, callback) {
     return this;
 
 }
-
-
-
 
 
 
@@ -2698,6 +2745,9 @@ mix($.fn, {
     prepend: Node.prepend,
     find: Node.find,
     index: Node.index,
+    width: Node.width,
+    height: Node.height,
+    offset: Node.offset,
     animate: Animate.init
 })
 /**

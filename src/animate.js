@@ -15,8 +15,6 @@ Animate.init = function(params, duration, callback) {
 
     var ele = this;
 
-    console.log(ele)
-
     //clearInterval(ele.timer)
     var oChange = {}
     var oBegin = {}
@@ -60,9 +58,6 @@ Animate.init = function(params, duration, callback) {
     return this;
 
 }
-
-
-
 
 
 

@@ -36,9 +36,10 @@ Route.getHash = function() {
 // 模块加载的入口
 Route.load = function(routes) {
 
+    // 路由没有匹配，跳转到otherwise
     if (routes === undefined) {
 
-        return
+        window.location.href = Route.otherwise
     }
 
     // 先重置页面不需要的css
@@ -197,7 +198,12 @@ Route.provider = function(paths) {
     this.otherwise = function(path) {
 
         // 这里使用的routes是provider的私有变量
-        routes.otherwise = path
+        Route.otherwise = path
+
+        return provider
+    }
+
+    this.scan = function() {
 
         Route.routes = routes
 
@@ -240,4 +246,5 @@ Route.provider = function(paths) {
  * 修改了loadJs：
  * 1. 在加载结束后会调用hash中的callback
  * 2. 取消了js的数组写法，只能保留唯一入口
+ * 修改了provider，将路由激活的逻辑放到了scan中
  */

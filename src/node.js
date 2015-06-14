@@ -1,4 +1,3 @@
-
 /**
  * @name  node.js
  * @description  dom、node模块，提供dom对象的CRUD
@@ -34,7 +33,7 @@ Node.prepend = function(node) {
 
         nodes[i].insertBefore(n, nodes[i].childNodes[0])
     }
-  
+
     return this
 }
 
@@ -94,7 +93,7 @@ Node.remove = function() {
     for (var i = 0, length = this.length; i < length; i++) {
 
         this[i].parentNode.removeChild(this[i])
-    }    
+    }
 
     // TODO: 如果返回this，这个对象会包含已经删除节点对象的引用
     return null
@@ -122,7 +121,7 @@ Node.first = function() {
 
 Node.last = function() {
 
-    return Node.eq.call(this, this.length - 1)   
+    return Node.eq.call(this, this.length - 1)
 }
 
 // 查找子节点，参数是css 2选择器
@@ -186,7 +185,45 @@ Node.hide = function() {
 Node.show = function() {
 
     return Css.init.call(this, 'display', 'block')
-} 
+}
+
+// 获取元素的宽
+Node.width = function() {
+
+    return Number.parseInt(Css.init.call(this, 'width'))
+}
+
+// 获取元素的高
+Node.height = function() {
+
+    return Number.parseInt(Css.init.call(this, 'height'))
+}
+
+// 获取元素的offset
+Node.offset = function() {
+
+    var offsetParent = $(this[0].offsetParent),
+        offset = {
+            top: offsetTop = this[0].offsetTop,
+            left: this[0].offsetLeft
+        },
+        
+        parentOffset = /^body|html$/i.test(offsetParent[0].tagName) ? {
+            top: 0,
+            left: 0
+        } : offsetParent.offset()
+    
+    offset.top -= Number.parseInt(Css.init.call(this, 'margin-top'))
+    offset.left -= Number.parseInt(Css.init.call(this, 'margin-left'))
+
+    parentOffset.top += Number.parseInt(Css.init.call(offsetParent, 'border-top-width'))
+    parentOffset.left += Number.parseInt(Css.init.call(offsetParent, 'border-left-width'))
+    
+    return {
+        top: offset.top - parentOffset.top,
+        left: offset.left - parentOffset.left
+    }
+}
 
 Node.each = function() {}
 Node.show = function() {}
@@ -215,5 +252,7 @@ Node.wrap = function() {}
  * 2015.6.12
  * 增加了hide、show方法
  * 修改了hide、show方法，他们现在依赖css模块
+ * 2015.6.14
+ * 增加了offset方法
  */
  

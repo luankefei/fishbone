@@ -43,6 +43,9 @@ mix($.fn, {
     prepend: Node.prepend,
     find: Node.find,
     index: Node.index,
+    width: Node.width,
+    height: Node.height,
+    offset: Node.offset,
     animate: Animate.init
 })
 /**
