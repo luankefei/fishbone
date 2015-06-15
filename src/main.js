@@ -48,6 +48,22 @@ function mix(receiver, supplier) {
     return receiver
 }
 
+function query(expr) {
+
+    var arrExp = expr.split(',')
+
+    var nodes = DOC.querySelectorAll(expr)
+
+    for (var i = 0; i < nodes.length; i++) {
+
+        this[i] = nodes[i]
+    }
+
+    this.length = nodes.length
+
+    return this
+}
+
 
 // 将类数组对象转成数组
 // TODO: catch部分的代码是jquery源码
@@ -82,6 +98,78 @@ function makeArray(arrayLike) {
 // 初始化fishbone对象
 // TODO: 分支较多，结构不清晰。对length和selector的赋值不统一
 function init(expr) {
+
+    // 分支1，处理空白字符串、null、undefiend函数
+    if (!expr) {
+
+        return this
+    }
+
+    // 分支2，如果传入的是dom节点
+    if (expr.nodeName) {
+
+        this[0] = expr
+        this.length = 1
+
+        return this
+    }
+
+    this.selector = expr + ''
+
+    // 分支3，传入的是数组、节点集合
+    if (expr instanceof Array || expr instanceof NodeList) {
+
+        for (var i = 0; i < expr.length; i++) {
+
+            this[i] = expr[i]
+        }
+
+        this.length = expr.length
+
+        return this
+    }
+
+    // 分支4，处理选择器
+    if (typeof expr === 'string') {
+
+        expr = expr.trim()
+
+        // 分支5，动态生成新节点
+        // TODO: 暂时不支持
+        if (expr.charAt(0) === '<' && expr.charAt(expr.length - 1) === '>' && expr.length >= 3) {
+
+            return this
+            
+        // 分支6，调用选择器模块
+        } else {
+
+            return query.call(this, expr)
+        }
+
+    // 分支7，处理fishbone对象
+    } else if (expr instanceof $) {
+
+        return expr
+    
+    // 分支8，处理window对象
+    } else if (expr === window){
+
+        this[0] = window
+    }
+
+    return this
+}
+
+/*
+
+
+function init(expr) {
+
+    // 分支1，处理空白字符串、null、undefiend函数
+    // if (!expr) {
+
+    //     return this
+    // }
 
     // 分支1，如果传入的是dom节点
     if (expr.nodeName || expr === window) {
@@ -145,6 +233,8 @@ function init(expr) {
 
     return this
 }
+
+*/
 
 init.prototype = $.fn
 

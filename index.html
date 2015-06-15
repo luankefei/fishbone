@@ -51,6 +51,44 @@
 
 <script>
 
+    var arr = []
+    var divs = document.querySelectorAll('div')
+
+    for (var i = 0; i < divs.length; i++) {
+        arr.push(divs[i])
+    }
+
+    var a = $('#a')
+    var b = $(window)
+    var c = $('#parent > div')
+    var d = $(a)
+    var e = $(document.createElement('span'))
+    var f = $(document)
+    var g = $(document.querySelectorAll('div'))
+    var h = $(divs)
+    var i = $('#a, #b, #parent')
+    var j = $('')
+    var k = $()
+    var l = $(null)
+    var m = $(undefined)
+
+
+    console.log(a)
+    console.log(b)
+    console.log(c)
+    console.log(d)
+    console.log(e)
+    console.log(f)
+    console.log(g)
+    console.log(h)
+    console.log(i)
+    console.log(j)
+    console.log(k)
+    console.log(l)
+    console.log(m)
+
+    //console.log(document.querySelectorAll('#parent > div'))
+
     // var test = $('#b').prev()
 
     // //console.log(a.nextSibling)

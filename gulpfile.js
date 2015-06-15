@@ -15,22 +15,24 @@ var livereload = require('gulp-livereload')
 var paths = {
 
     scripts: [
-            'src/_sea-debug.js',
-            'src/_intro.js',
-            'src/main.js',
-            'src/_fix.js',
-            'src/prototype.js',
-            'src/http.js',
-            'src/node.js',
-			'src/event.js',
-            'src/module.js',
-            'src/css.js',
-            'src/attr.js',
-            'src/route.js',
-            'src/animate.js',
-            'src/extend.js',
-            'src/_outro.js'
-            ],
+        'src/_sea-debug.js',
+        'src/_intro.js',
+        'src/main.js',
+        'src/_fix.js',
+        'src/prototype.js',
+        'src/lang.js',
+        'src/data.js',
+        'src/http.js',
+        'src/node.js',
+		'src/event.js',
+        'src/module.js',
+        'src/css.js',
+        'src/attr.js',
+        'src/route.js',
+        'src/animate.js',
+        'src/extend.js',
+        'src/_outro.js'
+    ],
     images: ''
 }
 

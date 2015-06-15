@@ -1192,6 +1192,22 @@ function mix(receiver, supplier) {
     return receiver
 }
 
+function query(expr) {
+
+    var arrExp = expr.split(',')
+
+    var nodes = DOC.querySelectorAll(expr)
+
+    for (var i = 0; i < nodes.length; i++) {
+
+        this[i] = nodes[i]
+    }
+
+    this.length = nodes.length
+
+    return this
+}
+
 
 // 将类数组对象转成数组
 // TODO: catch部分的代码是jquery源码
@@ -1226,6 +1242,78 @@ function makeArray(arrayLike) {
 // 初始化fishbone对象
 // TODO: 分支较多，结构不清晰。对length和selector的赋值不统一
 function init(expr) {
+
+    // 分支1，处理空白字符串、null、undefiend函数
+    if (!expr) {
+
+        return this
+    }
+
+    // 分支2，如果传入的是dom节点
+    if (expr.nodeName) {
+
+        this[0] = expr
+        this.length = 1
+
+        return this
+    }
+
+    this.selector = expr + ''
+
+    // 分支3，传入的是数组、节点集合
+    if (expr instanceof Array || expr instanceof NodeList) {
+
+        for (var i = 0; i < expr.length; i++) {
+
+            this[i] = expr[i]
+        }
+
+        this.length = expr.length
+
+        return this
+    }
+
+    // 分支4，处理选择器
+    if (typeof expr === 'string') {
+
+        expr = expr.trim()
+
+        // 分支5，动态生成新节点
+        // TODO: 暂时不支持
+        if (expr.charAt(0) === '<' && expr.charAt(expr.length - 1) === '>' && expr.length >= 3) {
+
+            return this
+            
+        // 分支6，调用选择器模块
+        } else {
+
+            return query.call(this, expr)
+        }
+
+    // 分支7，处理fishbone对象
+    } else if (expr instanceof $) {
+
+        return expr
+    
+    // 分支8，处理window对象
+    } else if (expr === window){
+
+        this[0] = window
+    }
+
+    return this
+}
+
+/*
+
+
+function init(expr) {
+
+    // 分支1，处理空白字符串、null、undefiend函数
+    // if (!expr) {
+
+    //     return this
+    // }
 
     // 分支1，如果传入的是dom节点
     if (expr.nodeName || expr === window) {
@@ -1289,6 +1377,8 @@ function init(expr) {
 
     return this
 }
+
+*/
 
 init.prototype = $.fn
 
@@ -1436,6 +1526,16 @@ Array.prototype.last = function() {
 
 
 
+/**
+ * @name  data.js
+ * @description  语言模块，补全功能
+ * @date  2015.6.15
+ */
+//var Lang = {}
+
+
+//$.parseHTMl = function() {}
+ 
 /**
  * @name  data.js
  * @description  数据缓存模块
@@ -2779,64 +2879,68 @@ Route.provider = function(paths) {
 
 var Animate = {}
 
-Animate.linear = function(t, b, c, d) {
-    //t：times,b:begin,c:change,d:duration
-    return t / d * c + b;
-}
 
-Animate.init = function(params, duration, callback) {
 
-    var ele = this;
 
-    //clearInterval(ele.timer)
-    var oChange = {}
-    var oBegin = {}
-    // 单位
-    var unit = {}
-    for (var attr in params) {
 
-        var begin = Number.parseFloat(ele.css(attr))
-        unit[attr] = ele.css(attr).slice(begin.toString().length)
-        var change = params[attr] - begin;
-        oChange[attr] = change;
-        oBegin[attr] = begin;
-    }
-    var times = 0;
-    var interval = 13;
 
-    function step() {
-        times += interval;
-        if (times < duration) {
-            for (var attr in params) {
-                var change = oChange[attr];
-                var begin = oBegin[attr];
-                var val = Animate.linear(times, begin, change, duration) + unit[attr];
-                ele.css(attr, val)
-                    // setTimeout(step,interval)
-            }
-        } else {
-            for (var attr in params) {
-                ele.css(attr, params[attr] + unit[attr])
-            }
-            clearInterval(ele.timer);
-            ele.timer = null;
-            if (typeof callback == "function") {
-                callback.call(ele);
-            }
-        }
-    }
+// Animate.linear = function(t, b, c, d) {
+//     //t：times,b:begin,c:change,d:duration
+//     return t / d * c + b;
+// }
 
-    ele.timer = window.setInterval(step, interval);
+// Animate.init = function(params, duration, callback) {
 
-    return this;
-}
+//     var ele = this;
+
+//     //clearInterval(ele.timer)
+//     var oChange = {}
+//     var oBegin = {}
+//         // 单位
+//     var unit = {}
+//     for (var attr in params) {
+
+//         var begin = Number.parseFloat(ele.css(attr))
+//         unit[attr] = ele.css(attr).slice(begin.toString().length)
+//         var change = params[attr] - begin;
+//         oChange[attr] = change;
+//         oBegin[attr] = begin;
+//     }
+//     var times = 0;
+//     var interval = 13;
+
+//     function step() {
+//         times += interval;
+//         if (times < duration) {
+//             for (var attr in params) {
+//                 var change = oChange[attr];
+//                 var begin = oBegin[attr];
+//                 var val = Animate.linear(times, begin, change, duration) + unit[attr];
+//                 ele.css(attr, val)
+//                     // setTimeout(step,interval)
+//             }
+//         } else {
+//             for (var attr in params) {
+//                 ele.css(attr, params[attr] + unit[attr])
+//             }
+//             clearInterval(ele.timer);
+//             ele.timer = null;
+//             if (typeof callback == "function") {
+//                 callback.call(ele);
+//             }
+//         }
+//     }
+
+//     ele.timer = window.setInterval(step, interval);
+
+//     return this;
+// }
 
 /**
  * 2015.6.5
  * 创建模块
  * 2015.6.15 重写动画模块
  */
-
 
 /**
  * @name  extend.js
