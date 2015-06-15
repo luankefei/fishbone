@@ -96,7 +96,7 @@ function init(expr) {
         this.length = 1
 
     // 分支3，传入的是dom数组
-    } else if (expr instanceof Array) {
+    } else if (expr instanceof Array || expr instanceof NodeList) {
 
         for (var i = 0; i < expr.length; i++) {
 
