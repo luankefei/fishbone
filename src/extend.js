@@ -48,8 +48,11 @@ mix($.fn, {
     height: Node.height,
     offset: Node.offset,
     position: Node.position,
+    parent: Node.parent,
+    next: Node.next,
+    prev: Node.prev,
 
-    //data: Data.init,
+    data: Data.init,
     animate: Animate.init
 })
 /**

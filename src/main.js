@@ -7,7 +7,9 @@
 var W3C = DOC.dispatchEvent //IE9开始支持W3C的事件模型与getComputedStyle取样式值
 var html = DOC.documentElement //HTML元素
 var head = DOC.head || DOC.getElementsByTagName('head')
+var body = document.body
 var version = 2
+
 
 // 命名空间，传入css表达式或dom对象，返回一个fishbone对象
 // function $(selector) {

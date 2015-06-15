@@ -26,7 +26,7 @@
     </style>
 </head>
 <body>
-    
+
   <!--   <div id="drag"></div>
 
     <div id="fs-view" class="a b">
@@ -36,23 +36,36 @@
         <input type="text" value="123">
     </div>
  -->
-    <div id="a"></div>
-
+    <div id="parent">
+        <div id="a" d="1234"></div>
+        aaa
+        <div id="b"></div>
+    </div>
     <!-- <div id="b"></div>
     <div id="test">fs-replace</div> -->
 
     <script src="dist/fishbone.js"></script>
     <!--<script src="index.js"></script>-->
     <!--<script src="dist/jquery-2.1.0.min.js"></script>-->
-    
 </body>
 
 <script>
 
+    // var test = $('#b').prev()
+
+    // //console.log(a.nextSibling)
+
+    // $('button').on('click', function() {
+
+    //     $(this).parent().find('button')
+    // })
+
+
+    // var a = $('#a').parent()
+
+    // console.log(a)
+
     //$('#a').animate({ height: 500 }, 5000)
-
-
-
 
     // var dropdown = $.component('dropdown', function(cop) {
         
@@ -114,7 +127,6 @@
     //     d.data = ['111', '222', '333', '444']
         
     // }, 5000)
-
 
 
 </script>

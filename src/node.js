@@ -47,7 +47,6 @@ Node.clone = function(include) {
         arr.push(nodes[i].cloneNode(include))
     }
 
-
     return arr
 }
 
@@ -235,9 +234,60 @@ Node.position = function() {
     }
 }
 
+// 获取当前元素的父节点
+Node.parent = function() {
+
+    var nodes = []
+
+    for (var i = 0; i < this.length; i++) {
+
+        nodes.push(this[i].parentNode)
+    }
+
+    return new $.fn.init(nodes)
+}
+
+// 获取当前元素的下一个兄弟节点
+Node.next = function() {
+
+    var nodes = []
+
+    for (var i = 0; i < this.length; i++) {
+
+        var next = this[i].nextSibling
+
+        while(next && next.nodeType !== 1) {
+
+            next = next.nextSibling
+        }
+
+        nodes.push(next)
+    }
+
+    return new $.fn.init(nodes)
+}
+
+// 获取当前元素的上一个兄弟节点
+Node.prev = function() {
+
+    var nodes = []
+
+    for (var i = 0; i < this.length; i++) {
+
+        var prev = this[i].previousSibling
+
+        while(prev && prev.nodeType !== 1) {
+
+            prev = prev.previousSibling
+        }
+
+        nodes.push(prev)
+    }
+
+    return new $.fn.init(nodes)
+}
+
 Node.each = function() {}
-Node.show = function() {}
-Node.hide = function() {}
 Node.wrap = function() {}
 
 // 遍历所有对象
@@ -264,5 +314,7 @@ Node.wrap = function() {}
  * 修改了hide、show方法，他们现在依赖css模块
  * 2015.6.14
  * 增加了offset、position方法
+ * 2015.6.15
+ * 增加了next、prev和parent方法
  */
  

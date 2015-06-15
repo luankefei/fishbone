@@ -1151,7 +1151,9 @@ seajs.config = function(configData) {
 var W3C = DOC.dispatchEvent //IE9开始支持W3C的事件模型与getComputedStyle取样式值
 var html = DOC.documentElement //HTML元素
 var head = DOC.head || DOC.getElementsByTagName('head')
+var body = document.body
 var version = 2
+
 
 // 命名空间，传入css表达式或dom对象，返回一个fishbone对象
 // function $(selector) {
@@ -1434,6 +1436,52 @@ Array.prototype.last = function() {
 
 
 
+/**
+ * @name  data.js
+ * @description  数据缓存模块
+ * @date  2015.6.10
+ */
+var Data = {}
+
+// var dataMap = {
+
+//     length: 0
+// }
+
+
+// 从dom节点的d中读写数据
+Data.init = function (key, value) {
+
+    if (value === undefined) {
+
+        return this[0]['d'] ? this[0]['d'][key] : null
+
+    } else {
+
+        for (var i = 0; i < this.length; i++) {
+
+            // 如果dom节点不存在d属性，创建
+            if (!this[i]['d']) {
+
+                this[i]['d'] = {}
+            }
+
+            this[i]['d'][key] = value
+        }
+    }
+
+    return this
+}
+
+
+
+/**
+ * 2015.6.10
+ * 创建模块
+ * 2015.6.15
+ * 增加了init方法
+ */
+ 
 /*
  * @name  http.js
  * @description  数据请求模块，负责实现ajax、comet、websocket
@@ -1637,7 +1685,6 @@ Node.clone = function(include) {
         arr.push(nodes[i].cloneNode(include))
     }
 
-
     return arr
 }
 
@@ -1825,9 +1872,60 @@ Node.position = function() {
     }
 }
 
+// 获取当前元素的父节点
+Node.parent = function() {
+
+    var nodes = []
+
+    for (var i = 0; i < this.length; i++) {
+
+        nodes.push(this[i].parentNode)
+    }
+
+    return new $.fn.init(nodes)
+}
+
+// 获取当前元素的下一个兄弟节点
+Node.next = function() {
+
+    var nodes = []
+
+    for (var i = 0; i < this.length; i++) {
+
+        var next = this[i].nextSibling
+
+        while(next && next.nodeType !== 1) {
+
+            next = next.nextSibling
+        }
+
+        nodes.push(next)
+    }
+
+    return new $.fn.init(nodes)
+}
+
+// 获取当前元素的上一个兄弟节点
+Node.prev = function() {
+
+    var nodes = []
+
+    for (var i = 0; i < this.length; i++) {
+
+        var prev = this[i].previousSibling
+
+        while(prev && prev.nodeType !== 1) {
+
+            prev = prev.previousSibling
+        }
+
+        nodes.push(prev)
+    }
+
+    return new $.fn.init(nodes)
+}
+
 Node.each = function() {}
-Node.show = function() {}
-Node.hide = function() {}
 Node.wrap = function() {}
 
 // 遍历所有对象
@@ -1854,6 +1952,8 @@ Node.wrap = function() {}
  * 修改了hide、show方法，他们现在依赖css模块
  * 2015.6.14
  * 增加了offset、position方法
+ * 2015.6.15
+ * 增加了next、prev和parent方法
  */
  
 /**
@@ -1891,13 +1991,13 @@ Event.addEvent = function(target, type, handler) {
 
         target.attachEvent('on' + type, function(event) {
 
-            event.pageX = original.clientX 
-                    + ( doc && doc.scrollLeft || body && body.scrollLeft || 0 ) 
-                    - ( doc && doc.clientLeft || body && body.clientLeft || 0 )
+            event.pageX = event.clientX 
+                    + ( DOC && DOC.scrollLeft || body && body.scrollLeft || 0 ) 
+                    - ( DOC && DOC.clientLeft || body && body.clientLeft || 0 )
 
-            event.pageY = original.clientY 
-                    + ( doc && doc.scrollTop || body && body.scrollTop || 0 ) 
-                    - ( doc && doc.clientTop || body && body.clientTop || 0 )
+            event.pageY = event.clientY 
+                    + ( DOC && DOC.scrollTop || body && body.scrollTop || 0 ) 
+                    - ( DOC && DOC.clientTop || body && body.clientTop || 0 )
 
             // 把处理和程序作为时间目标的方法调用
             // 传递事件对象
@@ -1922,6 +2022,8 @@ Event.removeEvent = function(target, type, handler) {
 
                 if (events[i].type === type) {
 
+                    delete events[i]
+
                     target.removeEventListener(type, events[i].handler, false)
                 }
             }
@@ -1932,6 +2034,8 @@ Event.removeEvent = function(target, type, handler) {
             for (var i = 0; i < events.length; i++) {
 
                 if (events[i].type === type) {
+
+                    delete events[i]
 
                     target.detachEvent('on' + type, events[i].handler)
                 }
@@ -2052,6 +2156,8 @@ Event.off = function(type, handler) {
  * 添加了ready函数
  * 2015.6.5
  * 将unbind更名为off
+ * 2015.6.15
+ * 修改了removeEvent，在删除事件的同时删除target.e
  */
 
 /**
@@ -2673,68 +2779,57 @@ Route.provider = function(paths) {
 
 var Animate = {}
 
+Animate.linear = function(t, b, c, d) {
+    //t：times,b:begin,c:change,d:duration
+    return t / d * c + b;
+}
 
+Animate.init = function(params, duration, callback) {
 
+    var ele = this;
 
+    //clearInterval(ele.timer)
+    var oChange = {}
+    var oBegin = {}
+    // 单位
+    var unit = {}
+    for (var attr in params) {
 
+        var begin = Number.parseFloat(ele.css(attr))
+        unit[attr] = ele.css(attr).slice(begin.toString().length)
+        var change = params[attr] - begin;
+        oChange[attr] = change;
+        oBegin[attr] = begin;
+    }
+    var times = 0;
+    var interval = 13;
 
+    function step() {
+        times += interval;
+        if (times < duration) {
+            for (var attr in params) {
+                var change = oChange[attr];
+                var begin = oBegin[attr];
+                var val = Animate.linear(times, begin, change, duration) + unit[attr];
+                ele.css(attr, val)
+                    // setTimeout(step,interval)
+            }
+        } else {
+            for (var attr in params) {
+                ele.css(attr, params[attr] + unit[attr])
+            }
+            clearInterval(ele.timer);
+            ele.timer = null;
+            if (typeof callback == "function") {
+                callback.call(ele);
+            }
+        }
+    }
 
+    ele.timer = window.setInterval(step, interval);
 
-
-
-
-
-// Animate.linear = function(t, b, c, d) {
-//     //t：times,b:begin,c:change,d:duration
-//     return t / d * c + b;
-// }
-
-// Animate.init = function(params, duration, callback) {
-
-//     var ele = this;
-
-//     //clearInterval(ele.timer)
-//     var oChange = {}
-//     var oBegin = {}
-//     // 单位
-//     var unit = {}
-//     for (var attr in params) {
-
-//         var begin = Number.parseFloat(ele.css(attr))
-//         unit[attr] = ele.css(attr).slice(begin.toString().length)
-//         var change = params[attr] - begin;
-//         oChange[attr] = change;
-//         oBegin[attr] = begin;
-//     }
-//     var times = 0;
-//     var interval = 13;
-
-//     function step() {
-//         times += interval;
-//         if (times < duration) {
-//             for (var attr in params) {
-//                 var change = oChange[attr];
-//                 var begin = oBegin[attr];
-//                 var val = Animate.linear(times, begin, change, duration) + unit[attr];
-//                 ele.css(attr, val)
-//                     // setTimeout(step,interval)
-//             }
-//         } else {
-//             for (var attr in params) {
-//                 ele.css(attr, params[attr] + unit[attr])
-//             }
-//             clearInterval(ele.timer);
-//             ele.timer = null;
-//             if (typeof callback == "function") {
-//                 callback.call(ele);
-//             }
-//         }
-//     }
-
-//     ele.timer = window.setInterval(step, interval);
-
-//     return this;
-// }
+    return this;
+}
 
 /**
  * 2015.6.5
@@ -2792,8 +2887,11 @@ mix($.fn, {
     height: Node.height,
     offset: Node.offset,
     position: Node.position,
+    parent: Node.parent,
+    next: Node.next,
+    prev: Node.prev,
 
-    //data: Data.init,
+    data: Data.init,
     animate: Animate.init
 })
 /**

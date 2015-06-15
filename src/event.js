@@ -33,13 +33,13 @@ Event.addEvent = function(target, type, handler) {
 
         target.attachEvent('on' + type, function(event) {
 
-            event.pageX = original.clientX 
-                    + ( doc && doc.scrollLeft || body && body.scrollLeft || 0 ) 
-                    - ( doc && doc.clientLeft || body && body.clientLeft || 0 )
+            event.pageX = event.clientX 
+                    + ( DOC && DOC.scrollLeft || body && body.scrollLeft || 0 ) 
+                    - ( DOC && DOC.clientLeft || body && body.clientLeft || 0 )
 
-            event.pageY = original.clientY 
-                    + ( doc && doc.scrollTop || body && body.scrollTop || 0 ) 
-                    - ( doc && doc.clientTop || body && body.clientTop || 0 )
+            event.pageY = event.clientY 
+                    + ( DOC && DOC.scrollTop || body && body.scrollTop || 0 ) 
+                    - ( DOC && DOC.clientTop || body && body.clientTop || 0 )
 
             // 把处理和程序作为时间目标的方法调用
             // 传递事件对象
@@ -64,6 +64,8 @@ Event.removeEvent = function(target, type, handler) {
 
                 if (events[i].type === type) {
 
+                    delete events[i]
+
                     target.removeEventListener(type, events[i].handler, false)
                 }
             }
@@ -74,6 +76,8 @@ Event.removeEvent = function(target, type, handler) {
             for (var i = 0; i < events.length; i++) {
 
                 if (events[i].type === type) {
+
+                    delete events[i]
 
                     target.detachEvent('on' + type, events[i].handler)
                 }
@@ -194,4 +198,6 @@ Event.off = function(type, handler) {
  * 添加了ready函数
  * 2015.6.5
  * 将unbind更名为off
+ * 2015.6.15
+ * 修改了removeEvent，在删除事件的同时删除target.e
  */
