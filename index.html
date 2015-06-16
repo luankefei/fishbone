@@ -27,22 +27,11 @@
 </head>
 <body>
 
-  <!--   <div id="drag"></div>
+    <div id="test"></div>
 
-    <div id="fs-view" class="a b">
-        <a href=""></a>
-        <span>111</span>
-        <span>222</span>
-        <input type="text" value="123">
-    </div>
- -->
-    <div id="parent">
-        <div id="a" d="1234"></div>
-        aaa
-        <div id="b"></div>
-    </div>
-    <!-- <div id="b"></div>
-    <div id="test">fs-replace</div> -->
+    <svg>
+        <rect></rect>
+    </svg>
 
     <script src="dist/fishbone.js"></script>
     <!--<script src="index.js"></script>-->
@@ -51,120 +40,10 @@
 
 <script>
 
-    var arr = []
-    var divs = document.querySelectorAll('div')
-
-    for (var i = 0; i < divs.length; i++) {
-        arr.push(divs[i])
-    }
-
-    var a = $('#a')
-    var b = $(window)
-    var c = $('#parent > div')
-    var d = $(a)
-    var e = $(document.createElement('span'))
-    var f = $(document)
-    var g = $(document.querySelectorAll('div'))
-    var h = $(divs)
-    var i = $('#a, #b, #parent')
-    var j = $('')
-    var k = $()
-    var l = $(null)
-    var m = $(undefined)
 
 
-    console.log(a)
-    console.log(b)
-    console.log(c)
-    console.log(d)
-    console.log(e)
-    console.log(f)
-    console.log(g)
-    console.log(h)
-    console.log(i)
-    console.log(j)
-    console.log(k)
-    console.log(l)
-    console.log(m)
-
-    //console.log(document.querySelectorAll('#parent > div'))
-
-    // var test = $('#b').prev()
-
-    // //console.log(a.nextSibling)
-
-    // $('button').on('click', function() {
-
-    //     $(this).parent().find('button')
-    // })
-
-
-    // var a = $('#a').parent()
-
-    // console.log(a)
-
-    //$('#a').animate({ height: 500 }, 5000)
-
-    // var dropdown = $.component('dropdown', function(cop) {
-        
-    //     cop.view = {
-    //         html: '<div class="dropdown"><ul>fs-replace</ul></div>',
-    //         init: function(node) {
-    //             // TODO: 增加格式校验
-    //             var html = ''
-    //             var data = cop.data
-    //             for (var i = 0, length = data.length; i < length; i++) {
-    //                 html += '<li>' + data[i] + '</li>'
-    //             }
-    //             html = cop.view.html.replace('fs-replace', html)
-    //             // cop.view.html = cop.view.html.replace('fs-replace', html)
-    //             // node.innerHTML = cop.view.html
-    //             node.innerHTML = html
-    //         }
-    //     }
-    //     // 事件，数据逻辑
-    //     cop.controller = {
-    //         init: function(node) {
-    //             // 绑定事件
-    //             cop.controller.registerEvent(node)
-    //         },
-    //         registerEvent: function(node) {
-    //             // 点击时切换下拉列表的隐藏、显示     
-    //             node.addEventListener('click', function() {
-    //                 alert(node.getAttribute('id') + '  clicked')
-    //             },
-    //             false)
-    //         },
-    //         // 数据变更后的刷新操作
-    //         refresh: function(node) {
-
-    //             cop.view.init.call(this, node)
-    //             cop.controller.init(node)
-    //         }
-    //     }
-        
-    //     // 数据读取、存储
-    //     cop.model = {
-    //         // TODO: callback没有执行
-    //         init: function(callback) {
-               
-    //             cop.data = ['男', '女']
-    //             // callback && callback()
-    //         }
-    //     }
-    //     return cop
-    // })
-    // var node = document.getElementById('test')
-    // var d = dropdown.init(node)
-
-    // setTimeout(function() {
-    
-    //     d.data = ['张三', '李四', '王二']
-    // }, 1000)
-    // setTimeout(function() {
-    //     d.data = ['111', '222', '333', '444']
-        
-    // }, 5000)
+console.log($('#test'))
+// $('rect').addClass('rect')
 
 
 </script>

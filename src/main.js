@@ -154,7 +154,9 @@ function init(expr) {
     // 分支8，处理window对象
     } else if (expr === window){
 
-        this[0] = window
+        this[0] = expr
+
+        this.length = 1
     }
 
     return this

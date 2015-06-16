@@ -150,4 +150,3 @@ Attr.val = function() {
  * 2015.6.14
  * 增加了hasClass
  */
- 
