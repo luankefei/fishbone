@@ -52,18 +52,36 @@ function query(expr) {
 
     var arrExp = expr.split(',')
 
-    var nodes = DOC.querySelectorAll(expr)
+    if (arrExp.length === 1 && arrExp[0].charAt(0) === '#') {
 
-    for (var i = 0; i < nodes.length; i++) {
+        // 记录选择器，方便后面使用 
+        this.selector = expr
+        this[0] = DOC.querySelector(arrExp[0])
+        this.length = 1
 
-        this[i] = nodes[i]
+    } else {
+
+        var nodes = DOC.querySelectorAll(expr)
+
+        for (var i = 0; i < nodes.length; i++) {
+
+            this[i] = nodes[i]
+        }
+
+        this.length = nodes.length
+        // 将nodeList转为数组
+        //this = makeArray(this)
     }
-
-    this.length = nodes.length
 
     return this
 }
 
+function create(nodeName) {
+
+    var node = document.createElement(nodeName)
+
+    return new $.fn.init(node)
+}
 
 // 将类数组对象转成数组
 // TODO: catch部分的代码是jquery源码
@@ -272,5 +290,7 @@ mix($.fn, {
  * 修改了fishbone对象的结构，现在看起来更像jquery
  * 2015.6.14
  * 修改了init函数，修复bug -> 选择器使用空格分割
+ * 2015.6.17
+ * 增加了create方法，用来创建节点
  */
  

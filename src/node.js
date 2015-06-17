@@ -9,18 +9,38 @@ var Node = {}
 // 将node以某元素子元素的形式插入到该元素内容的最后面
 Node.append = function(node) {
 
-    var nodes = []
+    //var nodes = []
 
     // 循环复制插入节点
     for (var i = 0; i < this.length; i++) {
 
-        var n = node.cloneNode(true)
+        // 将fishbone对象转为dom对象
+        if (node instanceof $) {
 
-        this[i].appendChild(n)
-        nodes.push(n)
+            node = node[0]
+        }
+
+        //var n = node.cloneNode(true)
+
+        this[i].appendChild(node)
+        //nodes.push(n)
     }
 
-    return new $.fn.init(nodes)
+    return this
+    //return new $.fn.init(nodes)
+}
+
+// 将节点插入目标元素
+Node.appendTo = function(node) {
+
+    for (var i = 0; i < this.length; i++) {
+
+        $(node).append(this.eq(i))
+    }
+
+    return this
+    // 返回新节点
+    //return new $.fn.init(nodes)
 }
 
 // 将node以某元素子元素的形式插入到该元素内容的最前面
@@ -288,6 +308,10 @@ Node.prev = function() {
 }
 
 Node.each = function() {}
+
+
+
+// 创建一个div，包裹原有代码
 Node.wrap = function() {}
 
 // 遍历所有对象
@@ -316,5 +340,7 @@ Node.wrap = function() {}
  * 增加了offset、position方法
  * 2015.6.15
  * 增加了next、prev和parent方法
+ * 2015.6.17
+ * 增加了prepend方法，修改了append，对fishbone对象进行支持
  */
  

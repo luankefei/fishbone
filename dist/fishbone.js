@@ -1196,18 +1196,36 @@ function query(expr) {
 
     var arrExp = expr.split(',')
 
-    var nodes = DOC.querySelectorAll(expr)
+    if (arrExp.length === 1 && arrExp[0].charAt(0) === '#') {
 
-    for (var i = 0; i < nodes.length; i++) {
+        // 记录选择器，方便后面使用 
+        this.selector = expr
+        this[0] = DOC.querySelector(arrExp[0])
+        this.length = 1
 
-        this[i] = nodes[i]
+    } else {
+
+        var nodes = DOC.querySelectorAll(expr)
+
+        for (var i = 0; i < nodes.length; i++) {
+
+            this[i] = nodes[i]
+        }
+
+        this.length = nodes.length
+        // 将nodeList转为数组
+        //this = makeArray(this)
     }
-
-    this.length = nodes.length
 
     return this
 }
 
+function create(nodeName) {
+
+    var node = document.createElement(nodeName)
+
+    return new $.fn.init(node)
+}
 
 // 将类数组对象转成数组
 // TODO: catch部分的代码是jquery源码
@@ -1416,6 +1434,8 @@ mix($.fn, {
  * 修改了fishbone对象的结构，现在看起来更像jquery
  * 2015.6.14
  * 修改了init函数，修复bug -> 选择器使用空格分割
+ * 2015.6.17
+ * 增加了create方法，用来创建节点
  */
  
 /**
@@ -1749,18 +1769,38 @@ var Node = {}
 // 将node以某元素子元素的形式插入到该元素内容的最后面
 Node.append = function(node) {
 
-    var nodes = []
+    //var nodes = []
 
     // 循环复制插入节点
     for (var i = 0; i < this.length; i++) {
 
-        var n = node.cloneNode(true)
+        // 将fishbone对象转为dom对象
+        if (node instanceof $) {
 
-        this[i].appendChild(n)
-        nodes.push(n)
+            node = node[0]
+        }
+
+        //var n = node.cloneNode(true)
+
+        this[i].appendChild(node)
+        //nodes.push(n)
     }
 
-    return new $.fn.init(nodes)
+    return this
+    //return new $.fn.init(nodes)
+}
+
+// 将节点插入目标元素
+Node.appendTo = function(node) {
+
+    for (var i = 0; i < this.length; i++) {
+
+        $(node).append(this.eq(i))
+    }
+
+    return this
+    // 返回新节点
+    //return new $.fn.init(nodes)
 }
 
 // 将node以某元素子元素的形式插入到该元素内容的最前面
@@ -2028,6 +2068,10 @@ Node.prev = function() {
 }
 
 Node.each = function() {}
+
+
+
+// 创建一个div，包裹原有代码
 Node.wrap = function() {}
 
 // 遍历所有对象
@@ -2056,6 +2100,8 @@ Node.wrap = function() {}
  * 增加了offset、position方法
  * 2015.6.15
  * 增加了next、prev和parent方法
+ * 2015.6.17
+ * 增加了prepend方法，修改了append，对fishbone对象进行支持
  */
  
 /**
@@ -2108,9 +2154,68 @@ Event.addEvent = function(target, type, handler) {
     }
 }
 
+Event.removeEvent = function(target, type, handler) {
+
+    // 对handler进行判断，如果不存在，按照type清除全部事件
+    if (handler === undefined) {
+
+        // 事件对象e，以type为key，每个事件类型对应一个handler数组
+        var events = target.e[type]
+
+        // ie9+
+        if (target.removeEventListener) {
+
+            // 遍历当前节点上保存的所有事件
+            for (var i = 0; i < events.length; i++) {
+
+                // 匹配同类型事件
+                // 分支1，如果传入了handler
+                if (events[i].type === type && events[i].handler === handler) {
+
+                    target.removeEventListener(type, handler, false)
+
+                    events.splice(i, 1)
+                
+                // 分支2，type匹配但没有handler，全部删除
+                } else if (events[i].type === type) {
+
+                    target.removeEventListener(type, events[i].handler, false)
+
+                    // 从数组中删除事件，并重置数组长度
+                    events.splice(i, 1)
+                }
+            }
+
+        // IE 8
+        } else {
+
+            for (var i = 0; i < events.length; i++) {
+
+                if (events[i].type === type) {
+
+                    delete events[i]
+
+                    target.detachEvent('on' + type, events[i].handler)
+                }
+            }
+        }
+
+    } else {
+
+        if (target.removeEventListener) {
+            target.removeEventListener(type, handler, false)
+
+        } else {
+
+            target.detachEvent('on' + type, handler)
+        }
+    }
+}
+
 // 移除事件
 // TODO: handler应该是可选项，如果没有传入，清除所有事件函数
 // TODO: ie 9以下不兼容
+/*
 Event.removeEvent = function(target, type, handler) {
 
     // 对handler进行判断，如果不存在，按照type清除全部事件
@@ -2122,7 +2227,7 @@ Event.removeEvent = function(target, type, handler) {
 
             for (var i = 0; i < events.length; i++) {
 
-                if (events[i].type === type) {
+                if (events[i].type === type && handler) {
 
                     delete events[i]
 
@@ -2156,7 +2261,7 @@ Event.removeEvent = function(target, type, handler) {
         }
     }
 }
-
+*/
 // 将事件绑定在document上，然后根据selector来判断是否执行
 // TODO: 缺少ie9以下的处理，事件委托的选择器不完善
 Event.live = function(type, handler) {
@@ -2260,6 +2365,9 @@ Event.off = function(type, handler) {
  * 将unbind更名为off
  * 2015.6.15
  * 修改了removeEvent，在删除事件的同时删除target.e
+ * 2015.6.16
+ * 修改了removeEvent，修复bug，先解除事件再删除target.e
+ * 修改了removeEvent，增加了handler的存在验证分支
  */
 
 /**
@@ -2878,13 +2986,102 @@ Route.provider = function(paths) {
  * @date  2015.6.5
  * @author  xiaoer
  */
-
 var Animate = {}
 
+// 返回初始值的数组
+//
+
+Animate.getBegin = function(key) {
+
+    var begins = []
+
+    for (var i = 0; i < this.length; i++) {
+
+        var value = Number.parseFloat(this.eq(i).css(key))
+
+        begins.push(value)
+    }
+
+    return begins
+}
+
+// 计算步长
+Animate.getDistance = function(begin, end, duration, frame) {
+
+    var distances = []
+
+    // begin是数组，end是值
+    for (var i = 0; i < begin.length; i++) {
+
+        var value = (end - begin[i]) / (duration / frame)
+
+        distances.push(value)
+    }
+
+    return distances
+}
+
+// 对外暴露的接口
+Animate.init = function(params, duration, callback) {
+
+    var start = new Date()
+
+    var target = this
+
+    var step = 0,           // 当前步数
+        fps = 60,           // fps
+        times = null        // 循环次数
+
+    var duration = 1000     // 动画时间
+    var frame = 15          // magic number: 15毫秒为一帧
+
+    // TODO: 没有对param进行处理
+    var begin = Animate.getBegin.call(this, 'height'),
+        end = Number.parseFloat(params.height),
+        now = begin,
+        distances = Animate.getDistance(begin, end, duration, frame)
+
+    times = Math.ceil(duration / frame)
+
+    var wait = setInterval(function() {
+
+        if (step === times) {
+
+            var end = new Date() - start
+
+            // 测试时间
+            alert(end)
+
+            clearInterval(wait)
+
+            console.log('end')
+
+        } else {
+
+            for (var i = 0; i < target.length; i++) {
+
+                // TODO: 没有使用param
+                var height = now[i] + distances[i]
+
+                now[i] = height
+                height = height + 'px'
+
+                target.eq(i).css('height', height)
+            }
+
+            // 步数 + 1
+            step = step + 1
+        }
+
+    }, frame)
+}
 
 
 
 
+
+
+/*
 
 Animate.linear = function(t, b, c, d) {
     //t：times,b:begin,c:change,d:duration
@@ -2892,6 +3089,8 @@ Animate.linear = function(t, b, c, d) {
 }
 
 Animate.init = function(params, duration, callback) {
+
+    var sss = new Date()
 
     var ele = this;
 
@@ -2925,6 +3124,9 @@ Animate.init = function(params, duration, callback) {
             for (var attr in params) {
                 ele.css(attr, params[attr] + unit[attr])
             }
+
+            alert(new Date - sss)
+
             clearInterval(ele.timer);
             ele.timer = null;
             if (typeof callback == "function") {
@@ -2937,12 +3139,14 @@ Animate.init = function(params, duration, callback) {
 
     return this;
 }
+*/
 
 /**
  * 2015.6.5
  * 创建模块
  * 2015.6.15 重写动画模块
  */
+ 
 
 /**
  * @name  extend.js
@@ -2959,6 +3163,7 @@ mix($, {
     ajax: Http.ajax,
     jsonp: Http.jsonp,
     route: Route,
+    create: create,
     // on: Event.on,
     // live: Event.live,
     
@@ -2986,6 +3191,7 @@ mix($.fn, {
     text: Node.text,
     clone: Node.clone,
     append: Node.append,
+    appendTo: Node.appendTo,
     prepend: Node.prepend,
     find: Node.find,
     index: Node.index,
@@ -2996,6 +3202,8 @@ mix($.fn, {
     parent: Node.parent,
     next: Node.next,
     prev: Node.prev,
+    show: Node.show,
+    hide: Node.hide,
 
     data: Data.init,
     animate: Animate.init

@@ -14,6 +14,7 @@ mix($, {
     ajax: Http.ajax,
     jsonp: Http.jsonp,
     route: Route,
+    create: create,
     // on: Event.on,
     // live: Event.live,
     
@@ -41,6 +42,7 @@ mix($.fn, {
     text: Node.text,
     clone: Node.clone,
     append: Node.append,
+    appendTo: Node.appendTo,
     prepend: Node.prepend,
     find: Node.find,
     index: Node.index,
@@ -51,6 +53,8 @@ mix($.fn, {
     parent: Node.parent,
     next: Node.next,
     prev: Node.prev,
+    show: Node.show,
+    hide: Node.hide,
 
     data: Data.init,
     animate: Animate.init

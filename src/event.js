@@ -48,9 +48,68 @@ Event.addEvent = function(target, type, handler) {
     }
 }
 
+Event.removeEvent = function(target, type, handler) {
+
+    // 对handler进行判断，如果不存在，按照type清除全部事件
+    if (handler === undefined) {
+
+        // 事件对象e，以type为key，每个事件类型对应一个handler数组
+        var events = target.e[type]
+
+        // ie9+
+        if (target.removeEventListener) {
+
+            // 遍历当前节点上保存的所有事件
+            for (var i = 0; i < events.length; i++) {
+
+                // 匹配同类型事件
+                // 分支1，如果传入了handler
+                if (events[i].type === type && events[i].handler === handler) {
+
+                    target.removeEventListener(type, handler, false)
+
+                    events.splice(i, 1)
+                
+                // 分支2，type匹配但没有handler，全部删除
+                } else if (events[i].type === type) {
+
+                    target.removeEventListener(type, events[i].handler, false)
+
+                    // 从数组中删除事件，并重置数组长度
+                    events.splice(i, 1)
+                }
+            }
+
+        // IE 8
+        } else {
+
+            for (var i = 0; i < events.length; i++) {
+
+                if (events[i].type === type) {
+
+                    delete events[i]
+
+                    target.detachEvent('on' + type, events[i].handler)
+                }
+            }
+        }
+
+    } else {
+
+        if (target.removeEventListener) {
+            target.removeEventListener(type, handler, false)
+
+        } else {
+
+            target.detachEvent('on' + type, handler)
+        }
+    }
+}
+
 // 移除事件
 // TODO: handler应该是可选项，如果没有传入，清除所有事件函数
 // TODO: ie 9以下不兼容
+/*
 Event.removeEvent = function(target, type, handler) {
 
     // 对handler进行判断，如果不存在，按照type清除全部事件
@@ -62,7 +121,7 @@ Event.removeEvent = function(target, type, handler) {
 
             for (var i = 0; i < events.length; i++) {
 
-                if (events[i].type === type) {
+                if (events[i].type === type && handler) {
 
                     delete events[i]
 
@@ -96,7 +155,7 @@ Event.removeEvent = function(target, type, handler) {
         }
     }
 }
-
+*/
 // 将事件绑定在document上，然后根据selector来判断是否执行
 // TODO: 缺少ie9以下的处理，事件委托的选择器不完善
 Event.live = function(type, handler) {
@@ -200,4 +259,7 @@ Event.off = function(type, handler) {
  * 将unbind更名为off
  * 2015.6.15
  * 修改了removeEvent，在删除事件的同时删除target.e
+ * 2015.6.16
+ * 修改了removeEvent，修复bug，先解除事件再删除target.e
+ * 修改了removeEvent，增加了handler的存在验证分支
  */
