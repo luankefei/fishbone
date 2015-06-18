@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>首页 - sunken.me</title>
+
+    <style>
+
+    * { margin: 0; padding: 0; }
+    
+    body {
+
+        background: #329c8e;
+        padding: 100px;
+    }
+
+    ul > li {
+
+        float: left;
+        width: 40px;
+        height: 10px;
+        background: red;
+
+        margin-right: 10px;
+        list-style: none;
+    }
+
+    li.selected {
+        background: blue;
+    }
+
+    </style>
+</head>
+<body>
+    
+    <div id="test">
+        <ul>
+            <li class="selected"></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+        </ul>
+    </div>
+    <script src="dist/fishbone.js"></script>
+
+</body>
+
+<script>
+    
+    $('li').on('mousedown', function(e) {
+
+        var target = $(this)
+
+        // 通过selected来判断当前的状态
+        var type = target.parent().find('.selected').length === 1
+
+        // 计算每个元素的起始位置
+        var positions = [],
+            brothers = target.parent().find('li')
+
+        // 获取当前点击的元素下标
+        var currentIndex = target.index()
+
+        // 当前选中的元素列表
+        var currentList = target.parent().find('.selected')
+
+        // 当前选中的元素个数
+        var currentCount = currentList.length
+
+        // 分支不同，执行函数不同
+        var handlerSelect = null
+
+        // 初始化positions
+        for (var i = 0; i <= index; i++) {
+
+            brothers.eq(i).addClass('selected')
+        }
+
+        // 记录每个元素的起始位置
+        for (var i = 0; i < brothers.length; i++) {
+
+            positions.push(brothers.eq(i).offset().left)
+        }
+
+        // 处理初次拖拽选中
+        function firstHandler(x) {
+
+            for (var i = 0; i < positions.length; i++) {
+
+                // 将应该选中的元素选中
+                if (x > positions[i]) {
+
+                    brothers.eq(i).addClass('selected')
+
+                // 取消不该选中的元素
+                // 前两个元素不能取消
+                } else if (i > 1){
+
+                    brothers.eq(i).removeClass('selected')
+                }
+            }
+        }
+
+        // 处理再次拖拽选中
+        function secondHandler(x) {
+
+            var head = currentList.first().index()
+            var foot = currentList.last().index()
+
+            // 拖拽的是尾元素
+            if (currentIndex === currentList.last().index()) {
+
+                for (var i = 0; i < positions.length; i++) {
+
+                    // 将应该选中的元素选中
+                    // 选中不能超过头元素
+                    if (x > positions[i] && i > head) {
+
+                        brothers.eq(i).addClass('selected')
+
+                    // 取消不该选中的元素
+                    // 清除不能超过头元素 + 1
+                    } else if (i > head + 1) {
+
+                        brothers.eq(i).removeClass('selected')
+                    }
+                }
+
+                // 拖拽头元素不能超过头元素
+                
+
+            // 拖拽的是头元素
+            } else if (currentIndex === currentList.first().index()) {
+
+                for (var i = 0; i < positions.length; i++) {
+
+                    //var foot = brothers.last().index()
+
+                    // 将应该选中的元素选中，增加不能超过尾元素
+                    if (x < positions[i] && i < foot) {
+
+                        brothers.eq(i).addClass('selected')
+
+                    // 取消不该选中的元素
+                    // 清除不能超过尾元素 - 1
+                    // x超过head的都是删除，小于head的才是选中
+                    } else if (x > positions[i] && i < foot - 1) {
+
+                        brothers.eq(i).removeClass('selected')
+                    
+                    } else {
+
+                        // console.log(foot)
+
+                        // console.log(x > positions[i] && i < foot)
+                        
+                    }
+                }
+
+
+                // 拖拽尾元素不能超过尾元素
+                // 清除不能超过尾元素 - 1
+            }
+
+        }
+
+        // 从单选切换到框选
+        if (type) {
+
+            // 分支1，如果当前点击按钮已被选中，并且只有一个节点被选中，直接退出
+            if (target.hasClass('selected') && target.parent().find('.selected').length === 1) {
+
+                console.log('分支1')
+
+                return
+
+            // 如果没被选中，启动单向多选（向右）
+            } else {
+
+               handlerSelect = firstHandler
+            }    
+
+            
+        // 框选的再次执行
+        } else {
+
+            // 判断是否是头尾元素，否则直接退出
+            var index = $(e.target).index()
+            
+            var count = currentList.length
+            var headIndex = currentList.first().index()
+            var footIndex = currentList.last().index()
+
+            if (index !== headIndex && index !== footIndex) {
+
+                return false
+
+            } else if (index === headIndex) {
+
+                // 拖拽头元素不能超过尾元素
+                // 清除不能超过尾元素 -1
+                console.log('是头元素')
+
+            } else if (index === footIndex) {
+
+                // 拖拽尾元素不能超过头元素
+                // 清除不能超过头元素 - 1
+                console.log('是尾元素')
+            }
+
+            handlerSelect = secondHandler
+        }     
+
+        // 激活拖拽事件
+        $(document).on('mousemove', function(e) {
+
+            // 按照鼠标的y坐标判断应该选中哪个元素
+            handlerSelect(e.pageX)
+
+            // TODO: dosomething
+        })
+
+        // 回收拖拽事件
+        $(document).on('mouseup', function() {
+
+            $(document).off('mousemove')
+            $(document).off('mouseup')
+        })
+
+        e.preventDefault()
+        e.stopPropagation()
+    })
+
+</script>
+
+<script>
+    /*
+    // 滚动条需要拖动，需要支持鼠标滚轮
+    // 滚动条的按钮要根据div长度计算
+    // 点击bar，按钮要移动
+    
+
+    // 处理函数
+    // 初始化按钮的尺寸
+    function init() {
+
+        initButton(button, container, scrollHeight)
+        initEvent()
+    }
+
+    function initButton(button, container, scrollHeight) {
+    }
+
+    function initEvent(button) {
+
+       
+    }
+
+    // TODO: 初始化的调用应该由入口函数执行
+    init()
+    */
+
+</script>
+
+</html>

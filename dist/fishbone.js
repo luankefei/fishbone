@@ -3050,11 +3050,9 @@ Animate.init = function(params, duration, callback) {
             var end = new Date() - start
 
             // 测试时间
-            alert(end)
+            // alert(end)
 
             clearInterval(wait)
-
-            console.log('end')
 
         } else {
 

@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>首页 - sunken.me</title>
+
+    <style>
+
+    * { margin: 0; padding: 0; }
+    
+    body {
+
+        background: #329c8e;
+    }
+
+    #test {
+        width: 500px;
+        height: 500px;
+    }
+
+    .scroll {
+        overflow: hidden;
+        position: relative;
+    }
+
+    .scroll > .content {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 495px;
+        overflow: hidden;
+    }
+
+    .scroll .scroll-bar {
+        position: absolute;
+        right: 0;
+        top: 0;
+
+        width: 5px;
+        height: 100%;
+        background-image: url(image/scroll.png);
+        background-repeat: repeat-y;
+    }
+
+    .scroll .scroll-bar > .scroll-button {
+        width: 3px;
+        height: 0px;
+        margin-left: 1px;
+        background: #1d8eff;
+        border: none;
+        border-radius: 20px;
+
+        position: absolute;
+        top: 0;
+        cursor: pointer;
+    }
+
+    </style>
+</head>
+<body>
+    
+    <div id="test">
+        <img src="image/2013-12-21 09.57.41.jpg" alt="" />
+    </div>
+    <script src="dist/fishbone.js"></script>
+    <!--<script src="index.js"></script>-->
+    <!--<script src="dist/jquery-2.1.0.min.js"></script>-->
+      <!-- <div class="content">
+            
+        </div>    
+
+        <div class="scroll-bar">
+            <a class="scroll-button"></a>
+        </div> -->
+</body>
+
+<script>
+    
+    var scrollBar = (function() {
+
+        var init = function($node) {
+
+            return new scroll($node)
+        }
+
+        function scroll(container) {
+
+            // 初始化私有变量
+            // TODO: scroll的值应该由参数传递，content和button不变
+            var content = null, //$.create('div')
+                button = null   //container.find('.scroll-button').first()
+
+            var scrollHeight = null
+
+            var initContainer = function() {
+
+                var html = container.html().trim()
+
+                container.html('')
+
+                button = $.create('a').addClass('scroll-button')
+
+                content = $.create('div').addClass('content')
+                        .html(html)
+                        .appendTo(container)
+
+                var bar = $.create('div').addClass('scroll-bar')
+                        .append(button)
+                        .appendTo(container)
+
+                container.addClass('scroll')
+            }
+
+            var initButton = function() {
+
+                var rate =  container.height() / content.height()
+
+                if (isNaN(rate)) {
+
+                    return false
+                }
+
+                button.data('rate', rate)
+                button.css('height', container.height() * rate + 'px')
+
+                // 计算可滚动高度
+                scrollHeight = container.height() - button.height()
+
+                return true
+            }
+
+            var initEvent = function() {
+
+                // 初始化事件
+                button.on('mousedown', function(e) {
+
+                    var start = e.pageY - $(this).position().top
+
+                    // 计算起始位置的时候应该减去鼠标距离按钮的位置
+                    $(document).on('mousemove', function(e) {
+
+                        pageTurning(start, e.pageY)
+
+                        e.preventDefault()
+                        e.stopPropagation()
+                    })
+
+                    $(document).on('mouseup', function() {
+
+                        $(document).off('mouseup')
+                        $(document).off('mousemove')
+                    })
+
+                    e.preventDefault()
+                    e.stopPropagation()
+                })
+
+                // 滚轮事件
+                container.on('mousewheel', function(e) {
+
+                    // 用当前位置加上变化量
+                    var change = e.wheelDelta ? e.wheelDelta : e.detail
+                    var top = button.position().top - e.wheelDeltaY / 20
+
+                    pageTurning(0, top)
+                
+                    e.preventDefault()
+                    e.stopPropagation()        
+                })
+            }
+
+            // 翻页，滚动条移动，页面移动
+            // TODO: 只重置了按钮的位置，没有重置内容区
+            var pageTurning = function(start, top) {
+
+                var top = top - start
+                var rate = button.data('rate')
+
+                if (top > 0 && top < scrollHeight) {
+
+                    button.css('top', top + 'px')
+                    content.css('top', -top / rate + 'px')
+
+                } else if (top < 0) {
+
+                    button.css('top', '0px')
+                
+                } else if (top - scrollHeight > 0) {
+
+                    button.css('top', scrollHeight + 'px')
+                }
+            }
+
+            this.init = function() {
+
+                initContainer()
+
+                var state = initButton()
+
+                if (state) {
+
+                    initEvent()
+                }
+
+                return
+            }
+        }
+
+        return init
+    })()
+
+    var s = scrollBar($('#test').first())
+
+    s.init()
+    
+
+    // var a = document.createElement('div')
+
+    // a.id = 'lolllllllllklklk'
+    // a.innerHTML = 'dfdsfsdfd'
+
+    // document.body.appendChild(a)
+
+
+    // a.id = 'ffffffff'
+    // a.innerHTML = '1234'
+
+    
+
+
+
+
+
+
+</script>
+
+<script>
+    /*
+    // 滚动条需要拖动，需要支持鼠标滚轮
+    // 滚动条的按钮要根据div长度计算
+    // 点击bar，按钮要移动
+    
+
+    // 处理函数
+    // 初始化按钮的尺寸
+    function init() {
+
+        initButton(button, container, scrollHeight)
+        initEvent()
+    }
+
+    function initButton(button, container, scrollHeight) {
+    }
+
+    function initEvent(button) {
+
+       
+    }
+
+    // TODO: 初始化的调用应该由入口函数执行
+    init()
+    */
+
+</script>
+
+</html>

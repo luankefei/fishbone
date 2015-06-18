@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+</head>
+<body>
+    <div id="on">on ---------------</div>
+    <div id="off">off -------------</div>
+
+    <script src="../dist/fishbone.js"></script>
+</body>
+</html>
+
+<script>
+    
+
+$(document).ready(function() {
+
+    console.log('dom ready')
+})
+
+// on
+$('#on').on('click', function() {
+
+    console.log('test clicked')
+})
+
+$('#off').on('click', function() {
+
+    console.log('off clicked')
+})
+
+// off
+$('#off').off('click')
+    
+// live
+$('#live').live('click', function() {
+
+    this.style.backgroundColor = 'red'
+})
+
+
+
+var live = document.createElement('div')
+live.innerHTML = 'hahaha'
+live.id = 'live'
+
+document.body.appendChild(live)
+   
+</script>
