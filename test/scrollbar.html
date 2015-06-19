@@ -12,228 +12,243 @@
     body {
 
         background: #329c8e;
+        padding: 100px;
     }
 
-    #test {
-        width: 500px;
-        height: 500px;
+    ul > li {
+
+        float: left;
+        width: 40px;
+        height: 10px;
+        background: red;
+
+        margin-right: 10px;
+        list-style: none;
     }
 
-    .scroll {
-        overflow: hidden;
-        position: relative;
-    }
-
-    .scroll > .content {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 495px;
-        overflow: hidden;
-    }
-
-    .scroll .scroll-bar {
-        position: absolute;
-        right: 0;
-        top: 0;
-
-        width: 5px;
-        height: 100%;
-        background-image: url(image/scroll.png);
-        background-repeat: repeat-y;
-    }
-
-    .scroll .scroll-bar > .scroll-button {
-        width: 3px;
-        height: 0px;
-        margin-left: 1px;
-        background: #1d8eff;
-        border: none;
-        border-radius: 20px;
-
-        position: absolute;
-        top: 0;
-        cursor: pointer;
+    li.selected {
+        background: blue;
     }
 
     </style>
 </head>
 <body>
     
-    <div style="height:100px;background:red;"></div>
     <div id="test">
-        <img src="image/2013-12-21 09.57.41.jpg" alt="" />
+        <ul>
+            <li ></li>
+            <li></li>
+            <li class="selected"></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+        </ul>
     </div>
-    <script src="../dist/fishbone.js"></script>
-    <!--<script src="index.js"></script>-->
-    <!--<script src="dist/jquery-2.1.0.min.js"></script>-->
-      <!-- <div class="content">
-            
-        </div>    
+    <script src="dist/fishbone.js"></script>
 
-        <div class="scroll-bar">
-            <a class="scroll-button"></a>
-        </div> -->
 </body>
 
 <script>
     
-    var scrollBar = (function() {
+    $('li').on('mousedown', function(e) {
 
-        var init = function($node) {
+        var target = $(this)
 
-            return new scroll($node)
+        // 通过selected来判断当前的状态
+        var type = target.parent().find('.selected').length === 1
+
+        // 计算每个元素的起始位置
+        var positions = [],
+            brothers = target.parent().find('li')
+
+        // 获取当前点击的元素下标
+        var currentIndex = target.index()
+
+        // 当前选中的元素列表
+        var currentList = target.parent().find('.selected')
+
+        // 当前选中的元素个数
+        var currentCount = currentList.length
+
+        // 分支不同，执行函数不同
+        var handlerSelect = null
+
+        // 初始化positions
+        for (var i = 0; i <= index; i++) {
+
+            brothers.eq(i).addClass('selected')
         }
 
-        function scroll(container) {
+        // 记录每个元素的起始位置
+        for (var i = 0; i < brothers.length; i++) {
 
-            // 初始化私有变量
-            // TODO: scroll的值应该由参数传递，content和button不变
-            var content = null, //$.create('div')
-                button = null   //container.find('.scroll-button').first()
+            positions.push(brothers.eq(i).offset().left)
+        }
 
-            var scrollHeight = null
+        var direction = e.pageX > positions[currentList.first().index()] ? 'right' : 'left'
 
-            var initContainer = function() {
+        // 处理初次拖拽选中
+        function firstHandler(x) {
 
-                var html = container.html().trim()
+            var index = currentList.first().index()
 
-                container.html('')
+            // 拖拽尾元素不能超过头元素
+            if (direction === 'right') {
 
-                button = $.create('a').addClass('scroll-button')
+                for (var i = 0; i < positions.length; i++) {
 
-                content = $.create('div').addClass('content')
-                        .html(html)
-                        .appendTo(container)
+                    // 将应该选中的元素选中
+                    // 选中不能超过头元素
+                    if (x > positions[i] && i > index) {
 
-                var bar = $.create('div').addClass('scroll-bar')
-                        .append(button)
-                        .appendTo(container)
+                        brothers.eq(i).addClass('selected')
 
-                container.addClass('scroll')
-            }
+                    // 取消不该选中的元素
+                    // 清除不能超过头元素 + 1
+                    } else if (i > index + 1) {
 
-            var initButton = function() {
-
-                var rate =  container.height() / content.height()
-
-                if (isNaN(rate)) {
-
-                    return false
+                        brothers.eq(i).removeClass('selected')
+                    }
                 }
+            
+            // 拖拽的是头元素
+            } else {
 
-                button.data('rate', rate)
-                button.css('height', container.height() * rate + 'px')
+                for (var i = 0; i < positions.length; i++) {
 
-                // 计算可滚动高度
-                scrollHeight = container.height() - button.height()
+                    //var foot = brothers.last().index()
 
-                return true
+                    // 将应该选中的元素选中，增加不能超过尾元素
+                    if (x < positions[i] && i < index) {
+
+                        brothers.eq(i).addClass('selected')
+
+                    // 取消不该选中的元素
+                    // 清除不能超过尾元素 - 1
+                    // x超过head的都是删除，小于head的才是选中
+                    } else if (x > positions[i] && i < index - 1) {
+
+                        brothers.eq(i).removeClass('selected')
+                    
+                    }
+                }
             }
+        }
 
-            var initEvent = function() {
+        // 处理再次拖拽选中
+        function secondHandler(x) {
 
-                // 初始化事件
-                button.on('mousedown', function(e) {
+            var head = currentList.first().index()
+            var foot = currentList.last().index()
 
-                    var start = e.pageY - $(this).position().top
+            // 拖拽的是尾元素
+            // 拖拽头元素不能超过头元素
+            if (currentIndex === currentList.last().index()) {
 
-                    // 计算起始位置的时候应该减去鼠标距离按钮的位置
-                    $(document).on('mousemove', function(e) {
+                for (var i = 0; i < positions.length; i++) {
 
-                        pageTurning(start, e.pageY)
+                    // 将应该选中的元素选中
+                    // 选中不能超过头元素
+                    if (x > positions[i] && i > head) {
 
-                        e.preventDefault()
-                        e.stopPropagation()
-                    })
+                        brothers.eq(i).addClass('selected')
 
-                    $(document).on('mouseup', function() {
+                    // 取消不该选中的元素
+                    // 清除不能超过头元素 + 1
+                    } else if (i > head + 1) {
 
-                        $(document).off('mouseup')
-                        $(document).off('mousemove')
-                    })
+                        brothers.eq(i).removeClass('selected')
+                    }
+                }     
 
-                    e.preventDefault()
-                    e.stopPropagation()
-                })
+            // 拖拽的是头元素
+            // 拖拽尾元素不能超过尾元素
+            } else if (currentIndex === currentList.first().index()) {
 
-                // 滚轮事件
-                container.on('mousewheel', function(e) {
+                for (var i = 0; i < positions.length; i++) {
 
-                    // 用当前位置加上变化量
-                    var change = e.wheelDelta ? e.wheelDelta : e.detail
-                    var top = button.position().top - e.wheelDeltaY / 20
+                    //var foot = brothers.last().index()
 
-                    pageTurning(0, top)
-                
-                    e.preventDefault()
-                    e.stopPropagation()        
-                })
-            }
+                    // 将应该选中的元素选中，增加不能超过尾元素
+                    if (x < positions[i] && i < foot) {
 
-            // 翻页，滚动条移动，页面移动
-            // TODO: 只重置了按钮的位置，没有重置内容区
-            var pageTurning = function(start, top) {
+                        brothers.eq(i).addClass('selected')
 
-                var top = top - start
-                var rate = button.data('rate')
+                    // 取消不该选中的元素
+                    // 清除不能超过尾元素 - 1
+                    // x超过head的都是删除，小于head的才是选中
+                    } else if (x > positions[i] && i < foot - 1) {
 
-                if (top > 0 && top < scrollHeight) {
-
-                    button.css('top', top + 'px')
-                    content.css('top', -top / rate + 'px')
-
-                } else if (top < 0) {
-
-                    button.css('top', '0px')
-                
-                } else if (top - scrollHeight > 0) {
-
-                    button.css('top', scrollHeight + 'px')
+                        brothers.eq(i).removeClass('selected')
+                    
+                    }
                 }
             }
 
-            this.init = function() {
+        }
 
-                initContainer()
+        // 从单选切换到框选
+        if (type) {
 
-                var state = initButton()
+            // 分支1，如果当前点击按钮已被选中，并且只有一个节点被选中，直接退出
+            if (target.hasClass('selected') && target.parent().find('.selected').length === 1) {
 
-                if (state) {
-
-                    initEvent()
-                }
+                console.log('分支1')
 
                 return
+
+            // 如果没被选中，启动单向多选（向右）
+            } else {
+
+               handlerSelect = firstHandler
+            }    
+
+            
+        // 框选的再次执行
+        } else {
+
+            // 判断是否是头尾元素，否则直接退出
+            var index = $(e.target).index()
+            
+            var count = currentList.length
+            var headIndex = currentList.first().index()
+            var footIndex = currentList.last().index()
+
+            if (index !== headIndex && index !== footIndex) {
+
+                return false
+
+            } else {
+
+                handlerSelect = secondHandler
             }
-        }
+        }     
 
-        return init
-    })()
+        // 激活拖拽事件
+        $(document).on('mousemove', function(e) {
 
+            // 按照鼠标的y坐标判断应该选中哪个元素
+            handlerSelect(e.pageX)
 
-    var s = scrollBar($('#test').first())
+            // TODO: dosomething
+        })
 
-    s.init()
-    
+        // 回收拖拽事件
+        $(document).on('mouseup', function() {
 
-    // var a = document.createElement('div')
+            $(document).off('mousemove')
+            $(document).off('mouseup')
+        })
 
-    // a.id = 'lolllllllllklklk'
-    // a.innerHTML = 'dfdsfsdfd'
-
-    // document.body.appendChild(a)
-
-
-    // a.id = 'ffffffff'
-    // a.innerHTML = '1234'
-
-    
-
-
-
-
-
+        e.preventDefault()
+        e.stopPropagation()
+    })
 
 </script>
 
