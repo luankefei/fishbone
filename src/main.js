@@ -52,7 +52,20 @@ function query(expr) {
 
     var arrExp = expr.split(',')
 
-    if (arrExp.length === 1 && arrExp[0].charAt(0) === '#') {
+    var nodes = DOC.querySelectorAll(expr)
+
+    for (var i = 0; i < nodes.length; i++) {
+
+        this[i] = nodes[i]
+    }
+
+    this.length = nodes.length
+    // 将nodeList转为数组
+    //this = makeArray(this)
+
+    /*
+    // TODO: id的判断规则
+    if (arrExp.length === 1 && arrExp[0].charAt(0) === '#' && arrExp[0].indexOf(' ') === -1) {
 
         // 记录选择器，方便后面使用 
         this.selector = expr
@@ -72,6 +85,7 @@ function query(expr) {
         // 将nodeList转为数组
         //this = makeArray(this)
     }
+    */
 
     return this
 }
@@ -292,5 +306,7 @@ mix($.fn, {
  * 修改了init函数，修复bug -> 选择器使用空格分割
  * 2015.6.17
  * 增加了create方法，用来创建节点
+ * 2015.6.18
+ * 修改了query函数，移除了id分支
  */
  
