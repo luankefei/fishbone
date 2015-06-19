@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>首页 - sunken.me</title>
+
+    <style>
+
+    * { margin: 0; padding: 0; }
+    
+    body {
+
+        padding: 100px;
+    }
+
+    #test {
+        height: 50px;
+        background: #ED4441;
+        position: absolute;
+        left: 100px;
+        top: 100px;
+        width: 500px;
+        /*transform: rotate3d(7deg, 2deg, 10deg);*/
+        /*transform: scale(2, 3)rotate(7deg);*/
+    }
+
+    </style>
+</head>
+<body>
+    
+    <div id="test">
+        <ul>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+        </ul>
+
+    </div>
+    <script src="dist/fishbone.js"></script>
+
+</body>
+</html>
+
+<script>
+
+    // console.log($('#test ul li'))
+    // console.log($('#test'))
+    
+
+$(document).ready(function() {
+    
+    var state = $('#test').data('isAnimated')
+
+    if (!state) {
+
+        // asdf是用来测试的错误属性
+        $('#test').animate({ 
+            'height': 500,
+            'left': 1000,
+            'top': 100,
+            'width': 500,
+            // 'transform' : 'rotate(-40)',
+            // 'asdf': 0
+        }, 1000)
+
+    }
+
+    console.log($('#test').data('isAnimated'))
+})
+
+
+
+
+
+
+    
+</script>
