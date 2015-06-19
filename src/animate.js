@@ -92,11 +92,6 @@ Animate.init = function(params, duration, callback) {
     }, frame)
 }
 
-
-
-
-
-
 /*
 
 Animate.linear = function(t, b, c, d) {

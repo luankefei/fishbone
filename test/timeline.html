@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang='en'>
 
 <head>
-    <meta charset="UTF-8">
+    <meta charset='UTF-8'>
     <title>首页 - sunken.me</title>
 
     <style>
@@ -34,11 +34,11 @@
 </head>
 <body>
     
-    <div id="test">
+    <div id='test'>
         <ul>
-            <li class="selected"></li>
+            <li ></li>
             <li></li>
-            <li></li>
+            <li class='selected'></li>
             <li></li>
             <li></li>
             <li></li>
@@ -50,7 +50,7 @@
             <li></li>
         </ul>
     </div>
-    <script src="dist/fishbone.js"></script>
+    <script src='dist/fishbone.js'></script>
 
 </body>
 
@@ -91,21 +91,52 @@
             positions.push(brothers.eq(i).offset().left)
         }
 
+        var direction = e.pageX > positions[currentList.first().index()] ? 'right' : 'left'
+
         // 处理初次拖拽选中
         function firstHandler(x) {
 
-            for (var i = 0; i < positions.length; i++) {
+            var index = currentList.first().index()
 
-                // 将应该选中的元素选中
-                if (x > positions[i]) {
+            // 拖拽尾元素不能超过头元素
+            if (direction === 'right') {
 
-                    brothers.eq(i).addClass('selected')
+                for (var i = 0; i < positions.length; i++) {
 
-                // 取消不该选中的元素
-                // 前两个元素不能取消
-                } else if (i > 1){
+                    // 将应该选中的元素选中
+                    // 选中不能超过头元素
+                    if (x > positions[i] && i > index) {
 
-                    brothers.eq(i).removeClass('selected')
+                        brothers.eq(i).addClass('selected')
+
+                    // 取消不该选中的元素
+                    // 清除不能超过头元素 + 1
+                    } else if (i > index + 1) {
+
+                        brothers.eq(i).removeClass('selected')
+                    }
+                }
+            
+            // 拖拽的是头元素
+            } else {
+
+                for (var i = 0; i < positions.length; i++) {
+
+                    //var foot = brothers.last().index()
+
+                    // 将应该选中的元素选中，增加不能超过尾元素
+                    if (x < positions[i] && i < index) {
+
+                        brothers.eq(i).addClass('selected')
+
+                    // 取消不该选中的元素
+                    // 清除不能超过尾元素 - 1
+                    // x超过head的都是删除，小于head的才是选中
+                    } else if (x > positions[i] && i < index - 1) {
+
+                        brothers.eq(i).removeClass('selected')
+                    
+                    }
                 }
             }
         }
@@ -117,6 +148,7 @@
             var foot = currentList.last().index()
 
             // 拖拽的是尾元素
+            // 拖拽头元素不能超过头元素
             if (currentIndex === currentList.last().index()) {
 
                 for (var i = 0; i < positions.length; i++) {
@@ -133,12 +165,10 @@
 
                         brothers.eq(i).removeClass('selected')
                     }
-                }
-
-                // 拖拽头元素不能超过头元素
-                
+                }     
 
             // 拖拽的是头元素
+            // 拖拽尾元素不能超过尾元素
             } else if (currentIndex === currentList.first().index()) {
 
                 for (var i = 0; i < positions.length; i++) {
@@ -157,18 +187,8 @@
 
                         brothers.eq(i).removeClass('selected')
                     
-                    } else {
-
-                        // console.log(foot)
-
-                        // console.log(x > positions[i] && i < foot)
-                        
                     }
                 }
-
-
-                // 拖拽尾元素不能超过尾元素
-                // 清除不能超过尾元素 - 1
             }
 
         }
@@ -204,20 +224,10 @@
 
                 return false
 
-            } else if (index === headIndex) {
+            } else {
 
-                // 拖拽头元素不能超过尾元素
-                // 清除不能超过尾元素 -1
-                console.log('是头元素')
-
-            } else if (index === footIndex) {
-
-                // 拖拽尾元素不能超过头元素
-                // 清除不能超过头元素 - 1
-                console.log('是尾元素')
+                handlerSelect = secondHandler
             }
-
-            handlerSelect = secondHandler
         }     
 
         // 激活拖拽事件

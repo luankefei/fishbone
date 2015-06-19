@@ -2187,15 +2187,24 @@ Event.removeEvent = function(target, type, handler) {
             }
 
         // IE 8
+        // TODO: 未经过测试
         } else {
 
             for (var i = 0; i < events.length; i++) {
 
-                if (events[i].type === type) {
+                // 分支1，如果传入了handler
+                if (events[i].type === type && events[i].handler === handler) {
 
-                    delete events[i]
+                    target.detachEvent('on' + type, handler)
+
+                    events.splice(i, 1)
+
+
+                } else if (events[i].type === type) {
 
                     target.detachEvent('on' + type, events[i].handler)
+
+                    events.splice(i, 1)
                 }
             }
         }
@@ -3073,11 +3082,6 @@ Animate.init = function(params, duration, callback) {
 
     }, frame)
 }
-
-
-
-
-
 
 /*
 
