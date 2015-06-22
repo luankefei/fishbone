@@ -65,6 +65,7 @@ $(document).ready(function() {
         
         $('#test').animate({ 
             'height': 150,
+            'opacity': 0
             // 'left': 1000,
             // 'top': 100,
             // 'width': 500,
@@ -79,9 +80,11 @@ $(document).ready(function() {
 
     }
 
+    $('#test').css('z-index', 10000)
+            .css('z-index', 500)
+
     console.log($('#test').data('isAnimated'))
 })
-
 
 
 

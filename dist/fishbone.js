@@ -3021,6 +3021,7 @@ Animate.supports = {
     'left': 'px',
     'right': 'px',
     'bottom': 'px',
+    'opacity': ''
     // 'transform': 'deg'
 }
 
@@ -3088,12 +3089,11 @@ Animate.paramFilter = function(params) {
     // 使用for in 遍历params
     for (var k in params) {
 
-        if (!Animate.supports[k]) {
-
+        if (Animate.supports[k] === undefined) {
+            
             delete params[k]
 
         } else {
-
             keys.push(k)
         }
     }
@@ -3271,8 +3271,12 @@ Animate.init = function(params, duration, callback) {
  * 创建模块
  * 2015.6.15 重写动画模块
  * 2015.6.18 初步测试可用，与上个版本功能一致
+ * 2015.6.22
+ * 修改了supports，增加了opacity
+ * 修改了paramFilter，fix bug：判断Animate.supports[k]应该使用undefined
  */
  
+
 
 /**
  * @name  extend.js
