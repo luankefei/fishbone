@@ -25,6 +25,18 @@
         /*transform: scale(2, 3)rotate(7deg);*/
     }
 
+    #test2 {
+
+        height: 50px;
+        background: #329c8e;
+        position: absolute;
+        left: 100px;
+        top: 200px;
+        width: 500px;
+
+
+    }
+
     </style>
 </head>
 <body>
@@ -44,6 +56,8 @@
         </ul>
 
     </div>
+
+    <div id="test2">
     <script src="dist/fishbone.js"></script>
 
 </body>
@@ -74,18 +88,13 @@ $(document).ready(function() {
         }, 1000)
         
         
-        // $('#test').animate({
-        //     left: 0
-        // }, 500)
+        $('#test2').animate({
+            left: 0
+        }, 500)
 
     }
 
-    $('#test').css('z-index', 10000)
-            .css('z-index', 500)
-
-    console.log($('#test').data('isAnimated'))
 })
-
 
 
 
