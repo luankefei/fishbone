@@ -6,8 +6,8 @@
 
 var Event = {}
 
-// 添加事件
-Event.addEvent = function(target, type, handler) {
+// 声明事件，将事件保存在dom节点对象上
+Event.declareEvent = function(target, type) {
 
     // 向target添加事件之前记录在e上
     if (target.e === undefined) {
@@ -20,26 +20,36 @@ Event.addEvent = function(target, type, handler) {
         target.e[type] = []
     }
 
+    // 记录
     target.e[type].push({
 
         type: type,
         handler: handler
     })
+}
+
+
+// 添加事件
+Event.addEvent = function(target, type, handler) {
+
+    Event.declareEvent.call(null, target, type)
 
     if (target.addEventListener) {
+
         target.addEventListener(type, handler, false)
 
     } else {
 
         target.attachEvent('on' + type, function(event) {
 
+            // jquery的坐标修复
             event.pageX = event.clientX 
-                    + ( DOC && DOC.scrollLeft || body && body.scrollLeft || 0 ) 
-                    - ( DOC && DOC.clientLeft || body && body.clientLeft || 0 )
+                    + (DOC && DOC.scrollLeft || body && body.scrollLeft || 0) 
+                    - (DOC && DOC.clientLeft || body && body.clientLeft || 0)
 
             event.pageY = event.clientY 
-                    + ( DOC && DOC.scrollTop || body && body.scrollTop || 0 ) 
-                    - ( DOC && DOC.clientTop || body && body.clientTop || 0 )
+                    + (DOC && DOC.scrollTop || body && body.scrollTop || 0) 
+                    - (DOC && DOC.clientTop || body && body.clientTop || 0)
 
             // 把处理和程序作为时间目标的方法调用
             // 传递事件对象
@@ -213,7 +223,6 @@ Event.on = function(type, handler) {
 // domReady
 Event.ready = function(handler) {
 
-
     var eventFn = W3C ? 'DOMContentLoaded' : 'readystatechange'
     var handle = handler
 
@@ -271,4 +280,5 @@ Event.off = function(type, handler) {
  * 2015.6.16
  * 修改了removeEvent，修复bug，先解除事件再删除target.e
  * 修改了removeEvent，增加了handler的存在验证分支
+ * 增加了declareEvent函数，代码从addEvent中分离
  */

@@ -247,4 +247,6 @@ Route.provider = function(paths) {
  * 1. 在加载结束后会调用hash中的callback
  * 2. 取消了js的数组写法，只能保留唯一入口
  * 修改了provider，将路由激活的逻辑放到了scan中
+ * 2015.6.24
+ * 修改了route模块的调用方式，不再对外暴露Route对象
  */

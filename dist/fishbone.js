@@ -1181,7 +1181,8 @@ function mix(receiver, supplier) {
     }
 
     while ((supplier = args[i++])) {
-        for (key in supplier) { //允许对象糅杂，用户保证都是对象
+        for (key in supplier) { 
+            //允许对象糅杂，用户保证都是对象
             if (Object.prototype.hasOwnProperty.call(supplier, key) && (ride || !(key in receiver))) {
 
                 receiver[key] = supplier[key]
@@ -2128,8 +2129,8 @@ Node.wrap = function() {}
 
 var Event = {}
 
-// 添加事件
-Event.addEvent = function(target, type, handler) {
+// 声明事件，将事件保存在dom节点对象上
+Event.declareEvent = function(target, type) {
 
     // 向target添加事件之前记录在e上
     if (target.e === undefined) {
@@ -2142,26 +2143,36 @@ Event.addEvent = function(target, type, handler) {
         target.e[type] = []
     }
 
+    // 记录
     target.e[type].push({
 
         type: type,
         handler: handler
     })
+}
+
+
+// 添加事件
+Event.addEvent = function(target, type, handler) {
+
+    Event.declareEvent.call(null, target, type)
 
     if (target.addEventListener) {
+
         target.addEventListener(type, handler, false)
 
     } else {
 
         target.attachEvent('on' + type, function(event) {
 
+            // jquery的坐标修复
             event.pageX = event.clientX 
-                    + ( DOC && DOC.scrollLeft || body && body.scrollLeft || 0 ) 
-                    - ( DOC && DOC.clientLeft || body && body.clientLeft || 0 )
+                    + (DOC && DOC.scrollLeft || body && body.scrollLeft || 0) 
+                    - (DOC && DOC.clientLeft || body && body.clientLeft || 0)
 
             event.pageY = event.clientY 
-                    + ( DOC && DOC.scrollTop || body && body.scrollTop || 0 ) 
-                    - ( DOC && DOC.clientTop || body && body.clientTop || 0 )
+                    + (DOC && DOC.scrollTop || body && body.scrollTop || 0) 
+                    - (DOC && DOC.clientTop || body && body.clientTop || 0)
 
             // 把处理和程序作为时间目标的方法调用
             // 传递事件对象
@@ -2335,7 +2346,6 @@ Event.on = function(type, handler) {
 // domReady
 Event.ready = function(handler) {
 
-
     var eventFn = W3C ? 'DOMContentLoaded' : 'readystatechange'
     var handle = handler
 
@@ -2393,6 +2403,7 @@ Event.off = function(type, handler) {
  * 2015.6.16
  * 修改了removeEvent，修复bug，先解除事件再删除target.e
  * 修改了removeEvent，增加了handler的存在验证分支
+ * 增加了declareEvent函数，代码从addEvent中分离
  */
 
 /**
@@ -2732,7 +2743,33 @@ Attr.hasClass = function(name) {
     return false
 }
 
-Attr.toggleClass = function() {}
+Attr.toggleClass = function(name) {
+
+    for (var i = 0; i < this.length; i++) {
+
+        var target = this[i]
+
+        var classes = target.className.split(',')
+
+        for (var j = 0; j < classes.length; j++) {
+
+            if (classes[j].trim() === name) {
+
+                classes.splice(j, 1)
+
+                break
+            
+            } else if (j === classes.length) {
+
+                classes.push(name)
+            }
+        }   // end for
+
+        this[i].className = classes.join(' ')
+    }   // end for
+
+    return this
+}
 
 
 Attr.replaceClass = function(name, value) {
@@ -2748,6 +2785,8 @@ Attr.replaceClass = function(name, value) {
             if (classes[j].trim() === name) {
 
                 classes[j] = value
+
+                break
             }
         }   // end for
 
@@ -2768,7 +2807,8 @@ Attr.replaceClass = function(name, value) {
  * 2015.6.14
  * 增加了hasClass
  * 2015.6.24
- * 增加了replaceClass
+ * 增加了replaceClass方法
+ * 增加了toogleClass方法
  */
 
 /*
@@ -3020,6 +3060,8 @@ Route.provider = function(paths) {
  * 1. 在加载结束后会调用hash中的callback
  * 2. 取消了js的数组写法，只能保留唯一入口
  * 修改了provider，将路由激活的逻辑放到了scan中
+ * 2015.6.24
+ * 修改了route模块的调用方式，不再对外暴露Route对象
  */
 
 /**
@@ -3041,7 +3083,6 @@ Animate.supports = {
     'opacity': ''
     // 'transform': 'deg'
 }
-
 
 // 动画类
 function Animation(target, params, duration, callback) {
@@ -3335,7 +3376,7 @@ mix($, {
     get: Http.get,
     ajax: Http.ajax,
     jsonp: Http.jsonp,
-    route: Route,
+    route: Route.provider,
     create: create,
     // on: Event.on,
     // live: Event.live,

@@ -18,7 +18,6 @@ Animate.supports = {
     // 'transform': 'deg'
 }
 
-
 // 动画类
 function Animation(target, params, duration, callback) {
 

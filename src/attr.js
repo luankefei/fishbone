@@ -129,7 +129,33 @@ Attr.hasClass = function(name) {
     return false
 }
 
-Attr.toggleClass = function() {}
+Attr.toggleClass = function(name) {
+
+    for (var i = 0; i < this.length; i++) {
+
+        var target = this[i]
+
+        var classes = target.className.split(',')
+
+        for (var j = 0; j < classes.length; j++) {
+
+            if (classes[j].trim() === name) {
+
+                classes.splice(j, 1)
+
+                break
+            
+            } else if (j === classes.length) {
+
+                classes.push(name)
+            }
+        }   // end for
+
+        this[i].className = classes.join(' ')
+    }   // end for
+
+    return this
+}
 
 
 Attr.replaceClass = function(name, value) {
@@ -145,6 +171,8 @@ Attr.replaceClass = function(name, value) {
             if (classes[j].trim() === name) {
 
                 classes[j] = value
+
+                break
             }
         }   // end for
 
@@ -165,5 +193,6 @@ Attr.replaceClass = function(name, value) {
  * 2015.6.14
  * 增加了hasClass
  * 2015.6.24
- * 增加了replaceClass
+ * 增加了replaceClass方法
+ * 增加了toogleClass方法
  */

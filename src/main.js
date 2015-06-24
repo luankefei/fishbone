@@ -37,7 +37,8 @@ function mix(receiver, supplier) {
     }
 
     while ((supplier = args[i++])) {
-        for (key in supplier) { //允许对象糅杂，用户保证都是对象
+        for (key in supplier) { 
+            //允许对象糅杂，用户保证都是对象
             if (Object.prototype.hasOwnProperty.call(supplier, key) && (ride || !(key in receiver))) {
 
                 receiver[key] = supplier[key]
