@@ -32,6 +32,7 @@ mix($.fn, {
     addClass: Attr.addClass,
     removeClass: Attr.removeClass,
     hasClass: Attr.hasClass,
+    replaceClass: Attr.replaceClass,
 
     val: Node.val,
     first: Node.first,

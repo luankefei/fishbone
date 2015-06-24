@@ -93,19 +93,19 @@ Attr.removeClass = function(name) {
 
     for (var i = 0; i < this.length; i++) {
 
-        var className = this[i].className.split(' ')
+        var classes = this[i].className.split(' ')
 
-        for (j = 0; j < className.length; j++) {
+        for (j = 0; j < classes.length; j++) {
 
-            if (className[j] === name) {
+            if (classes[j] === name) {
 
-                className.splice(j, 1)
+                classes.splice(j, 1)
 
                 break
             }
         }
 
-        this[i].className = className.join(' ')
+        this[i].className = classes.join(' ')
     }
 
     return this
@@ -132,13 +132,28 @@ Attr.hasClass = function(name) {
 Attr.toggleClass = function() {}
 
 
-Attr.replaceClass = function() {}
+Attr.replaceClass = function(name, value) {
 
-// 获取表单元素的value
-Attr.val = function() {
+    for (var i = 0; i < this.length; i++) {
 
+        var target = this[i]
 
+        var classes = target.className.split(',')
+
+        for (var j = 0; j < classes.length; j++) {
+
+            if (classes[j].trim() === name) {
+
+                classes[j] = value
+            }
+        }   // end for
+
+        this[i].className = classes.join(' ')
+    }   // end for
+
+    return this
 }
+
 
 /**
  * 2015.6.2
@@ -149,4 +164,6 @@ Attr.val = function() {
  * 增加了addClass、removeClass
  * 2015.6.14
  * 增加了hasClass
+ * 2015.6.24
+ * 增加了replaceClass
  */
