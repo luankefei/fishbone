@@ -79,6 +79,7 @@ Event.removeEvent = function(target, type, handler) {
                     target.removeEventListener(type, handler, false)
 
                     events.splice(i, 1)
+                    i--
                 
                 // 分支2，type匹配但没有handler，全部删除
                 } else if (events[i].type === type) {
@@ -87,6 +88,7 @@ Event.removeEvent = function(target, type, handler) {
 
                     // 从数组中删除事件，并重置数组长度
                     events.splice(i, 1)
+                    i--
                 }
             }
 
@@ -102,13 +104,14 @@ Event.removeEvent = function(target, type, handler) {
                     target.detachEvent('on' + type, handler)
 
                     events.splice(i, 1)
-
+                    i--
 
                 } else if (events[i].type === type) {
 
                     target.detachEvent('on' + type, events[i].handler)
 
                     events.splice(i, 1)
+                    i--
                 }
             }
         }
@@ -281,4 +284,6 @@ Event.off = function(type, handler) {
  * 修改了removeEvent，修复bug，先解除事件再删除target.e
  * 修改了removeEvent，增加了handler的存在验证分支
  * 增加了declareEvent函数，代码从addEvent中分离
+ * 2015.6.26
+ * 修改了removeEvent，修复bug：删除事件后没有重置i
  */
