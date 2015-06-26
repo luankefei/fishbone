@@ -222,7 +222,6 @@ function Animation(target, params, duration, callback) {
 // 对外暴露的接口
 Animate.init = function(params, duration, callback) {
 
-    
     return new Animation(this, params, duration, callback)
 }
 

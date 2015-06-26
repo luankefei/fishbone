@@ -7,7 +7,7 @@
 var Event = {}
 
 // 声明事件，将事件保存在dom节点对象上
-Event.declareEvent = function(target, type) {
+Event.declareEvent = function(target, type, handler) {
 
     // 向target添加事件之前记录在e上
     if (target.e === undefined) {
@@ -32,7 +32,7 @@ Event.declareEvent = function(target, type) {
 // 添加事件
 Event.addEvent = function(target, type, handler) {
 
-    Event.declareEvent.call(null, target, type)
+    Event.declareEvent.call(null, target, type, handler)
 
     if (target.addEventListener) {
 
