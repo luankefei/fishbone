@@ -62,9 +62,9 @@ Node.clone = function(include) {
 
     var arr = []
 
-    for (var i = 0; i < nodes.length; i++) {
+    for (var i = 0; i < this.length; i++) {
 
-        arr.push(nodes[i].cloneNode(include))
+        arr.push(this[i].cloneNode(include))
     }
 
     return arr

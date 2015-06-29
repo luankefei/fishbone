@@ -35,6 +35,10 @@
         width: 500px;
     }
 
+    div {
+        background: red;
+        height: 50px;
+    }
     </style>
 </head>
 <body>
@@ -65,23 +69,25 @@
 <script>
 
 $(document).ready(function() {
-    
-    $('#test2').on('click', function() {
 
-        console.log('a')
+
+    // test clone
+    var cloneNode = $('#test').clone()
+
+    console.log(cloneNode)
+    $('div').on('click', function(e) {
+        console.log('on')
+        console.log(e.target)
+        console.log(this)
     })
 
-    $('#test2').on('click', function() {
-
-        console.log('b')
+    $('div').live('click', function(e) {
+        console.log('live')
+        console.log(e.target)
+        console.log(this)
     })
 
-    $('#test2').off('click')
-
-    $('#test2').on('click', function() {
-        console.log('c')
-    })
-
+    $.create('div').text('new').css('background', 'blue').appendTo($('#test2'))
     // $.route()
     //     .when('/', {
 

@@ -1839,9 +1839,9 @@ Node.clone = function(include) {
 
     var arr = []
 
-    for (var i = 0; i < nodes.length; i++) {
+    for (var i = 0; i < this.length; i++) {
 
-        arr.push(nodes[i].cloneNode(include))
+        arr.push(this[i].cloneNode(include))
     }
 
     return arr
@@ -2121,6 +2121,7 @@ Node.wrap = function() {}
  * 增加了prepend方法，修改了append，对fishbone对象进行支持
  */
  
+
 /**
  * @name  event.js
  * @description  事件模块
@@ -2227,13 +2228,14 @@ Event.removeEvent = function(target, type, handler) {
                     target.detachEvent('on' + type, handler)
 
                     events.splice(i, 1)
-
+                    i--
 
                 } else if (events[i].type === type) {
 
                     target.detachEvent('on' + type, events[i].handler)
 
                     events.splice(i, 1)
+                    i--
                 }
             }
         }
