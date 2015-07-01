@@ -4,7 +4,10 @@
  * @date  2015.6.5
  * @author  xiaoer
  */
+
 var Animate = {}
+
+
 
 // 支持的变化属性，及默认单位
 Animate.supports = {
@@ -80,7 +83,7 @@ function Animation(target, params, duration, callback) {
                     // 如果是最后一步，纠正误差
                     if (step === times - 1) {
 
-                        value = params[key]
+                        value = Number.parseFloat(params[key])
                     }
                 
                     var unit = Animate.supports[key]
@@ -107,8 +110,6 @@ function Animation(target, params, duration, callback) {
                         // 补上单位
                         value = value + unit    
                     }
-
-                    
 
                     target.eq(i).css(key, value)
                 }
@@ -210,15 +211,6 @@ Animate.paramFilter = function(params) {
     }
 }
 
-/*
-function Animation(target, params, duration, callback) {
-
-    
-
-}
-*/
-
-
 // 对外暴露的接口
 Animate.init = function(params, duration, callback) {
 
@@ -226,62 +218,6 @@ Animate.init = function(params, duration, callback) {
 }
 
 
-
-
-/*
-Animate.linear = function(t, b, c, d) {
-    //t：times,b:begin,c:change,d:duration
-    return t / d * c + b;
-}
-
-Animate.init = function(params, duration, callback) {
-
-    var ele = this;
-
-    //clearInterval(ele.timer)
-    var oChange = {}
-    var oBegin = {}
-        // 单位
-    var unit = {}
-    for (var attr in params) {
-
-        var begin = Number.parseFloat(ele.css(attr))
-        unit[attr] = ele.css(attr).slice(begin.toString().length)
-        var change = params[attr] - begin;
-        oChange[attr] = change;
-        oBegin[attr] = begin;
-    }
-    var times = 0;
-    var interval = 13;
-
-    function step() {
-        times += interval;
-        if (times < duration) {
-            for (var attr in params) {
-                var change = oChange[attr];
-                var begin = oBegin[attr];
-                var val = Animate.linear(times, begin, change, duration) + unit[attr];
-                ele.css(attr, val)
-                    // setTimeout(step,interval)
-            }
-        } else {
-            for (var attr in params) {
-                ele.css(attr, params[attr] + unit[attr])
-            }
-
-            clearInterval(ele.timer);
-            ele.timer = null;
-            if (typeof callback == "function") {
-                callback.call(ele);
-            }
-        }
-    }
-
-    ele.timer = window.setInterval(step, interval);
-
-    return this;
-}
-*/
 
 /**
  * 2015.6.5

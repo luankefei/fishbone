@@ -15,7 +15,7 @@
     }
 
     #test {
-        height: 50px;
+        height: 0px;
         background: #ED4441;
         position: absolute;
         left: 100px;
@@ -27,7 +27,7 @@
 
     #test2 {
 
-        height: 50px;
+        height: 52px;
         background: #329c8e;
         position: absolute;
         left: 100px;
@@ -60,7 +60,7 @@
     </div>
 
     <div id="test2">test 2</div>
-    <div id="test3" class="asdf"></div>
+    <div id="test" class="asdf"></div>
     <script src="dist/fishbone.js"></script>
 
 </body>
@@ -72,26 +72,15 @@ $(document).ready(function() {
 
 
     // test clone
-    var cloneNode = $('#test').clone()
+    $('#test2').animate({'height': '50px'}, 200)
+    $('#test').animate({'height': '100px'}, 200)
 
-    console.log(cloneNode)
-    $('div').on('click', function(e) {
-        console.log('on')
-        console.log(e.target)
-        console.log(this)
-    })
+    // var left = $('#test').offset().left,
+    //     top = $('#test').offset().top
 
-    $('div').live('click', function(e) {
-        console.log('live')
-        console.log(e.target)
-        console.log(this)
-    })
+    // console.log('left: ' + left)
+    // console.log('top: ' + top)
 
-    $.create('div').text('new').css('background', 'blue').appendTo($('#test2'))
-    // $.route()
-    //     .when('/', {
-
-    //     })
 
     // var state = $('#test').data('isAnimated')
 
