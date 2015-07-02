@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>首页 - sunken.me</title>
+
+    <style>
+
+    </style>
+</head>
+<body>
+    
+    <dropdown data-sarial="1"></dropdown>
+    <dropdown data-sarial="2"></dropdown>
+    <dropdown data-sarial="3"></dropdown>
+    <dropdown data-sarial="4"></dropdown>
+
+
+    <script src="fishbone.js"></script>
+</body>
+</html>
+
+<script>
+
+var Component = function() {
+
+    this.selector = null,
+    this.target = null,
+    this.view = null
+
+    return this
+}
+
+// TODO: 参数传递太多，需要移动到Component中，将参数整理成属性
+var replaceView = function(view, keys, target, params) {
+
+    keys.forEach(function(v, i, a) {
+
+        // 去掉v两端的括号，作为key从param中取值
+        var key = v.slice(1, v.length - 1)
+
+        view = view.replace(v, params[key])
+    })
+
+    target.html(view)
+}
+
+var dropdown = function(params) {
+
+    // 1. 替换模板
+    var target = $(params.selector)
+
+    // 2. 绑定数据、替换模板中绑定的数据
+    // TODO 注册属性监听，如果属性改变，要重新走此步骤。需要记录view的初值
+    var reg = /{(\w*)}/g
+    var keys = params.view.match(reg)
+
+    var component = new Component()
+
+    component.selector = params.selector
+    component.target = target
+    component.view = params.view
+
+    var properties = {}
+    var view = component.view
+
+    replaceView(view, keys, target, params)
+
+    keys.forEach(function(v, i, a) {
+
+        var key = v.slice(1, v.length - 1)
+
+        // defineProperties 监听属性变化
+        properties[key] = {
+
+            enumerable: true,
+            configurable: true,
+
+            get: function() { return this[key + 'Value'] },
+            set: function(value) { 
+
+                this[key + 'Value'] = value
+                
+                // TODO: 临时代码
+                params[key] = value
+
+                replaceView(view, keys, target, params)
+                console.log('properties setter')
+
+                // 数据变更时，调用view层的初始化
+                //this.controller.refresh(this.node)
+            }
+        }
+    })
+
+    Object.defineProperties(component, properties)
+
+    // 3. 注册事件
+    var events = null
+
+    for (var k in params) {
+
+        // 匹配到事件，字符串转换后进行绑定
+        if (k.indexOf('handle') === 0) {
+
+            var type = k.substring(6).toLowerCase()
+
+            target.on(type, params[k])
+        }   
+    }
+    
+    // 4. 返回接口，返回所有属性
+    //return 'to be contiune...'
+    return component
+}
+
+
+// 以下为调用代码
+var d = dropdown({
+
+    selector: 'dropdown',
+    id: 'dropdown',
+    data: 'hello, world',
+    view:'<div id="{id}">{data}</div>',
+    handleClick: function(e) {
+
+        $(this).html('click me !!')
+    }
+})
+
+
+setTimeout(function() {
+
+    d.data = 'data'
+    d.id = 123
+
+}, 1000)
+
+setTimeout(function() {
+
+    d.data = 'change'
+    d.id = 123
+    
+}, 5000)
+
+console.log(d)
+
+
+
+</script>
