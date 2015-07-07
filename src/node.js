@@ -75,7 +75,7 @@ Node.text = function(text) {
 
     if (text === undefined) {
 
-        return this[0].innerText
+        return this[0].textContent ? this[0].textContent : this[0].innerText
 
     } else {
 
@@ -342,5 +342,7 @@ Node.wrap = function() {}
  * 增加了next、prev和parent方法
  * 2015.6.17
  * 增加了prepend方法，修改了append，对fishbone对象进行支持
+ * 2015.7.7
+ * 修改了text方法，fix bug: 火狐不支持innerText
  */
  
