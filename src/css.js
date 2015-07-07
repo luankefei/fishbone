@@ -113,6 +113,54 @@ Css.init = function(key, value) {
 
     return returnValue
 }
+
+// 获取当前对象的绝对位置
+// position和offset不同，需要分开计算。position是相对定位框，不是body
+Css.position = function() {
+
+    var top = Number.parseInt(Css.init.call(this, 'top')),
+        left = Number.parseInt(Css.init.call(this, 'left')),
+        right = Number.parseInt(Css.init.call(this, 'right')),
+        bottom = Number.parseInt(Css.init.call(this, 'bottom'))
+
+    top = top + Number.parseInt(Css.init.call(this, 'margin-top'))
+    left = left + Number.parseInt(Css.init.call(this, 'margin-left'))
+    right = right + Number.parseInt(Css.init.call(this, 'margin-right'))
+    bottom = bottom + Number.parseInt(Css.init.call(this, 'margin-bottom'))
+
+    return {
+        top: top,
+        right: right,
+        bottom: bottom,
+        left: left
+    }
+}
+
+// 获取元素的offset
+Css.offset = function() {
+
+    var offsetParent = $(this[0].offsetParent),
+        offset = {
+            top: offsetTop = this[0].offsetTop,
+            left: this[0].offsetLeft
+        },
+        
+        parentOffset = /^body|html$/i.test(offsetParent[0].tagName) ? {
+            top: 0,
+            left: 0
+        } : offsetParent.offset()
+    
+    // offset.top += Number.parseInt(Css.init.call(this, 'margin-top'))
+    // offset.left += Number.parseInt(Css.init.call(this, 'margin-left'))
+
+    parentOffset.top += Number.parseInt(Css.init.call(offsetParent, 'border-top-width'))
+    parentOffset.left += Number.parseInt(Css.init.call(offsetParent, 'border-left-width'))
+    
+    return {
+        top: offset.top - parentOffset.top,
+        left: offset.left - parentOffset.left
+    }
+}
 /**
  * 2015.5.30
  * 创建模块
@@ -129,4 +177,7 @@ Css.init = function(key, value) {
  * 修改了getCss，在IE 8 和 Opera上使用currentStyle代替getComputedStyle
  * 2015.6.11
  * 修改了getCss，fix bug
+ * 2015.7.7
+ * 增加了position方法
+ * 增加了offset方法
  */

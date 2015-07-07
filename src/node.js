@@ -218,42 +218,6 @@ Node.height = function() {
     return Number.parseInt(Css.init.call(this, 'height'))
 }
 
-// 获取元素的offset
-Node.offset = function() {
-
-    var offsetParent = $(this[0].offsetParent),
-        offset = {
-            top: offsetTop = this[0].offsetTop,
-            left: this[0].offsetLeft
-        },
-        
-        parentOffset = /^body|html$/i.test(offsetParent[0].tagName) ? {
-            top: 0,
-            left: 0
-        } : offsetParent.offset()
-    
-    offset.top -= Number.parseInt(Css.init.call(this, 'margin-top'))
-    offset.left -= Number.parseInt(Css.init.call(this, 'margin-left'))
-
-    parentOffset.top += Number.parseInt(Css.init.call(offsetParent, 'border-top-width'))
-    parentOffset.left += Number.parseInt(Css.init.call(offsetParent, 'border-left-width'))
-    
-    return {
-        top: offset.top - parentOffset.top,
-        left: offset.left - parentOffset.left
-    }
-}
-
-Node.position = function() {
-
-    return {
-        top: Number.parseInt(Css.init.call(this, 'top')),
-        right: Number.parseInt(Css.init.call(this, 'right')),
-        bottom: Number.parseInt(Css.init.call(this, 'bottom')),
-        left: Number.parseInt(Css.init.call(this, 'left'))
-    }
-}
-
 // 获取当前元素的父节点
 Node.parent = function() {
 
@@ -344,5 +308,8 @@ Node.wrap = function() {}
  * 增加了prepend方法，修改了append，对fishbone对象进行支持
  * 2015.7.7
  * 修改了text方法，fix bug: 火狐不支持innerText
+ * 将position方法移动到css模块
+ * 修改了offset方法，之前offset和margin的关系计算错误
+ * 将offset方法移动到css模块
  */
  
