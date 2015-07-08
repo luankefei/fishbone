@@ -128,56 +128,6 @@ Event.removeEvent = function(target, type, handler) {
     }
 }
 
-// 移除事件
-// TODO: handler应该是可选项，如果没有传入，清除所有事件函数
-// TODO: ie 9以下不兼容
-/*
-Event.removeEvent = function(target, type, handler) {
-
-    // 对handler进行判断，如果不存在，按照type清除全部事件
-    if (handler === undefined) {
-
-        var events = target.e[type]
-
-        if (target.removeEventListener) {
-
-            for (var i = 0; i < events.length; i++) {
-
-                if (events[i].type === type && handler) {
-
-                    delete events[i]
-
-                    target.removeEventListener(type, events[i].handler, false)
-                }
-            }
-
-        } else {
-
-            // IE 8
-            for (var i = 0; i < events.length; i++) {
-
-                if (events[i].type === type) {
-
-                    delete events[i]
-
-                    target.detachEvent('on' + type, events[i].handler)
-                }
-            }
-        }
-
-    } else {
-
-
-        if (target.removeEventListener) {
-            target.removeEventListener(type, handler, false)
-
-        } else {
-
-            target.detachEvent('on' + type, handler)
-        }
-    }
-}
-*/
 // 将事件绑定在document上，然后根据selector来判断是否执行
 // TODO: 缺少ie9以下的处理，事件委托的选择器不完善
 Event.live = function(type, handler) {

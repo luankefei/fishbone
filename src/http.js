@@ -21,7 +21,7 @@ defaults = {
     type: 'GET',
     contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
     async: true
-        //jsonp: 'callback'
+    //jsonp: 'callback'
 }
 
 // ajax获取js文件
@@ -51,7 +51,6 @@ Http.getCss = function(url, callback) {
     link.rel = 'stylesheet'
 
     // IE 8兼容
-    //link.onload = callback.call(this)
     link.onload = function() {
 
         callback.call(this)
@@ -66,7 +65,6 @@ Http.get = function(url, callback) {
     var param = defaults
 
     param.success = callback
-
     param.url = url
 
     Http.ajax(param)
@@ -122,6 +120,7 @@ Http.ajax = function(param, events) {
     }
 
     req.setRequestHeader('Content-type', defaults.contentType)
+
     req.send(data)
 }
 

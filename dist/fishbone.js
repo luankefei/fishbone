@@ -1637,7 +1637,7 @@ defaults = {
     type: 'GET',
     contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
     async: true
-        //jsonp: 'callback'
+    //jsonp: 'callback'
 }
 
 // ajax获取js文件
@@ -1667,7 +1667,6 @@ Http.getCss = function(url, callback) {
     link.rel = 'stylesheet'
 
     // IE 8兼容
-    //link.onload = callback.call(this)
     link.onload = function() {
 
         callback.call(this)
@@ -1682,7 +1681,6 @@ Http.get = function(url, callback) {
     var param = defaults
 
     param.success = callback
-
     param.url = url
 
     Http.ajax(param)
@@ -1738,6 +1736,7 @@ Http.ajax = function(param, events) {
     }
 
     req.setRequestHeader('Content-type', defaults.contentType)
+
     req.send(data)
 }
 
@@ -1845,7 +1844,7 @@ Node.text = function(text) {
 
     if (text === undefined) {
 
-        return this[0].innerText
+        return this[0].textContent ? this[0].textContent : this[0].innerText
 
     } else {
 
@@ -1988,42 +1987,6 @@ Node.height = function() {
     return Number.parseInt(Css.init.call(this, 'height'))
 }
 
-// 获取元素的offset
-Node.offset = function() {
-
-    var offsetParent = $(this[0].offsetParent),
-        offset = {
-            top: offsetTop = this[0].offsetTop,
-            left: this[0].offsetLeft
-        },
-        
-        parentOffset = /^body|html$/i.test(offsetParent[0].tagName) ? {
-            top: 0,
-            left: 0
-        } : offsetParent.offset()
-    
-    offset.top -= Number.parseInt(Css.init.call(this, 'margin-top'))
-    offset.left -= Number.parseInt(Css.init.call(this, 'margin-left'))
-
-    parentOffset.top += Number.parseInt(Css.init.call(offsetParent, 'border-top-width'))
-    parentOffset.left += Number.parseInt(Css.init.call(offsetParent, 'border-left-width'))
-    
-    return {
-        top: offset.top - parentOffset.top,
-        left: offset.left - parentOffset.left
-    }
-}
-
-Node.position = function() {
-
-    return {
-        top: Number.parseInt(Css.init.call(this, 'top')),
-        right: Number.parseInt(Css.init.call(this, 'right')),
-        bottom: Number.parseInt(Css.init.call(this, 'bottom')),
-        left: Number.parseInt(Css.init.call(this, 'left'))
-    }
-}
-
 // 获取当前元素的父节点
 Node.parent = function() {
 
@@ -2112,6 +2075,11 @@ Node.wrap = function() {}
  * 增加了next、prev和parent方法
  * 2015.6.17
  * 增加了prepend方法，修改了append，对fishbone对象进行支持
+ * 2015.7.7
+ * 修改了text方法，fix bug: 火狐不支持innerText
+ * 将position方法移动到css模块
+ * 修改了offset方法，之前offset和margin的关系计算错误
+ * 将offset方法移动到css模块
  */
  
 
@@ -2245,56 +2213,6 @@ Event.removeEvent = function(target, type, handler) {
     }
 }
 
-// 移除事件
-// TODO: handler应该是可选项，如果没有传入，清除所有事件函数
-// TODO: ie 9以下不兼容
-/*
-Event.removeEvent = function(target, type, handler) {
-
-    // 对handler进行判断，如果不存在，按照type清除全部事件
-    if (handler === undefined) {
-
-        var events = target.e[type]
-
-        if (target.removeEventListener) {
-
-            for (var i = 0; i < events.length; i++) {
-
-                if (events[i].type === type && handler) {
-
-                    delete events[i]
-
-                    target.removeEventListener(type, events[i].handler, false)
-                }
-            }
-
-        } else {
-
-            // IE 8
-            for (var i = 0; i < events.length; i++) {
-
-                if (events[i].type === type) {
-
-                    delete events[i]
-
-                    target.detachEvent('on' + type, events[i].handler)
-                }
-            }
-        }
-
-    } else {
-
-
-        if (target.removeEventListener) {
-            target.removeEventListener(type, handler, false)
-
-        } else {
-
-            target.detachEvent('on' + type, handler)
-        }
-    }
-}
-*/
 // 将事件绑定在document上，然后根据selector来判断是否执行
 // TODO: 缺少ie9以下的处理，事件委托的选择器不完善
 Event.live = function(type, handler) {
@@ -2489,7 +2407,10 @@ var Css = {}
 // 判断传入setCss的值是否是变化量
 Css.validateChange = function(value) {
     
-    if ((value[0] === '+' || value[0] === '-') && typeof value[value.length - 1] === 'number') {
+    return (value[0] === '+' || value[0] === '-') && typeof value[value.length - 1] === 'number'
+
+    /*
+    if () {
 
         return true
 
@@ -2497,6 +2418,7 @@ Css.validateChange = function(value) {
 
         return false
     }
+    */
 }
 
 // 处理连缀写法，将css写法转为驼峰式
@@ -2594,6 +2516,54 @@ Css.init = function(key, value) {
 
     return returnValue
 }
+
+// 获取当前对象的绝对位置
+// position和offset不同，需要分开计算。position是相对定位框，不是body
+Css.position = function() {
+
+    var top = Number.parseInt(Css.init.call(this, 'top')),
+        left = Number.parseInt(Css.init.call(this, 'left')),
+        right = Number.parseInt(Css.init.call(this, 'right')),
+        bottom = Number.parseInt(Css.init.call(this, 'bottom'))
+
+    top = top + Number.parseInt(Css.init.call(this, 'margin-top'))
+    left = left + Number.parseInt(Css.init.call(this, 'margin-left'))
+    right = right + Number.parseInt(Css.init.call(this, 'margin-right'))
+    bottom = bottom + Number.parseInt(Css.init.call(this, 'margin-bottom'))
+
+    return {
+        top: top,
+        right: right,
+        bottom: bottom,
+        left: left
+    }
+}
+
+// 获取元素的offset
+Css.offset = function() {
+
+    var offsetParent = $(this[0].offsetParent),
+        offset = {
+            top: offsetTop = this[0].offsetTop,
+            left: this[0].offsetLeft
+        },
+        
+        parentOffset = /^body|html$/i.test(offsetParent[0].tagName) ? {
+            top: 0,
+            left: 0
+        } : offsetParent.offset()
+    
+    // offset.top += Number.parseInt(Css.init.call(this, 'margin-top'))
+    // offset.left += Number.parseInt(Css.init.call(this, 'margin-left'))
+
+    parentOffset.top += Number.parseInt(Css.init.call(offsetParent, 'border-top-width'))
+    parentOffset.left += Number.parseInt(Css.init.call(offsetParent, 'border-left-width'))
+    
+    return {
+        top: offset.top - parentOffset.top,
+        left: offset.left - parentOffset.left
+    }
+}
 /**
  * 2015.5.30
  * 创建模块
@@ -2610,6 +2580,10 @@ Css.init = function(key, value) {
  * 修改了getCss，在IE 8 和 Opera上使用currentStyle代替getComputedStyle
  * 2015.6.11
  * 修改了getCss，fix bug
+ * 2015.7.7
+ * 增加了position方法
+ * 增加了offset方法
+ * 重构了validateChange方法
  */
 /**
  * @name  attr.js
@@ -2810,7 +2784,7 @@ Attr.replaceClass = function(name, value) {
  * 增加了toogleClass方法
  */
 
-/*
+/**
  * @name  route.js
  * @description  路由模块
  * @date  2015.5.21
@@ -2818,9 +2792,6 @@ Attr.replaceClass = function(name, value) {
  */
 var Route = {}
 
-
-// Route.cssReady = false
-// Route.jsReady = false
 Route.hash = null
 
 // 根据当前url返回hash，并处理history
@@ -2828,29 +2799,23 @@ Route.getHash = function() {
 
     var hash = window.location.hash
     var history = window.history
-
     // 去掉url前面的#!
     hash = hash.replace('#!', '')
-
     // 记录hash，以便后面的set方法中调用
     Route.hash = hash
 
     // 将去掉#!后的url显示在地址栏中
     // TODO: 开启debug模式时不使用
     // if (W3C) {
-
     //     history.replaceState(null, null, hash)
     // }
-
     return hash
 }
-
 // 模块加载的入口
 Route.load = function(routes) {
 
     // 路由没有匹配，跳转到otherwise
     if (routes === undefined) {
-
         window.location.href = Route.otherwise
     }
 
@@ -2863,7 +2828,7 @@ Route.load = function(routes) {
 
 // 清除当前页面不需要的css、js
 Route.resetCss = function() {
-    
+
     var doms = $('link')
 
     for (var i = 0; i < doms.length; i++) {
@@ -2871,7 +2836,6 @@ Route.resetCss = function() {
         var type = doms.eq(i).attr('data-type')
 
         if (type !== 'common') {
-
             doms.eq(i).remove()
         }
     }
@@ -2879,24 +2843,21 @@ Route.resetCss = function() {
 
 // 重置模块加载状态
 Route.resetStatus = function() {
-
     Route.cssReady = false
     Route.jsReady = false
     Route.hash = null
 }
 
 // 加载页面模板代码
-Route.loadTempalte = function(url) {
+Route.loadTemplate = function(url) {
 
     Http.get(url, function(data) {
-
         var view = $('#fs-view')
-
+        var hash = Route.routes[Route.hash]
+        
         // 加载成功之后，将data复制到view中
         $('#fs-view').html(data)
-
-        var hash = Route.routes[Route.hash]
-
+        
         Route.loadJs(hash['js'], hash)
         Route.setTitle(hash['title'])
     })
@@ -2908,24 +2869,22 @@ Route.loadJs = function(path, hash) {
     function callback() {
 
         Route.jsReady = true
-
         // 重置模块加载状态
         Route.resetStatus()
 
         if (hash['callback'] !== undefined) {
-
             hash['callback'].call(this, hash['js'])
         }
     }
 
     // 如果没有声明js，直接执行回调
     if (path === undefined) {
-
+        
         callback.call(null)
-
+        
         return
     }
-    
+
     Http.getScript(path, callback)
 }
 
@@ -2933,7 +2892,6 @@ Route.loadJs = function(path, hash) {
 Route.setTitle = function(title) {
 
     if (title !== undefined) {
-
         document.title = title
     }
 }
@@ -2949,10 +2907,10 @@ Route.loadCss = function(arr) {
         cssReady += 1
 
         if (arr === undefined || cssReady === arr.length) {
-
+            
             var hash = Route.routes[Route.hash]
-
-            Route.loadTempalte(hash['template'])
+            
+            Route.loadTemplate(hash['template'])
         }
     }
 
@@ -2969,7 +2927,6 @@ Route.loadCss = function(arr) {
         Http.getCss(arr[i], callback)
     }
 }
-
 // TODO: provider可以考虑改成类
 Route.provider = function(paths) {
 
@@ -2977,9 +2934,7 @@ Route.provider = function(paths) {
         routes = {}
 
     var hashChange = function() {
-
         var hash = Route.getHash()
-
         // 在这里分析routes，然后分别调用加载
         var routes = Route.routes[hash]
 
@@ -2987,28 +2942,25 @@ Route.provider = function(paths) {
     }
 
     this.when = function(path, route) {
-
         // TODO: path需要支持数组形式
         if (path instanceof Array) {
 
             for (var i = 0; i < path.length; i++) {
-
                 var key = path[i]
 
                 routes[key] = route
             }
-            
+
         } else {
 
-            routes[path] = route    
+            routes[path] = route
         }
 
         return provider
     }
-
+    
     // 路由的配置必须由otherwise结尾，该方法负责注册路由规则和激活hashchange事件
     this.otherwise = function(path) {
-
         // 这里使用的routes是provider的私有变量
         Route.otherwise = path
 
@@ -3018,26 +2970,30 @@ Route.provider = function(paths) {
     this.scan = function() {
 
         Route.routes = routes
-
         // 激活hashChange事件
         $(window).on('hashchange', hashChange)
 
+        // 首次访问页面的处理
+        ! function() {
+
+            hashChange.call()
+        }
+
+
+        /*
         // 处理url直接访问的加载情况
         // TODO: 这里的代码和hashChange中的重复
         ! function() {
-
             var hash = Route.getHash()
-
             // 在这里分析routes，然后分别调用加载
             var routes = Route.routes[hash]
-
             Route.load(routes)
         }()
+        */
     }
 
     return this
 }
-
 /**
  * 2015.5.21
  * 增加了Route模块
@@ -3061,8 +3017,9 @@ Route.provider = function(paths) {
  * 修改了provider，将路由激活的逻辑放到了scan中
  * 2015.6.24
  * 修改了route模块的调用方式，不再对外暴露Route对象
+ * 2015.7.7
+ * 调整了整个模块的格式，修改了scan，自运行直接调用hashChange
  */
-
 /**
  * @name  animate.js
  * @description  动画模块
@@ -3325,6 +3282,8 @@ mix($.fn, {
     live: Event.live,
     ready: Event.ready,
     css: Css.init,
+    position: Css.position,
+    offset: Css.offset,
     attr: Attr.init,
     addClass: Attr.addClass,
     removeClass: Attr.removeClass,
@@ -3346,8 +3305,6 @@ mix($.fn, {
     index: Node.index,
     width: Node.width,
     height: Node.height,
-    offset: Node.offset,
-    position: Node.position,
     parent: Node.parent,
     next: Node.next,
     prev: Node.prev,

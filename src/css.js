@@ -8,7 +8,10 @@ var Css = {}
 // 判断传入setCss的值是否是变化量
 Css.validateChange = function(value) {
     
-    if ((value[0] === '+' || value[0] === '-') && typeof value[value.length - 1] === 'number') {
+    return (value[0] === '+' || value[0] === '-') && typeof value[value.length - 1] === 'number'
+
+    /*
+    if () {
 
         return true
 
@@ -16,6 +19,7 @@ Css.validateChange = function(value) {
 
         return false
     }
+    */
 }
 
 // 处理连缀写法，将css写法转为驼峰式
@@ -180,4 +184,5 @@ Css.offset = function() {
  * 2015.7.7
  * 增加了position方法
  * 增加了offset方法
+ * 重构了validateChange方法
  */

@@ -16,51 +16,24 @@
 
     #test {
         height: 0px;
-        background: #ED4441;
+        background: red;
         position: absolute;
-        left: 100px;
+        left: 140px;
         top: 100px;
         width: 500px;
+        height: 100px;
+
+        margin-left: -20px;
+        margin-top: -30px;
         /*transform: rotate3d(7deg, 2deg, 10deg);*/
         /*transform: scale(2, 3)rotate(7deg);*/
     }
 
-    #test2 {
-
-        height: 52px;
-        background: #329c8e;
-        position: absolute;
-        left: 100px;
-        top: 200px;
-        width: 500px;
-    }
-
-    div {
-        background: red;
-        height: 50px;
-    }
     </style>
 </head>
 <body>
-    
-    <div id="test">
-        <ul>
-            <li></li>
-            <li></li>
-            <li></li>
-            <li></li>
-            <li></li>
-            <li></li>
-            <li></li>
-            <li></li>
-            <li></li>
-            <li></li>
-        </ul>
 
-    </div>
-
-    <div id="test2">test 2</div>
-    <div id="test" class="asdf"></div>
+    <div id="test">test 000</div>
     <script src="dist/fishbone.js"></script>
 
 </body>
@@ -68,40 +41,12 @@
 
 <script>
 
+// ready
 $(document).ready(function() {
 
-
-    // test clone
-    $('#test2').animate({'height': '50px'}, 200)
-    $('#test').animate({'height': '100px'}, 200)
-
-    // var left = $('#test').offset().left,
-    //     top = $('#test').offset().top
-
-    // console.log('left: ' + left)
-    // console.log('top: ' + top)
-
-
-    // var state = $('#test').data('isAnimated')
-
-    // if (!state) {
-
-    //     // asdf是用来测试的错误属性
-    //     $('#test').animate({
-    //         'height': 150,
-    //         'opacity': 0
-    //         // 'left': 1000,
-    //         // 'top': 100,
-    //         // 'width': 500,
-    //         // 'transform' : 'rotate(-40)',
-    //         // 'asdf': 0
-    //     }, 1000)
-        
-    //     $('#test2').animate({
-    //         left: 0
-
-    //     }, 500)
-    // }
+    var test = $('#test')
+    console.log(test.position())
+    console.log(test.offset())
 })
 
     
