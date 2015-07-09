@@ -67,7 +67,7 @@ Node.clone = function(include) {
         arr.push(this[i].cloneNode(include))
     }
 
-    return arr
+    return new $.fn.init(arr)
 }
 
 // 修改元素的innerText
