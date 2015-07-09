@@ -2899,6 +2899,14 @@ Route.hash = null
 Route.getHash = function() {
 
     var hash = window.location.hash
+    var index = hash.indexOf('?')
+
+    // TODO: 去掉hash尾部的条件，弊端是条件变化页面不会刷新
+    if (index !== -1) {
+
+        hash = hash.substring(0, index)
+    }
+
     var history = window.history
     // 去掉url前面的#!
     hash = hash.replace('#!', '')
@@ -3046,9 +3054,12 @@ Route.provider = function(paths) {
         routes = {}
 
     var hashChange = function() {
+
         var hash = Route.getHash()
         // 在这里分析routes，然后分别调用加载
         var routes = Route.routes[hash]
+
+        console.log(hash)
 
         Route.load(routes)
     }
