@@ -136,9 +136,17 @@ Route.loadCss = function(arr) {
         return
     }
 
-    for (var i = 0; i < arr.length; i++) {
+    // 判断css是否是数组
+    if (arr instanceof Array) {
 
-        Http.getCss(arr[i], callback)
+        for (var i = 0; i < arr.length; i++) {
+
+            Http.getCss(arr[i], callback)
+        }
+    // 直接调用Http.getCss 
+    } else {
+
+        Http.getCss(arr, callback)
     }
 }
 // TODO: provider可以考虑改成类
