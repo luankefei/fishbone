@@ -15,6 +15,7 @@ mix($, {
     jsonp: Http.jsonp,
     route: Route.provider,
     create: create,
+    imgReady: imgReady,
     // on: Event.on,
     // live: Event.live,
     
