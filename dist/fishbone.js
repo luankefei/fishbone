@@ -2922,14 +2922,17 @@ Route.setTitle = function(title) {
 // TODO: loadCss和loadJs的结构相似
 Route.loadCss = function(arr) {
 
-    var cssReady = 0
+    var cssReady = 0,
+        isArray = arr instanceof Array
 
     var callback = function() {
 
         cssReady += 1
 
-        if (arr === undefined || cssReady === arr.length) {
-            
+        if (arr === undefined 
+            || (isArray && cssReady === arr.length) 
+            || !isArray) {
+
             var hash = Route.routes[Route.hash]
             
             Route.loadTemplate(hash['template'])
@@ -2945,7 +2948,7 @@ Route.loadCss = function(arr) {
     }
 
     // 判断css是否是数组
-    if (arr instanceof Array) {
+    if (isArray) {
 
         for (var i = 0; i < arr.length; i++) {
 
