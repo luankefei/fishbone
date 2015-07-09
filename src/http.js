@@ -105,7 +105,7 @@ Http.ajax = function(setting, events) {
     req.open(type, url)
 
     // 调用beforeSend，这里面不能写异步函数
-    setting.beforeSend && setting.beforeSend(req)
+    setting.before && setting.before(req)
 
     req.onreadystatechange = function() {
 
