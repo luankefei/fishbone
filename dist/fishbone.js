@@ -1633,7 +1633,6 @@ var accepts = {
     '*': ['*/'] + ['*'] //避免被压缩掉
 },
 defaults = {
-
     type: 'GET',
     contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
     async: true
@@ -1686,16 +1685,68 @@ Http.get = function(url, callback) {
     Http.ajax(param)
 }
 
-Http.ajax = function(param, events) {
+Http.convertJsonToPostData = function(data) {
 
-    var url = param.url
-    var type = param.type ? param.type.toUpperCase() : defaults.type
-    var data = param.data || null
+    // case 1
+    if (data === undefined) {
+
+        return null
+
+    // case 2
+    } else {
+
+        var str = ''
+
+        for (var k in data) {
+
+            str = str + k + '=' + data[k] + '&'
+        }   
+
+        data = str.substring(0, str.length - 1)
+
+        return data
+    }
+}
+
+Http.ajax = function(setting, events) {
+
+    var url = setting.url,
+        type = setting.type ? setting.type.toUpperCase() : defaults.type
+    
+    // 将param转成post数据
+    var param = Http.convertJsonToPostData(setting.param)
 
     var req = new XMLHttpRequest()
     
     req.open(type, url)
 
+    // 调用beforeSend，这里面不能写异步函数
+    setting.beforeSend && setting.beforeSend(req)
+
+    req.onreadystatechange = function() {
+
+        if (req.readyState === 4 && req.status === 200) {
+
+            // 应该判断是否是json
+            var res = req.responseText
+
+            // 尝试将字符串转换为json对象
+            try {
+
+                res = JSON.parse(res)
+            
+            } catch(e) {
+
+                //throw 'json parse error'
+            }
+
+            setting.success && setting.success(res)
+        }
+    }
+
+    req.setRequestHeader('Content-type', defaults.contentType)
+
+    // handle XMLHttpRequest level 2 event
     // 如果有传入loadStart和progress参数
     if (typeof events !== 'undefined') {
 
@@ -1705,39 +1756,7 @@ Http.ajax = function(param, events) {
         }
     }
 
-    // 调用beforeSend，这里面不能写异步函数
-    param.beforeSend && param.beforeSend(req)
-
-    req.onreadystatechange = function() {
-
-        if (req.readyState === 4 && req.status === 200) {
-
-            // 应该判断是否是json
-            var res = req.responseText
-
-            try {
-
-                if (W3C) {
-
-                    res = JSON.parse(res)
-
-                } else {
-
-                    res = eval('[' + res + ']')
-                }
-            
-            } catch(e) {
-
-                //throw 'json parse error'
-            }
-
-            param.success && param.success(res)
-        }
-    }
-
-    req.setRequestHeader('Content-type', defaults.contentType)
-
-    req.send(data)
+    req.send(param)
 }
 
 // 尽量使用CORS
@@ -1765,6 +1784,9 @@ Http.socket = function() {}
  * 添加ajax、jsonp两个顶级接口。ajax支持httprequest 2.0
  * 2015.6.4
  * 修改了getScript函数，依赖了seajs
+ * 2015.7.9
+ * 修改了ajax函数，将data参数更名为param，去掉了最后转化json的eval，修复了post发送数据格式错误的bug
+ * 增加了convertJsonToPostData函数，该函数接收一个json参数，返回一个post数据格式字符串
  */
  
 /**
@@ -2976,8 +2998,8 @@ Route.provider = function(paths) {
         // 首次访问页面的处理
         ! function() {
 
-            hashChange.call()
-        }
+            hashChange.call(null)
+        } ()
 
 
         /*

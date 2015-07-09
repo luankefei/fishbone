@@ -190,8 +190,8 @@ Route.provider = function(paths) {
         // 首次访问页面的处理
         ! function() {
 
-            hashChange.call()
-        }
+            hashChange.call(null)
+        } ()
 
 
         /*
