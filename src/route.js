@@ -172,8 +172,6 @@ Route.provider = function(paths) {
         // 在这里分析routes，然后分别调用加载
         var routes = Route.routes[hash]
 
-        console.log(hash)
-
         Route.load(routes)
     }
 
