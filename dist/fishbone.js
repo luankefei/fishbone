@@ -2981,8 +2981,11 @@ Route.loadJs = function(path, hash) {
         // 重置模块加载状态
         Route.resetStatus()
 
-        if (hash['callback'] !== undefined) {
-            hash['callback'].call(this, hash['js'])
+
+        // TODO: 模块加载后的callback，应该传入模块名，现在是通过js文件标识的
+        if (Route.enter !== undefined) {
+
+            Route.enter.call(this, hash['js'])
         }
     }
 
@@ -3053,11 +3056,17 @@ Route.provider = function(paths) {
     var provider = this,
         routes = {}
 
-    var hashChange = function() {
+    // type == 1, first，不执行leave
+    var hashChange = function(type) {
 
         var hash = Route.getHash()
         // 在这里分析routes，然后分别调用加载
         var routes = Route.routes[hash]
+
+        if (type !== 1 && Route.leave) {
+
+            Route.leave.call(this, hash['js'])
+        }
 
         Route.load(routes)
     }
@@ -3088,6 +3097,18 @@ Route.provider = function(paths) {
         return provider
     }
 
+    // after module loaded, 传入模块作为参数
+    this.enter = function(func) {
+
+        Route.enter = func
+    }
+
+    // before module loadding, 传入模块作为参数
+    this.leave = function(after) {
+
+        Route.leave = func
+    }
+
     this.scan = function() {
 
         Route.routes = routes
@@ -3097,7 +3118,8 @@ Route.provider = function(paths) {
         // 首次访问页面的处理
         ! function() {
 
-            hashChange.call(null)
+            hashChange.call(null, 1)
+
         } ()
 
 
@@ -3140,7 +3162,12 @@ Route.provider = function(paths) {
  * 修改了route模块的调用方式，不再对外暴露Route对象
  * 2015.7.7
  * 调整了整个模块的格式，修改了scan，自运行直接调用hashChange
+ * 2015.7.10
+ * 增加了Route.leave函数，该函数在离开模块时触发，优先于resetCss
+ * 增加了Route.enter函数，该函数在进入模块时触发，在loadJS的回调中被调用
+ * 修改了hashChange，根据type参数决定是否调用Route.leave函数
  */
+ 
 /**
  * @name  animate.js
  * @description  动画模块
