@@ -3065,7 +3065,7 @@ Route.provider = function(paths) {
 
         if (type !== 1 && Route.leave) {
 
-            Route.leave.call(this, hash['js'])
+            Route.leave.call(this, routes)
         }
 
         Route.load(routes)
