@@ -3101,12 +3101,16 @@ Route.provider = function(paths) {
     this.enter = function(func) {
 
         Route.enter = func
+
+        return provider
     }
 
     // before module loadding, 传入模块作为参数
-    this.leave = function(after) {
+    this.leave = function(func) {
 
         Route.leave = func
+
+        return provider
     }
 
     this.scan = function() {
