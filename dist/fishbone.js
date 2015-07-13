@@ -2403,6 +2403,29 @@ Event.off = function(type, handler) {
     }
 }
 
+// TODO: 新增的特殊事件接口，可能会改动
+Event.drag = function(dragStart, dragging, dragEnd) {
+
+    this.on('mousedown', function(e) {
+
+        dragStart && dragStart(e)
+
+        $(document).on('mousemove', function(e) {
+
+            dragging && dragging(e)
+        })
+
+        $(document).on('mouseup', function(e) {
+
+            dragEnd && dragEnd(e)
+
+            $(document).off('mousemove')
+            $(document).off('mouseup')
+        })
+    })
+}
+
+
 /**
  * 2015.5.25
  * 创建模块
@@ -2422,6 +2445,8 @@ Event.off = function(type, handler) {
  * 增加了declareEvent函数，代码从addEvent中分离
  * 2015.6.26
  * 修改了removeEvent，修复bug：删除事件后没有重置i
+ * 2015.7.13
+ * 增加了drag接口，传入三个参数，对应拖拽的三种状态
  */
 
 /**
