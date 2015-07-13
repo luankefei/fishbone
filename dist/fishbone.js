@@ -2336,7 +2336,7 @@ Event.live = function(type, handler) {
 
                 if (nodes[i] === target) {
 
-                    console.log('live match loop: ' + loop)
+                    // console.log('live match loop: ' + loop)
 
                     return handler.call(target, e)
                 }
@@ -2986,6 +2986,10 @@ Route.resetStatus = function() {
 Route.loadTemplate = function(url) {
 
     Http.get(url, function(data) {
+
+        console.clear()
+        console.log('%c\n \n O ever youthful, O ever weeping. \n\n', 'color:rgb(237, 68, 65);font-size:13px;font-family:Myriad Set Pro;')
+
         var view = $('#fs-view')
         var hash = Route.routes[Route.hash]
         
@@ -3195,6 +3199,8 @@ Route.provider = function(paths) {
  * 增加了Route.leave函数，该函数在离开模块时触发，优先于resetCss
  * 增加了Route.enter函数，该函数在进入模块时触发，在loadJS的回调中被调用
  * 修改了hashChange，根据type参数决定是否调用Route.leave函数
+ * 2015.7.13
+ * 修改了loadTemplate，增加了两行log操作
  */
  
 /**
@@ -3459,6 +3465,7 @@ mix($.fn, {
     off: Event.off,
     live: Event.live,
     ready: Event.ready,
+    drag: Event.drag,
     css: Css.init,
     position: Css.position,
     offset: Css.offset,
