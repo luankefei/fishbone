@@ -28,6 +28,7 @@ mix($.fn, {
     off: Event.off,
     live: Event.live,
     ready: Event.ready,
+    drag: Event.drag,
     css: Css.init,
     position: Css.position,
     offset: Css.offset,
