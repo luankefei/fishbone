@@ -150,7 +150,7 @@ Event.live = function(type, handler) {
 
                 if (nodes[i] === target) {
 
-                    console.log('live match loop: ' + loop)
+                    // console.log('live match loop: ' + loop)
 
                     return handler.call(target, e)
                 }
