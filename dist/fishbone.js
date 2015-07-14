@@ -1857,7 +1857,7 @@ Http.comet = function() {}
 
 Http.socket = function() {}
 
-Http.load = function(url) {
+Http.load = function(url, callback) {
 
     var self = this
 
@@ -1871,6 +1871,8 @@ Http.load = function(url) {
 
                 self.eq(i).html(d)
             }
+
+            callback && callback()
         }
     })
 }
