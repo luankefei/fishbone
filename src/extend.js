@@ -13,6 +13,7 @@ mix($, {
     get: Http.get,
     ajax: Http.ajax,
     jsonp: Http.jsonp,
+    load: Http.load,
     route: Route.provider,
     create: create,
     imgReady: imgReady,

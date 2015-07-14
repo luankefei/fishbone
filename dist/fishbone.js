@@ -1857,6 +1857,18 @@ Http.comet = function() {}
 
 Http.socket = function() {}
 
+Http.load = function(url) {
+
+    // 调用Http.get
+    $.get(url, function(d) {
+
+        for (var i = 0; i < this.length; i++) {
+
+            this.eq(i).html(d)
+        }
+    })
+}
+
 /**
  * 2015.5.12
  * 创建http模块
@@ -1866,6 +1878,8 @@ Http.socket = function() {}
  * 2015.7.9
  * 修改了ajax函数，将data参数更名为param，去掉了最后转化json的eval，修复了post发送数据格式错误的bug
  * 增加了convertJsonToPostData函数，该函数接收一个json参数，返回一个post数据格式字符串
+ * 2015.7.14
+ * 增加了load函数，用于加载页面片段
  */
  
 /**
@@ -3450,6 +3464,7 @@ mix($, {
     get: Http.get,
     ajax: Http.ajax,
     jsonp: Http.jsonp,
+    load: Http.load,
     route: Route.provider,
     create: create,
     imgReady: imgReady,
