@@ -13,7 +13,6 @@ mix($, {
     get: Http.get,
     ajax: Http.ajax,
     jsonp: Http.jsonp,
-    load: Http.load,
     route: Route.provider,
     create: create,
     imgReady: imgReady,
@@ -61,7 +60,8 @@ mix($.fn, {
     hide: Node.hide,
 
     data: Data.init,
-    animate: Animate.init
+    animate: Animate.init,
+    load: Http.load
 })
 /**
  * 2015.5.12 创建extend

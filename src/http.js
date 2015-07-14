@@ -164,12 +164,18 @@ Http.socket = function() {}
 
 Http.load = function(url) {
 
-    // 调用Http.get
-    $.get(url, function(d) {
+    var self = this
 
-        for (var i = 0; i < this.length; i++) {
+    $.ajax({
 
-            this.eq(i).html(d)
+        url: url,
+        type: 'get',
+        success: function(d) {
+            
+            for (var i = 0; i < self.length; i++) {
+
+                self.eq(i).html(d)
+            }
         }
     })
 }

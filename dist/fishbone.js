@@ -1859,12 +1859,18 @@ Http.socket = function() {}
 
 Http.load = function(url) {
 
-    // 调用Http.get
-    $.get(url, function(d) {
+    var self = this
 
-        for (var i = 0; i < this.length; i++) {
+    $.ajax({
 
-            this.eq(i).html(d)
+        url: url,
+        type: 'get',
+        success: function(d) {
+            
+            for (var i = 0; i < self.length; i++) {
+
+                self.eq(i).html(d)
+            }
         }
     })
 }
@@ -1882,6 +1888,7 @@ Http.load = function(url) {
  * 增加了load函数，用于加载页面片段
  */
  
+
 /**
  * @name  node.js
  * @description  dom、node模块，提供dom对象的CRUD
@@ -3464,7 +3471,6 @@ mix($, {
     get: Http.get,
     ajax: Http.ajax,
     jsonp: Http.jsonp,
-    load: Http.load,
     route: Route.provider,
     create: create,
     imgReady: imgReady,
@@ -3512,7 +3518,8 @@ mix($.fn, {
     hide: Node.hide,
 
     data: Data.init,
-    animate: Animate.init
+    animate: Animate.init,
+    load: Http.load
 })
 /**
  * 2015.5.12 创建extend
