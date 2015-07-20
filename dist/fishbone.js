@@ -1747,7 +1747,7 @@ Http.getCss = function(url, callback) {
     // IE 8兼容
     link.onload = function() {
 
-        callback.call(this)
+        callback && callback.call(this)
     }
 
     head.appendChild(link)
