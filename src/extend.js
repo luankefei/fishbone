@@ -16,9 +16,9 @@ mix($, {
     route: Route.provider,
     create: create,
     imgReady: imgReady,
-    // on: Event.on,
-    // live: Event.live,
-    
+    loadCss: Http.getCss,
+    loadJs: Http.getScript,
+
     module: Module.init,
     component: Module.component.init
 })
