@@ -217,8 +217,11 @@ Event.off = function(type, handler) {
     }
 }
 
-// TODO: 新增的特殊事件接口，可能会改动
+// 拖拽事件接口
 Event.drag = function(dragging, control, dragStart, dragEnd) {
+
+    // 如果不记录target，后面事件中无法获取
+    var frame = target
 
     this.on('mousedown', function(e) {
 
@@ -227,18 +230,18 @@ Event.drag = function(dragging, control, dragStart, dragEnd) {
             x: e.pageX, 
             y: e.pageY 
         },
-        control = control || this
-        controlPosition = $(control).position(),
-        controlStart = {
-            x: controlPosition.left,
-            y: controlPosition.top
+        target = frame !== undefined ? frame : self,
+        targetPosition = $(target).position(),
+        targetStart = {
+            x: targetPosition.left,
+            y: targetPosition.top
         }
 
         dragStart && dragStart.call(self, e)
 
         $(document).on('mousemove', function(e) {
 
-            dragging && dragging.call(self, e, mouseStart, controlStart)
+            dragging && dragging.call(self, e, mouseStart, targetStart)
         })
 
         $(document).on('mouseup', function(e) {
@@ -277,4 +280,5 @@ Event.drag = function(dragging, control, dragStart, dragEnd) {
  * 修改了drag，更改的参数顺序，将dragging移到最前
  * 修改了drag，提供两个默认变量，可以在dragging中作为参数使用
  * 修改了drag，提供了第四个参数
+ * 修改了drag，修复了target在事件中为undefined的bug
  */
