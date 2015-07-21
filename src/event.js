@@ -223,12 +223,21 @@ Event.drag = function(dragging, dragStart, dragEnd) {
     this.on('mousedown', function(e) {
 
         var self = this
+        var mouseStart = { 
+            x: e.pageX, 
+            y: e.pageY 
+        },
+        controlPosition = $(this).position(),
+        controlStart = {
+            x: controlPosition.left,
+            y: controlPosition.top
+        }
 
         dragStart && dragStart.call(self, e)
 
         $(document).on('mousemove', function(e) {
 
-            dragging && dragging.call(self, e)
+            dragging && dragging.call(self, e, mouseStart, controlStart)
         })
 
         $(document).on('mouseup', function(e) {
@@ -263,4 +272,7 @@ Event.drag = function(dragging, dragStart, dragEnd) {
  * 修改了removeEvent，修复bug：删除事件后没有重置i
  * 2015.7.13
  * 增加了drag接口，传入三个参数，对应拖拽的三种状态
+ * 2015.7.21
+ * 修改了drag，更改的参数顺序，将dragging移到最前
+ * 修改了drag，提供两个默认变量，可以在dragging中作为参数使用
  */
