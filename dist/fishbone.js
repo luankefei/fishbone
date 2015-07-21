@@ -2432,16 +2432,18 @@ Event.drag = function(dragging, dragStart, dragEnd) {
 
     this.on('mousedown', function(e) {
 
-        dragStart && dragStart.call(this, e)
+        var self = this
+
+        dragStart && dragStart.call(self, e)
 
         $(document).on('mousemove', function(e) {
 
-            dragging && dragging.call(this, e)
+            dragging && dragging.call(self, e)
         })
 
         $(document).on('mouseup', function(e) {
 
-            dragEnd && dragEnd.call(this, e)
+            dragEnd && dragEnd.call(self, e)
 
             $(document).off('mousemove')
             $(document).off('mouseup')
