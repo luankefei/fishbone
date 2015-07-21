@@ -218,7 +218,7 @@ Event.off = function(type, handler) {
 }
 
 // TODO: 新增的特殊事件接口，可能会改动
-Event.drag = function(dragging, dragStart, dragEnd) {
+Event.drag = function(dragging, control, dragStart, dragEnd) {
 
     this.on('mousedown', function(e) {
 
@@ -227,7 +227,8 @@ Event.drag = function(dragging, dragStart, dragEnd) {
             x: e.pageX, 
             y: e.pageY 
         },
-        controlPosition = $(this).position(),
+        control = control || this
+        controlPosition = $(control).position(),
         controlStart = {
             x: controlPosition.left,
             y: controlPosition.top
@@ -275,4 +276,5 @@ Event.drag = function(dragging, dragStart, dragEnd) {
  * 2015.7.21
  * 修改了drag，更改的参数顺序，将dragging移到最前
  * 修改了drag，提供两个默认变量，可以在dragging中作为参数使用
+ * 修改了drag，提供了第四个参数
  */
