@@ -2428,20 +2428,20 @@ Event.off = function(type, handler) {
 }
 
 // TODO: 新增的特殊事件接口，可能会改动
-Event.drag = function(dragStart, dragging, dragEnd) {
+Event.drag = function(dragging, dragStart, dragEnd) {
 
     this.on('mousedown', function(e) {
 
-        dragStart && dragStart(e)
+        dragStart && dragStart.call(this, e)
 
         $(document).on('mousemove', function(e) {
 
-            dragging && dragging(e)
+            dragging && dragging.call(this, e)
         })
 
         $(document).on('mouseup', function(e) {
 
-            dragEnd && dragEnd(e)
+            dragEnd && dragEnd.call(this, e)
 
             $(document).off('mousemove')
             $(document).off('mouseup')
