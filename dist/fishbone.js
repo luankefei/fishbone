@@ -2368,7 +2368,7 @@ Event.live = function(type, handler) {
 
             target = target.parentNode
 
-        } while (target !== document)
+        } while (target !== document && target !== null)
     })
 }
 
