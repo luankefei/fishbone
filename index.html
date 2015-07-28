@@ -46,27 +46,17 @@
 
 <script>
 
-    $('#drag').attr('draggable', 'true')
 
-    $('#drag').on('dragstart', function(e) {
+    $.get('/package.json')
 
-        e.dataTransfer.setData("id", e.target.id)
+    $.get('/package2.json', function() {
 
-        console.log('dragstart')
+        console.log('1234')
     })
 
-    $('#test').on('dragover', function(e) {
 
-        console.log('dragover')
 
-        e.preventDefault()
-    })
 
-    $('#test').on('drop', function(e) {
 
-        var id = e.dataTransfer.getData('id')
 
-        this.appendChild(document.getElementById(id))
-    })
-    
 </script>

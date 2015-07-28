@@ -61,7 +61,8 @@ Http.getCss = function(url, callback) {
 // ajax函数的简化版，提供更简单易用的api
 Http.get = function(url, callback) {
 
-    var param = defaults
+    // param对象的拷贝
+    var param = JSON.parse(JSON.stringify(defaults))
 
     param.success = callback
     param.url = url
@@ -92,10 +93,13 @@ Http.convertJsonToPostData = function(data) {
     }
 }
 
+
+var testArr = []
+
 Http.ajax = function(setting, events) {
 
     var url = setting.url,
-        type = setting.type ? setting.type.toUpperCase() : defaults.type
+    type = setting.type ? setting.type.toUpperCase() : defaults.type
     
     // 将param转成post数据
     var param = Http.convertJsonToPostData(setting.param)
@@ -194,5 +198,7 @@ Http.load = function(url, callback) {
  * 2015.7.14
  * 增加了load函数，用于加载页面片段
  * 更新了load函数，增加了第二个参数callback
+ * 2015.7.28
+ * 修改了get函数，对param对象进行拷贝
  */
  

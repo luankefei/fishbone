@@ -1756,7 +1756,8 @@ Http.getCss = function(url, callback) {
 // ajax函数的简化版，提供更简单易用的api
 Http.get = function(url, callback) {
 
-    var param = defaults
+    // param对象的拷贝
+    var param = JSON.parse(JSON.stringify(defaults))
 
     param.success = callback
     param.url = url
@@ -1787,10 +1788,13 @@ Http.convertJsonToPostData = function(data) {
     }
 }
 
+
+var testArr = []
+
 Http.ajax = function(setting, events) {
 
     var url = setting.url,
-        type = setting.type ? setting.type.toUpperCase() : defaults.type
+    type = setting.type ? setting.type.toUpperCase() : defaults.type
     
     // 将param转成post数据
     var param = Http.convertJsonToPostData(setting.param)
@@ -1889,6 +1893,8 @@ Http.load = function(url, callback) {
  * 2015.7.14
  * 增加了load函数，用于加载页面片段
  * 更新了load函数，增加了第二个参数callback
+ * 2015.7.28
+ * 修改了get函数，对param对象进行拷贝
  */
  
 
@@ -1901,10 +1907,10 @@ Http.load = function(url, callback) {
 var Node = {}
 
 // 获取dom的个数
-Node.length = function() {
+// Node.length = function() {
 
-    return this.length
-}
+//     return this.length
+// }
 
 // 将node以某元素子元素的形式插入到该元素内容的最后面
 Node.append = function(node) {
@@ -2213,6 +2219,7 @@ Node.wrap = function() {}
  * 将offset方法移动到css模块
  * 2015.7.28
  * 增加length方法，用于获取元素的长度
+ * 移除了length方法，fishbone对象的同名属性可以替代
  */
 
 /**
@@ -3546,7 +3553,7 @@ mix($.fn, {
     prev: Node.prev,
     show: Node.show,
     hide: Node.hide,
-    length: Node.length,
+    // length: Node.length,
 
     data: Data.init,
     animate: Animate.init,
