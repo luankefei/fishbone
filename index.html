@@ -14,17 +14,12 @@
         padding: 100px;
     }
 
-    #test {
-        height: 0px;
-        background: red;
-        position: absolute;
-        left: 140px;
-        top: 100px;
-        width: 500px;
+    .test-div {
+        width: 200px;
         height: 100px;
 
-        margin-left: -20px;
-        margin-top: -30px;
+        margin-bottom: 20px;
+        background: red;
         /*transform: rotate3d(7deg, 2deg, 10deg);*/
         /*transform: scale(2, 3)rotate(7deg);*/
     }
@@ -33,29 +28,45 @@
 </head>
 <body>
 
-    <div id="test">test 000</div>
+    <div id="test" class="test-div">
+        <ul>
+            <li>1</li>
+            <li>2</li>
+            <li>3</li>
+            <li>4</li>
+            <li>5</li>
+        </ul>
+    </div>
+    <ul>
+        <li id="drag">draggable</li>
+    </ul>
     <script src="dist/fishbone.js"></script>
-
 </body>
 </html>
 
 <script>
 
-// ready
-/*
-$.ajax({
-    url: 'http://www.sunken.me/user',
-    type: 'post',
-    param: {
-        username: 'sunken',
-        password: '123456'
-    },
-    success: function(data) {
+    $('#drag').attr('draggable', 'true')
 
-        console.log(data)
-    }
-})
-*/
+    $('#drag').on('dragstart', function(e) {
 
+        e.dataTransfer.setData("id", e.target.id)
+
+        console.log('dragstart')
+    })
+
+    $('#test').on('dragover', function(e) {
+
+        console.log('dragover')
+
+        e.preventDefault()
+    })
+
+    $('#test').on('drop', function(e) {
+
+        var id = e.dataTransfer.getData('id')
+
+        this.appendChild(document.getElementById(id))
+    })
     
 </script>

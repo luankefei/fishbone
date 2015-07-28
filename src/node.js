@@ -6,6 +6,12 @@
  */
 var Node = {}
 
+// 获取dom的个数
+Node.length = function() {
+
+    return this.length
+}
+
 // 将node以某元素子元素的形式插入到该元素内容的最后面
 Node.append = function(node) {
 
@@ -311,5 +317,6 @@ Node.wrap = function() {}
  * 将position方法移动到css模块
  * 修改了offset方法，之前offset和margin的关系计算错误
  * 将offset方法移动到css模块
+ * 2015.7.28
+ * 增加length方法，用于获取元素的长度
  */
- 
