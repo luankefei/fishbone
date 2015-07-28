@@ -58,7 +58,7 @@ mix($.fn, {
     prev: Node.prev,
     show: Node.show,
     hide: Node.hide,
-    length: Node.length,
+    // length: Node.length,
 
     data: Data.init,
     animate: Animate.init,

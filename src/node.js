@@ -7,10 +7,10 @@
 var Node = {}
 
 // 获取dom的个数
-Node.length = function() {
+// Node.length = function() {
 
-    return this.length
-}
+//     return this.length
+// }
 
 // 将node以某元素子元素的形式插入到该元素内容的最后面
 Node.append = function(node) {
@@ -319,4 +319,5 @@ Node.wrap = function() {}
  * 将offset方法移动到css模块
  * 2015.7.28
  * 增加length方法，用于获取元素的长度
+ * 移除了length方法，fishbone对象的同名属性可以替代
  */
