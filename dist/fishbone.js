@@ -1663,9 +1663,17 @@ var Data = {}
 // 从dom节点的d中读写数据
 Data.init = function (key, value) {
 
+    // case 1 & 2
     if (value === undefined) {
 
-        return this[0]['d'] ? this[0]['d'][key] : null
+        if (key === undefined) {
+
+            return this[0]['d'] ? this[0]['d'] : null
+
+        } else {
+
+            return this[0]['d'] ? this[0]['d'][key] : null
+        }
 
     } else {
 
@@ -1681,6 +1689,7 @@ Data.init = function (key, value) {
         }
     }
 
+    // case 3
     return this
 }
 
@@ -1691,6 +1700,8 @@ Data.init = function (key, value) {
  * 创建模块
  * 2015.6.15
  * 增加了init方法
+ * 2015.8.10
+ * 修改了Data.init，支持无参数调用
  */
  
 /*
