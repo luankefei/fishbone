@@ -17,7 +17,8 @@ Animate.supports = {
     'left': 'px',
     'right': 'px',
     'bottom': 'px',
-    'opacity': ''
+    'opacity': '',
+    'background-position': 'px'
     // 'transform': 'deg'
 }
 
@@ -67,7 +68,7 @@ function Animation(target, params, duration, callback) {
             var end = new Date() - start
 
             // 测试时间
-            console.log('end time: ' + end)
+            // console.log('end time: ' + end)
 
             clearInterval(wait)
 
@@ -78,7 +79,22 @@ function Animation(target, params, duration, callback) {
                 for (var j = 0; j < keys.length; j++) {
 
                     var key = keys[j]
-                    var value = now[i][key] + distances[i][j]
+                    var value = null
+
+                    // 为background-position等多值属性进行特殊处理
+                    if (now[i][key] instanceof Array) {
+
+                        value = []
+
+                        now[i][key].forEach(function(v, index, a) {
+
+                             value.push(now[i][key][index] + distances[i][j][index])
+                        })
+
+                    } else {
+
+                        value = now[i][key] + distances[i][j]
+                    }
 
                     // 如果是最后一步，纠正误差
                     if (step === times - 1) {
@@ -105,6 +121,10 @@ function Animation(target, params, duration, callback) {
                         // console.log(now[i][key])
                         // console.log(distances[i][j])
                     // 处理常规值：width、height、left、top、bottom、right
+                    } else if (key === 'background-position') {
+
+                        value = value[0] + 'px ' + value[1] + 'px'
+
                     } else {
 
                         // 补上单位
@@ -152,7 +172,17 @@ Animate.getBegins = function(params, keys) {
 
             var key = keys[j]
 
-            params[key] = Number.parseFloat(obj.css(key))
+            // 为background-position的双数值做特殊判断
+            if (key === 'background-position') {
+
+                var valueArr = obj.css(key).split(' ')
+
+                params[key] = [Number.parseFloat(valueArr[0]), Number.parseFloat(valueArr[1])]
+
+            } else {
+
+                params[key] = Number.parseFloat(obj.css(key))
+            }
         }
 
         begins.push(params)
@@ -174,8 +204,23 @@ Animate.getDistance = function(begin, end, duration, frame) {
         // begin是一个对象数组，需要遍历计算
         for (var k in begin[i]) {
 
-            // 结束值 - 初始值 / 帧频
-            changes.push((Number.parseFloat(end[k]) - begin[i][k]) / (duration / frame))
+            // 为begin为数组类型进行特殊处理
+            if (begin[i][k] instanceof Array) {
+
+                var tempArr = []
+
+                end[k].split(' ').forEach(function(v, index, a) {
+
+                    tempArr.push((Number.parseFloat(v) - begin[i][k][index]) / (duration / frame))
+                })
+
+                changes.push(tempArr)
+
+            } else {
+
+                // 结束值 - 初始值 / 帧频
+                changes.push((Number.parseFloat(end[k]) - begin[i][k]) / (duration / frame))
+            }
         }
 
         distances.push(changes)
@@ -199,6 +244,7 @@ Animate.paramFilter = function(params) {
             delete params[k]
 
         } else {
+
             keys.push(k)
         }
     }
@@ -227,5 +273,8 @@ Animate.init = function(params, duration, callback) {
  * 2015.6.22
  * 修改了supports，增加了opacity
  * 修改了paramFilter，fix bug：判断Animate.supports[k]应该使用undefined
+ * 2015.9.26
+ * 修改整个流程，尝试增加对多值属性支持。background-position测试通过，但不完善。
+ * 没有支持center left top等值。可以将单值多值统一成数组格式，消除if分支。
  */
  

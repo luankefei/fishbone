@@ -15,11 +15,16 @@
     }
 
     .test-div {
-        width: 200px;
-        height: 100px;
+        width: 300px;
+        height: 200px;
 
+        position: relative;
+        left: 10px
         margin-bottom: 20px;
-        background: red;
+        background-color: red;
+        background-image: url(battery.png);
+        background-position: 10px 10px;
+        background-repeat: no-repeat;
         /*transform: rotate3d(7deg, 2deg, 10deg);*/
         /*transform: scale(2, 3)rotate(7deg);*/
     }
@@ -45,18 +50,9 @@
 </html>
 
 <script>
-
-
-    $.get('/package.json')
-
-    $.get('/package2.json', function() {
-
-        console.log('1234')
-    })
-
-
-
-
-
+    
+    $('#test').animate({
+        'background-position': '0px 30px'
+    }, 500)
 
 </script>

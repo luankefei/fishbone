@@ -44,8 +44,6 @@ Data.init = function (key, value) {
     return this
 }
 
-
-
 /**
  * 2015.6.10
  * 创建模块
