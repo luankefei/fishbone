@@ -224,8 +224,8 @@ Event.drag = function(frame, dragging, dragStart, dragEnd) {
 
         var self = this
         var mouseStart = { 
-            x: e.pageX, 
-            y: e.pageY 
+            x: e.touches[0].pageX, 
+            y: e.touches[0].pageY 
         },
         target = frame !== undefined ? frame : self,
         targetPosition = $(target).position(),
