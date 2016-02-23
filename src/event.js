@@ -218,12 +218,9 @@ Event.off = function(type, handler) {
 }
 
 // 拖拽事件接口
-Event.drag = function(dragging, control, dragStart, dragEnd) {
+Event.drag = function(frame, dragging, dragStart, dragEnd) {
 
-    // 如果不记录target，后面事件中无法获取
-    var frame = target
-
-    this.on('mousedown', function(e) {
+    this.on('touchstart', function(e) {
 
         var self = this
         var mouseStart = { 
@@ -239,17 +236,15 @@ Event.drag = function(dragging, control, dragStart, dragEnd) {
 
         dragStart && dragStart.call(self, e)
 
-        $(document).on('mousemove', function(e) {
-
+        $(document).on('touchmove', function(e) {
             dragging && dragging.call(self, e, mouseStart, targetStart)
         })
 
-        $(document).on('mouseup', function(e) {
-
+        $(document).on('touchend', function(e) {
             dragEnd && dragEnd.call(self, e)
 
-            $(document).off('mousemove')
-            $(document).off('mouseup')
+            $(document).off('touchmove')
+            $(document).off('touchend')
         })
     })
 }
